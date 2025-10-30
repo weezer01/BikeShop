@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BikePro Admin — Quản lý xe đạp (Full)</title>
+  <style>
+    :root{
+      --bg:#071018; --panel:#0f1720; --muted:#9aa4b2; --accent:#00b4d8; --danger:#ff5c5c;
+      --card:#0c1217; --glass:rgba(255,255,255,0.03);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#05070a,#071018);color:#e6eef6}
+    /* login */
+    .center-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .login-card{width:420px;background:linear-gradient(180deg,#07121a,#081724);padding:22px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.02)}
+    .brand{font-weight:800;color:var(--accent);font-size:20px;margin-bottom:8px}
+    label{display:block;margin-top:10px;color:var(--muted);font-size:13px}
+    input[type="text"],input[type="password"],input[type="number"],select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#e6eef6;margin-top:6px}
+    .row{display:flex;gap:8px;margin-top:12px}
+    .btn{padding:10px 12px;border-radius:8px;border:0;cursor:pointer;background:transparent;color:var(--muted)}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),#66e0ff);color:#012}
+    .btn.warn{background:rgba(255,201,71,0.12);color:#ffd89b}
+    .btn.danger{background:linear-gradient(90deg,#ff7a7a,#ff5c5c);color:#111}
+    .small{font-size:13px;color:var(--muted);margin-top:8px}
+    /* app layout */
+    .app{display:none;min-height:100vh}
+    .sidebar{width:260px;background:linear-gradient(180deg,var(--panel),#071018);padding:20px;border-right:1px solid rgba(255,255,255,0.02);position:fixed;inset:0 auto auto 0}
+    .nav{list-style:none;padding:0;margin-top:12px}
+    .nav button{width:100%;text-align:left;padding:10px;border:0;background:transparent;border-radius:8px;color:var(--muted);cursor:pointer;margin-bottom:6px}
+    .nav button.active{background:rgba(0,180,216,0.08);color:var(--accent)}
+    .main{margin-left:280px;padding:22px}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:12px;padding:14px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.03)}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--muted);text-align:left}
+    th{background:rgba(255,255,255,0.02)}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    .table-scroll{max-height:420px;overflow:auto}
+    .badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px}
+    .badge.open{background:rgba(0,255,187,0.06);color:#8fffe3}
+    .badge.lock{background:rgba(255,92,92,0.08);color:#ffb4b4}
+    .muted{color:var(--muted)}
+    /* product sub-tabs */
+    .subtabs{display:flex;gap:8px;margin-bottom:12px}
+    .subtabs button{padding:8px 10px;border-radius:8px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+    .subtabs button.active{background:rgba(255,255,255,0.02);color:var(--accent)}
+    /* modal */
+    #modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6)}
+    #modalCard{width:820px;max-width:95%;background:var(--card);padding:18px;border-radius:12px;max-height:90vh;overflow:auto;border:1px solid rgba(255,255,255,0.03)}
+    /* responsive */
+    @media(max-width:900px){.sidebar{display:none}.main{margin-left:0;padding:12px}}
+    code{background:rgba(255,255,255,0.02);padding:2px 6px;border-radius:6px;color:var(--muted)}
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="loginWrap" class="center-wrap">
+    <div class="login-card">
+      <div style="text-align:center;margin-bottom:8px">
+        <div class="brand">BikePro Store — Admin</div>
+        <div class="small">Giao diện quản trị (Dark). Dữ liệu lưu trên <code>localStorage</code>.</div>
+      </div>
+
+      <label>Tên đăng nhập hoặc email</label>
+      <input id="username" type="text" value="admin" />
+
+      <label>Mật khẩu</label>
+      <input id="password" type="password" value="admin" />
+
+      <div class="row" style="justify-content:flex-start;margin-top:12px">
+        <button id="btnLogin" class="btn primary">Đăng nhập</button>
+        <button id="demoLogin" class="btn">Demo</button>
+        <button id="btnRestore" class="btn warn">Khôi phục Admin</button>
+      </div>
+
+      <div id="loginMsg" class="small muted"></div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="app" class="app" aria-hidden="true">
+    <aside class="sidebar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-weight:800;color:var(--accent);font-size:18px">BikePro Store</div>
+      </div>
+
+      <ul class="nav" id="menu">
+        <li><button data-view="dashboard" class="active">Tổng quan</button></li>
+        <li><button data-view="users">Quản lý người dùng</button></li>
+        <li><button data-view="types">Loại xe đạp</button></li>
+        <li><button data-view="products">Sản phẩm</button></li>
+        <!-- top-level shortcuts kept, but main product features are inside products tab -->
+        <li><button data-view="settings">Cài đặt</button></li>
+      </ul>
+
+      <div style="margin-top:18px;font-size:13px;color:var(--muted)">Đăng nhập dưới quyền: <strong id="who">Admin</strong></div>
+      <div style="margin-top:8px"><button id="btnLogout" class="btn">Đăng xuất</button></div>
+      <div style="margin-top:12px;font-size:12px;color:var(--muted)">BikePro • Quản trị cửa hàng xe đạp</div>
+    </aside>
+
+    <main class="main">
+      <header>
+        <h2 id="viewTitle">Tổng quan</h2>
+        <div class="small muted">Bảng điều khiển quản lý - BikePro Store</div>
+      </header>
+
+      <div id="views">
+        <!-- Dashboard -->
+        <section data-view="dashboard">
+          <div class="card">
+            <h3 style="color:#dff7ff">Tổng quan nhanh</h3>
+            <div style="display:flex;gap:12px;margin-top:12px">
+              <div class="card" style="flex:1">
+                <div class="small muted">Tổng mẫu xe</div>
+                <div id="statProducts" style="font-size:20px;font-weight:700;color:var(--accent)">0</div>
+              </div>
+              <div class="card" style="flex:1">
+                <div class="small muted">Tồn kho tổng</div>
+                <div id="statStock" style="font-size:20px;font-weight:700;color:#ffd166">0</div>
+              </div>
+              <div class="card" style="flex:1">
+                <div class="small muted">Đơn hàng hôm nay</div>
+                <div id="statOrders" style="font-size:20px;font-weight:700;color:#9be7ff">0</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Users -->
+        <section data-view="users" style="display:none">
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <h3>Danh sách khách hàng / người dùng</h3>
+              <div class="small muted">Xem, reset mật khẩu, khoá/mở khoá</div>
+            </div>
+
+            <div class="toolbar" style="margin-top:12px">
+              <input id="searchUser" placeholder="Tìm theo tên hoặc email" />
+              <button class="btn" id="btnRefreshUsers">Làm mới</button>
+              <button class="btn primary" id="btnAddUser">Thêm người dùng</button>
+            </div>
+
+            <div class="table-scroll">
+              <table id="tblUsers">
+                <thead><tr><th>STT</th><th>Tên</th><th>Email</th><th>Trạng thái</th><th>Hành động</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Types -->
+        <section data-view="types" style="display:none">
+          <div class="card">
+            <h3>Quản lý loại xe đạp</h3>
+            <div class="toolbar" style="margin-top:12px">
+              <input id="typeName" placeholder="Tên loại mới (ví dụ: Xe đạp địa hình)" />
+              <button class="btn primary" id="btnAddType">Thêm loại</button>
+            </div>
+            <div class="table-scroll" style="margin-top:8px">
+              <table id="tblTypes"><thead><tr><th>STT</th><th>Tên loại</th><th>Hành động</th></tr></thead><tbody></tbody></table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Products (main) -->
+        <section data-view="products" style="display:none">
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <h3>Quản lý sản phẩm (Xe đạp)</h3>
+              <div class="small muted">Các chức năng liên quan sản phẩm: danh sách, nhập hàng, giá bán, tồn kho, đơn hàng.</div>
+            </div>
+
+            <div class="subtabs" style="margin-top:12px">
+              <button data-sub="list" class="active">Danh sách</button>
+              <button data-sub="imports">Nhập hàng</button>
+              <button data-sub="pricing">Giá bán</button>
+              <button data-sub="stock">Tồn kho</button>
+              <button data-sub="orders">Đơn hàng</button>
+            </div>
+
+            <!-- Subviews -->
+            <div id="subviews">
+              <!-- List -->
+              <div data-subview="list">
+                <div class="toolbar" style="margin-top:8px">
+                  <select id="filterType"><option value="">-- Lọc theo loại --</option></select>
+                  <input id="searchProd" placeholder="Tìm theo tên hoặc mã" />
+                  <button class="btn primary" id="btnAddProd">Thêm xe đạp</button>
+                </div>
+                <div class="table-scroll" style="margin-top:8px">
+                  <table id="tblProducts"><thead><tr><th>STT</th><th>Mã</th><th>Tên</th><th>Loại</th><th>Giá vốn</th><th>Giá bán</th><th>Tồn</th><th>Ẩn</th><th>Hành động</th></tr></thead><tbody></tbody></table>
+                </div>
+              </div>
+
+              <!-- Imports -->
+              <div data-subview="imports" style="display:none">
+                <div class="toolbar" style="margin-top:8px">
+                  <button class="btn primary" id="btnNewImport">Thêm phiếu nhập</button>
+                  <input id="importFilter" type="date" />
+                  <input id="importSearch" placeholder="Tìm theo mã phiếu" />
+                </div>
+                <div class="table-scroll" style="margin-top:8px">
+                  <table id="tblImports"><thead><tr><th>STT</th><th>Mã phiếu</th><th>Ngày</th><th>Tổng mặt hàng</th><th>Trạng thái</th><th>Hành động</th></tr></thead><tbody></tbody></table>
+                </div>
+              </div>
+
+              <!-- Pricing -->
+              <div data-subview="pricing" style="display:none">
+                <div class="toolbar" style="margin-top:12px">
+                  <select id="priceTypeFilter"><option value="">-- Chọn loại để chỉnh % --</option></select>
+                  <input id="priceMargin" placeholder="% lợi nhuận (ví dụ 20)" />
+                  <button class="btn primary" id="btnSetMargin">Áp dụng cho loại</button>
+                </div>
+                <div class="table-scroll" style="margin-top:12px">
+                  <table id="tblPricing"><thead><tr><th>STT</th><th>Xe đạp</th><th>Giá vốn</th><th>%LN</th><th>Giá bán</th><th>Hành động</th></tr></thead><tbody></tbody></table>
+                </div>
+              </div>
+
+              <!-- Stock -->
+              <div data-subview="stock" style="display:none">
+                <div class="toolbar" style="margin-top:8px">
+                  <select id="stockProductFilter"><option value="">-- Chọn xe đạp --</option></select>
+                  <input id="stockFrom" type="date" />
+                  <input id="stockTo" type="date" />
+                  <button class="btn" id="btnCheckStock">Tra cứu</button>
+                  <button class="btn" id="btnLowStock">Cảnh báo sắp hết</button>
+                </div>
+                <div class="table-scroll" style="margin-top:8px">
+                  <table id="tblStock"><thead><tr><th>STT</th><th>Xe đạp</th><th>Nhập (tổng)</th><th>Xuất (tổng)</th><th>Tồn hiện tại</th></tr></thead><tbody></tbody></table>
+                </div>
+              </div>
+
+              <!-- Orders -->
+              <div data-subview="orders" style="display:none">
+                <div class="toolbar" style="margin-top:8px">
+                  <input id="orderFrom_sub" type="date" />
+                  <input id="orderTo_sub" type="date" />
+                  <select id="orderStatus_sub"><option value="">-- Trạng thái --</option><option value="new">Mới đặt</option><option value="processing">Đã xử lý</option><option value="shipped">Đã giao</option><option value="cancel">Huỷ</option></select>
+                  <button class="btn" id="btnFilterOrders_sub">Tìm</button>
+                </div>
+                <div class="table-scroll" style="margin-top:8px">
+                  <table id="tblOrders_sub"><thead><tr><th>STT</th><th>Mã đơn</th><th>Ngày</th><th>Tổng tiền</th><th>Trạng thái</th><th>Hành động</th></tr></thead><tbody></tbody></table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Settings -->
+        <section data-view="settings" style="display:none">
+          <div class="card">
+            <h3>Cài đặt</h3>
+            <div class="small muted">Một số cấu hình nhanh</div>
+            <div style="margin-top:12px">
+              <label>Ngưỡng cảnh báo tồn thấp</label>
+              <input id="lowThreshold" type="number" value="3" />
+              <button class="btn" id="btnSaveSettings">Lưu</button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div id="modal"><div id="modalCard"></div></div>
+    </main>
+  </div>
+
+<script>
+/* ---------- Database (localStorage) ---------- */
+const DB = {
+  key: 'bikepro_admin_db_v1',
+  defaultData(){
+    return {
+      users:[
+        {id:1,name:'Khách A',email:'a@example.com',pass:'user',locked:false},
+        {id:2,name:'Khách B',email:'b@example.com',pass:'user',locked:false},
+        {id:99,name:'admin',email:'admin@bikepro.local',pass:'admin',locked:false,role:'admin'}
+      ],
+      types:[
+        {id:1,name:'Xe đạp đường trường'},
+        {id:2,name:'Xe đạp địa hình'},
+        {id:3,name:'Xe đạp gấp'}
+      ],
+      products:[
+        {id:1,code:'BD-TR-001',name:'RoadMaster Pro',type:1,desc:'Khung carbon, tốc độ cao',cost:1200,stock:6,hidden:false,margin:15},
+        {id:2,code:'BD-TR-002',name:'Sprint Elite',type:1,desc:'Khung nhôm, nhẹ',cost:800,stock:4,hidden:false,margin:12},
+        {id:3,code:'BD-MTB-001',name:'TrailBlazer X',type:2,desc:'MTB 29-inch, bền',cost:900,stock:5,hidden:false,margin:14},
+        {id:4,code:'BD-FOLD-001',name:'CityFold 20\"',type:3,desc:'Gấp gọn, phù hợp đô thị',cost:450,stock:10,hidden:false,margin:10}
+      ],
+      imports:[], // {id, code, date, items:[{productId,qty,cost}], completed:boolean}
+      orders:[
+        {id:1,code:'O-2001',date:new Date().toISOString().slice(0,10),items:[{productId:1,qty:1,price:1380}],total:1380,status:'new'}
+      ],
+      settings:{lowThreshold:3,defaultMargin:10},
+    }
+  },
+  load(){
+    const raw = localStorage.getItem(this.key);
+    if(!raw){ const d=this.defaultData(); localStorage.setItem(this.key,JSON.stringify(d)); return d; }
+    return JSON.parse(raw);
+  },
+  save(db){ localStorage.setItem(this.key,JSON.stringify(db)); }
+};
+
+let db = DB.load();
+let state = {user:null};
+
+/* ---------- Helpers ---------- */
+const $ = (s,el=document) => el.querySelector(s);
+const $$ = (s,el=document) => Array.from(el.querySelectorAll(s));
+const uid = ()=> Date.now()+Math.floor(Math.random()*999);
+
+/* ---------- Auth & UI ---------- */
+function initAuth(){
+  $('#btnLogin').addEventListener('click', ()=> {
+    const u = $('#username').value.trim();
+    const p = $('#password').value;
+    const found = db.users.find(x => (x.name===u || x.email===u) && x.pass===p);
+    if(found && !found.locked){ state.user = found; showApp(); }
+    else { $('#loginMsg').textContent = found && found.locked ? 'Tài khoản bị khóa' : 'Sai thông tin'; }
+  });
+  $('#demoLogin').addEventListener('click', ()=>{ $('#username').value='admin'; $('#password').value='admin'; $('#btnLogin').click(); });
+  $('#btnRestore').addEventListener('click', ()=> {
+    if(!confirm('Khôi phục tài khoản admin? (Mật khẩu sẽ đặt lại là \"admin\")')) return;
+    const admin = db.users.find(u=>u.name==='admin' || u.email.includes('admin'));
+    if(admin){ admin.locked=false; admin.pass='admin'; DB.save(db); alert('Đã khôi phục admin. Đăng nhập bằng admin / admin'); }
+    else { db.users.push({id:uid(),name:'admin',email:'admin@bikepro.local',pass:'admin',locked:false,role:'admin'}); DB.save(db); alert('Đã tạo mới admin'); }
+  });
+  $('#btnLogout').addEventListener('click', ()=> {
+    state.user = null; $('#app').style.display='none'; $('#loginWrap').style.display='flex'; $('#loginMsg').textContent='';
+  });
+  $('#password').addEventListener('keyup', e => { if(e.key==='Enter') $('#btnLogin').click(); });
+}
+
+/* ---------- Show App & navigation ---------- */
+function showApp(){
+  $('#loginWrap').style.display='none'; $('#app').style.display='block'; $('#app').setAttribute('aria-hidden','false'); $('#who').textContent = state.user.name; renderAll();
+}
+
+/* sidebar nav */
+$$('#menu button').forEach(btn => btn.addEventListener('click', ()=>{
+  $$('#menu button').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  const view = btn.dataset.view; switchView(view);
+}));
+function switchView(v){
+  $$('#views section').forEach(sec => sec.style.display = sec.dataset.view===v ? '' : 'none');
+  $('#viewTitle').textContent = $$('#menu button').find(b=>b.dataset.view===v).textContent || v;
+  if(v==='users') renderUsers();
+  if(v==='types') renderTypes();
+  if(v==='products') { activateSub('list'); renderProducts(); }
+}
+
+/* product subtabs */
+$$('.subtabs button').forEach(b => b.addEventListener('click', ()=>{
+  $$('.subtabs button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); activateSub(b.dataset.sub);
+}));
+function activateSub(name){
+  $$('#subviews > div').forEach(d=>d.style.display = d.dataset.subview===name ? '' : 'none');
+  if(name==='list') renderProducts();
+  if(name==='imports') renderImports();
+  if(name==='pricing') renderPricing();
+  if(name==='stock') renderStock();
+  if(name==='orders') renderOrders_sub();
+}
+
+/* ---------- Renderers & Features ---------- */
+function renderAll(){ renderDashboard(); renderUsers(); renderTypes(); renderProducts(); renderImports(); renderPricing(); renderOrders_sub(); renderStock(); }
+
+/* Dashboard */
+function renderDashboard(){
+  $('#statProducts').textContent = db.products.length;
+  $('#statStock').textContent = db.products.reduce((s,p)=>s+p.stock,0);
+  $('#statOrders').textContent = db.orders.filter(o=>o.date===new Date().toISOString().slice(0,10)).length;
+}
+
+/* Users */
+function renderUsers(filter=''){
+  const tbody = $('#tblUsers tbody'); tbody.innerHTML='';
+  const list = db.users.filter(u=>((u.name||'')+(u.email||'')).toLowerCase().includes(filter.toLowerCase()));
+  list.forEach((u,i)=>{ const tr=document.createElement('tr'); tr.innerHTML = `<td>${i+1}</td><td>${u.name}</td><td>${u.email||''}</td><td>${u.locked?'<span class="badge lock">Bị khoá</span>':'<span class="badge open">Hoạt động</span>'}</td><td><button class="btn" data-id="${u.id}" data-act="reset">Reset mật khẩu</button> <button class="btn" data-id="${u.id}" data-act="toggle">${u.locked? 'Mở khoá' : 'Khoá'}</button></td>`; tbody.appendChild(tr); });
+  tbody.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{
+    const id=Number(b.dataset.id), act=b.dataset.act, user=db.users.find(x=>x.id===id);
+    if(!user) return;
+    if(act==='reset'){ user.pass='user'; DB.save(db); alert('Mật khẩu đã reset về: user'); }
+    if(act==='toggle'){ user.locked = !user.locked; DB.save(db); renderUsers($('#searchUser').value); }
+  }));
+}
+$('#btnRefreshUsers')?.addEventListener('click', ()=>renderUsers(''));
+$('#searchUser')?.addEventListener('input', e=>renderUsers(e.target.value));
+$('#btnAddUser')?.addEventListener('click', ()=> {
+  showModal(`<h3>Thêm người dùng</h3><label>Tên</label><input id="mName"/><label>Email</label><input id="mEmail"/><label>Mật khẩu</label><input id="mPass" value="user"/><div style="margin-top:8px"><button id="mSave" class="btn primary">Lưu</button> <button id="mCancel" class="btn">Huỷ</button></div>`);
+  $('#mSave').addEventListener('click', ()=>{ const n=$('#mName').value.trim(), e=$('#mEmail').value.trim(), p=$('#mPass').value; if(!n||!e){alert('Nhập tên và email');return} db.users.push({id:uid(),name:n,email:e,pass:p,locked:false}); DB.save(db); closeModal(); renderUsers(); });
+  $('#mCancel').addEventListener('click', closeModal);
+});
+
+/* Types */
+function renderTypes(){
+  const tbody=$('#tblTypes tbody'); tbody.innerHTML='';
+  db.types.forEach((t,i)=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${t.name}</td><td><button class="btn" data-id="${t.id}" data-act="edit">Sửa</button> <button class="btn danger" data-id="${t.id}" data-act="del">Xoá</button></td>`; tbody.appendChild(tr); });
+  tbody.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{
+    const id=Number(b.dataset.id), act=b.dataset.act;
+    if(act==='edit'){ const t=db.types.find(x=>x.id===id); showModal(`<h3>Sửa loại</h3><label>Tên</label><input id='typeEdit' value='${t.name}'/><div style='margin-top:8px'><button id='saveType' class='btn primary'>Lưu</button> <button id='cType' class='btn'>Huỷ</button></div>`); $('#saveType').addEventListener('click', ()=>{ t.name=$('#typeEdit').value; DB.save(db); closeModal(); renderTypes(); renderProducts(); }); $('#cType').addEventListener('click', closeModal); }
+    else if(act==='del'){ if(!confirm('Xác nhận xoá loại?')) return; db.types=db.types.filter(x=>x.id!==id); DB.save(db); renderTypes(); renderProducts(); }
+  }));
+}
+$('#btnAddType')?.addEventListener('click', ()=>{ const name = $('#typeName').value.trim(); if(!name){alert('Nhập tên loại');return} db.types.push({id:uid(),name}); DB.save(db); $('#typeName').value=''; renderTypes(); renderProducts(); });
+
+/* Products */
+function calcSell(p){ const margin = p.margin!=null ? p.margin : (db.settings.defaultMargin||0); return Math.round((p.cost||0)*(1 + (margin||0)/100)); }
+function renderProducts(){
+  const tbody=$('#tblProducts tbody'); tbody.innerHTML='';
+  const filterType=$('#filterType'); filterType.innerHTML='<option value="">-- Lọc theo loại --</option>'; db.types.forEach(t=>filterType.innerHTML += `<option value="${t.id}">${t.name}</option>`);
+  const list = db.products.slice();
+  list.forEach((p,i)=>{
+    const typeName = (db.types.find(t=>t.id===p.type)||{}).name || '—';
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${i+1}</td><td>${p.code}</td><td style="color:#dff7ff">${p.name}</td><td>${typeName}</td><td>${p.cost}</td><td>${calcSell(p)}</td><td>${p.stock}</td><td>${p.hidden? 'Yes' : 'No'}</td><td><button class='btn' data-id='${p.id}' data-act='edit'>Sửa</button> <button class='btn warn' data-id='${p.id}' data-act='hide'>Ẩn/Hiện</button> <button class='btn danger' data-id='${p.id}' data-act='del'>Xoá</button></td>`;
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{
+    const id=Number(b.dataset.id), act=b.dataset.act, p=db.products.find(x=>x.id===id);
+    if(!p) return;
+    if(act==='edit') openProductModal(p);
+    if(act==='hide'){ p.hidden = !p.hidden; DB.save(db); renderProducts(); }
+    if(act==='del'){ if(!confirm('Xác nhận xoá sản phẩm?')) return; db.products=db.products.filter(x=>x.id!==id); DB.save(db); renderProducts(); }
+  }));
+
+  $('#filterType').onchange = ()=>{
+    const v = Number($('#filterType').value) || null;
+    if(!v){ renderProducts(); return; }
+    const tbody=$('#tblProducts tbody'); tbody.innerHTML='';
+    db.products.filter(p=>p.type===v).forEach((p,i)=>{
+      const tn=(db.types.find(t=>t.id===p.type)||{}).name||'—';
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${i+1}</td><td>${p.code}</td><td>${p.name}</td><td>${tn}</td><td>${p.stock}</td><td>${calcSell(p)}</td><td>${p.hidden? 'Yes' : 'No'}</td><td><button class='btn' data-id='${p.id}' data-act='edit'>Sửa</button></td>`;
+      tbody.appendChild(tr);
+    });
+  };
+  // search
+  $('#searchProd').oninput = (e)=>{
+    const q = e.target.value.toLowerCase();
+    const tbody=$('#tblProducts tbody'); tbody.innerHTML='';
+    db.products.filter(p=> (p.name+p.code).toLowerCase().includes(q) ).forEach((p,i)=>{
+      const tn=(db.types.find(t=>t.id===p.type)||{}).name||'—';
+      const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${p.code}</td><td>${p.name}</td><td>${tn}</td><td>${p.cost}</td><td>${calcSell(p)}</td><td>${p.stock}</td><td>${p.hidden? 'Yes' : 'No'}</td><td><button class='btn' data-id='${p.id}' data-act='edit'>Sửa</button></td>`; tbody.appendChild(tr);
+    });
+  };
+}
+$('#btnAddProd').addEventListener('click', ()=> openProductModal());
+
+function openProductModal(p=null){
+  const isNew = !p;
+  const typesOptions = db.types.map(t=>`<option value='${t.id}' ${p && p.type===t.id ? 'selected': ''}>${t.name}</option>`).join('');
+  showModal(`<h3>${isNew? 'Thêm' : 'Sửa'} xe đạp</h3>
+    <label>Mã</label><input id='mCode' value='${p?p.code:''}'/>
+    <label>Tên</label><input id='mName' value='${p?p.name:''}'/>
+    <label>Loại</label><select id='mType'>${typesOptions}</select>
+    <label>Giá vốn</label><input id='mCost' type='number' value='${p?p.cost:0}'/>
+    <label>Tồn</label><input id='mStock' type='number' value='${p?p.stock:0}'/>
+    <label>Mô tả</label><textarea id='mDesc'>${p?p.desc:''}</textarea>
+    <label>% lợi nhuận (để override, để trống dùng % loại)</label><input id='mMargin' type='number' value='${p && p.margin!=null? p.margin:''}'/>
+    <div style="margin-top:8px"><button id='mSave' class='btn primary'>Lưu</button> <button id='mCancel' class='btn'>Huỷ</button></div>`);
+  $('#mSave').addEventListener('click', ()=>{
+    const code=$('#mCode').value.trim(), name=$('#mName').value.trim(), type=Number($('#mType').value), cost=Number($('#mCost').value)||0, stock=Number($('#mStock').value)||0, desc=$('#mDesc').value, margin = $('#mMargin').value.trim();
+    if(!code||!name){ alert('Nhập mã và tên'); return; }
+    if(isNew){ db.products.push({id:uid(),code,name,type,cost,stock,desc,image:'',hidden:false,margin: margin===''? null: Number(margin)}); }
+    else { Object.assign(p,{code,name,type,cost,stock,desc,margin: margin===''? null: Number(margin)}); }
+    DB.save(db); closeModal(); renderProducts(); renderStock(); renderPricing();
+  });
+  $('#mCancel').addEventListener('click', closeModal);
+}
+
+/* Imports (phiếu nhập) */
+function renderImports(){
+  const tbody=$('#tblImports tbody'); tbody.innerHTML='';
+  db.imports.forEach((im,i)=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${im.code||('IM-'+im.id)}</td><td>${im.date}</td><td>${im.items.length}</td><td>${im.completed? 'Hoàn thành':'Mới'}</td><td><button class="btn" data-id="${im.id}" data-act="view">Xem</button> <button class="btn" data-id="${im.id}" data-act="edit">Sửa</button> <button class="btn danger" data-id="${im.id}" data-act="del">Xoá</button></td>`; tbody.appendChild(tr); });
+  tbody.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{
+    const id=Number(b.dataset.id), act=b.dataset.act, im=db.imports.find(x=>x.id===id);
+    if(!im) return;
+    if(act==='view') showImportView(im);
+    if(act==='edit'){ if(im.completed){ alert('Phiếu đã hoàn thành, không thể sửa'); return } openImportModal(im); }
+    if(act==='del'){ if(!confirm('Xác nhận xoá?')) return; db.imports=db.imports.filter(x=>x.id!==id); DB.save(db); renderImports(); renderStock(); }
+  }));
+}
+$('#btnNewImport').addEventListener('click', ()=> openImportModal());
+
+function openImportModal(im=null){
+  const isNew = !im;
+  const prodOptions = db.products.map(p=>`<option value='${p.id}'>${p.code} - ${p.name}</option>`).join('');
+  showModal(`<h3>${isNew? 'Thêm' : 'Sửa'} phiếu nhập</h3>
+    <label>Ngày</label><input id='impDate' type='date' value='${im?im.date:new Date().toISOString().slice(0,10)}' />
+    <label>Danh sách sản phẩm</label><div id='impList'></div>
+    <div style='margin-top:8px'><select id='impAddSel'>${prodOptions}</select> <input id='impQty' type='number' placeholder='Số lượng'/> <input id='impCost' type='number' placeholder='Giá nhập (từng xe)'/> <button id='impAdd' class='btn'>Thêm</button></div>
+    <div style='margin-top:12px'><button id='impSave' class='btn primary'>Lưu</button> <button id='impComplete' class='btn'>Hoàn thành</button> <button id='impCancel' class='btn'>Huỷ</button></div>`);
+  const local = im ? JSON.parse(JSON.stringify(im)) : {id:uid(),date:new Date().toISOString().slice(0,10),items:[],completed:false,code:'IM-'+Math.floor(Math.random()*9000+1000)};
+  function renderList(){ $('#impList').innerHTML = local.items.map((it,idx)=>`<div style='padding:6px;border:1px solid rgba(255,255,255,0.03);margin-top:6px;border-radius:8px'>${idx+1}. ${(db.products.find(p=>p.id===it.productId)||{}).name} — SL: ${it.qty} — Giá nhập: ${it.cost} <button data-idx='${idx}' class='btn danger delItem'>Xoá</button></div>`).join(''); $$('.delItem').forEach(b=>b.addEventListener('click',()=>{ local.items.splice(Number(b.dataset.idx),1); renderList(); })); }
+  renderList();
+  $('#impAdd').addEventListener('click', ()=>{ const pid=Number($('#impAddSel').value); const q=Number($('#impQty').value)||0; const c=Number($('#impCost').value)||0; if(!pid||q<=0){alert('Chọn sản phẩm & số lượng');return} local.items.push({productId:pid,qty:q,cost:c}); renderList(); });
+  $('#impSave').addEventListener('click', ()=>{ local.date = $('#impDate').value; if(isNew){ db.imports.push(local); } else { Object.assign(im,local); } DB.save(db); closeModal(); renderImports(); renderStock(); renderPricing(); });
+  $('#impComplete').addEventListener('click', ()=>{ if(local.items.length===0){alert('Phiếu rỗng');return} // apply stock and update cost
+    local.completed=true;
+    local.items.forEach(it=>{ const p=db.products.find(x=>x.id===it.productId); if(p){ p.stock = (p.stock||0) + it.qty; p.cost = it.cost; } });
+    if(isNew) db.imports.push(local);
+    DB.save(db); closeModal(); renderImports(); renderStock(); renderPricing();
+  });
+  $('#impCancel').addEventListener('click', closeModal);
+}
+function showImportView(im){ showModal(`<h3>Phiếu nhập ${im.code||''}</h3><div>Ngày: ${im.date}</div><div>Trạng thái: ${im.completed? 'Hoàn thành':'Mới'}</div><div style='margin-top:8px'>${im.items.map(it=>{const p=db.products.find(x=>x.id===it.productId); return `<div>${p? p.name : '—'} — SL: ${it.qty} — Giá: ${it.cost}</div>`}).join('')}</div><div style='margin-top:8px'><button id='c' class='btn'>Đóng</button></div>`); $('#c').addEventListener('click', closeModal); }
+
+/* Pricing: set margin by type or by product override */
+function renderPricing(){
+  const tbody=$('#tblPricing tbody'); tbody.innerHTML='';
+  db.products.forEach((p,i)=>{ const margin = p.margin!=null ? p.margin : (db.settings.defaultMargin||0); const sell = calcSell(p); const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${p.name}</td><td>${p.cost}</td><td>${margin}</td><td>${sell}</td><td><button class="btn" data-id="${p.id}" data-act="edit">Sửa %</button></td>`; tbody.appendChild(tr); });
+  tbody.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{ const id=Number(b.dataset.id), p=db.products.find(x=>x.id===id); showModal(`<h3>Chỉnh % lợi nhuận cho ${p.name}</h3><label>% LN</label><input id='pm' type='number' value='${p.margin!=null? p.margin: ''}'/><div style='margin-top:8px'><button id='savePM' class='btn primary'>Lưu</button> <button id='cpm' class='btn'>Huỷ</button></div>`); $('#savePM').addEventListener('click', ()=>{ const m = $('#pm').value.trim(); p.margin = m===''? null: Number(m); DB.save(db); closeModal(); renderPricing(); renderProducts(); }); $('#cpm').addEventListener('click', closeModal); }));
+  const sel=$('#priceTypeFilter'); sel.innerHTML = '<option value="">-- Chọn loại để chỉnh % --</option>'; db.types.forEach(t=>sel.innerHTML += `<option value='${t.id}'>${t.name}</option>`);
+  $('#btnSetMargin').onclick = ()=>{ const typeId = Number($('#priceTypeFilter').value); const margin = Number($('#priceMargin').value); if(!typeId || isNaN(margin)){ alert('Chọn loại & nhập %'); return } db.products.filter(p=>p.type===typeId).forEach(p=>p.margin = margin); DB.save(db); renderPricing(); renderProducts(); };
+}
+
+/* Orders (subview under products) */
+function renderOrders_sub(){
+  const tbody=$('#tblOrders_sub tbody'); tbody.innerHTML='';
+  db.orders.forEach((o,i)=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${o.code}</td><td>${o.date}</td><td>${o.total}</td><td>${o.status}</td><td><button class="btn" data-id="${o.id}" data-act="view">Xem</button> <button class="btn" data-id="${o.id}" data-act="update">Cập nhật</button></td>`; tbody.appendChild(tr); });
+  tbody.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{
+    const id=Number(b.dataset.id), act=b.dataset.act, o=db.orders.find(x=>x.id===id);
+    if(!o) return;
+    if(act==='view'){ showModal(`<h3>Đơn ${o.code}</h3><div>Ngày: ${o.date}</div><div>Trạng thái: ${o.status}</div><div style='margin-top:8px'>${o.items.map(it=>{const p=db.products.find(x=>x.id===it.productId); return `<div>${p? p.name: '—'} — SL:${it.qty} — Giá:${it.price}</div>`}).join('')}</div><div style='margin-top:8px'><button id='c' class='btn'>Đóng</button></div>`); $('#c').addEventListener('click', closeModal); }
+    else if(act==='update'){ showModal(`<h3>Cập nhật trạng thái</h3><select id='st'><option value='new'>Mới đặt</option><option value='processing'>Đã xử lý</option><option value='shipped'>Đã giao</option><option value='cancel'>Huỷ</option></select><div style='margin-top:8px'><button id='s' class='btn primary'>Lưu</button> <button id='x' class='btn'>Huỷ</button></div>`); $('#s').addEventListener('click', ()=>{ const prev=o.status; o.status = $('#st').value; // if move to processing or shipped -> reduce stock accordingly (simulate)
+        if(prev !== 'processing' && o.status === 'processing'){ // consume stock on processing
+          o.items.forEach(it=>{ const p=db.products.find(x=>x.id===it.productId); if(p){ p.stock = Math.max(0,(p.stock||0) - it.qty); } });
+        }
+        DB.save(db); closeModal(); renderOrders_sub(); renderStock(); renderProducts(); renderDashboard();
+    }); $('#x').addEventListener('click', closeModal); }
+  }));
+  $('#btnFilterOrders_sub').onclick = ()=>{ const from=$('#orderFrom_sub').value; const to=$('#orderTo_sub').value; const st=$('#orderStatus_sub').value; let list=db.orders.slice(); if(from) list=list.filter(o=>o.date>=from); if(to) list=list.filter(o=>o.date<=to); if(st) list=list.filter(o=>o.status===st); const tbody=$('#tblOrders_sub tbody'); tbody.innerHTML=''; list.forEach((o,i)=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${o.code}</td><td>${o.date}</td><td>${o.total}</td><td>${o.status}</td><td><button class="btn" data-id="${o.id}" data-act="view">Xem</button></td>`; tbody.appendChild(tr); }); tbody.querySelectorAll('button').forEach(btn=>btn.addEventListener('click', ()=>{ const id=Number(btn.dataset.id); const o = db.orders.find(x=>x.id===id); if(o) showModal(`<h3>Đơn ${o.code}</h3><div>Ngày: ${o.date}</div><div>Trạng thái: ${o.status}</div><div style='margin-top:8px'>${o.items.map(it=>{const p=db.products.find(x=>x.id===it.productId); return `<div>${p? p.name:'—'} — SL:${it.qty} — Giá:${it.price}</div>`}).join('')}</div><div style='margin-top:8px'><button id='c' class='btn'>Đóng</button></div>`); $('#c').addEventListener('click', closeModal); })); };
+}
+
+/* Stock */
+function renderStock(){
+  const tbody=$('#tblStock tbody'); tbody.innerHTML='';
+  db.products.forEach((p,i)=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${p.name}</td><td>${calcTotalIn(p.id)}</td><td>${calcTotalOut(p.id)}</td><td>${p.stock}</td>`; tbody.appendChild(tr); });
+  const sel=$('#stockProductFilter'); sel.innerHTML='<option value="">-- Chọn xe đạp --</option>'; db.products.forEach(p=>sel.innerHTML+=`<option value='${p.id}'>${p.name}</option>`);
+  $('#btnLowStock').onclick = ()=>{ const low = db.settings.lowThreshold || 3; const list = db.products.filter(p=>p.stock<=low); if(list.length===0){ alert('Không có xe sắp hết hàng'); return } alert('Xe sắp hết:\\n'+list.map(p=>p.name+' (tồn: '+p.stock+')').join('\\n')); };
+  $('#btnCheckStock').onclick = ()=>{ const pid = Number($('#stockProductFilter').value); const from=$('#stockFrom').value; const to=$('#stockTo').value; if(!pid){ alert('Chọn xe đạp'); return } const p=db.products.find(x=>x.id===pid); showModal(`<h3>Tồn kho: ${p.name}</h3><div>Nhập tổng (khoảng): ${calcTotalIn(pid,from,to)}</div><div>Xuất tổng (khoảng): ${calcTotalOut(pid,from,to)}</div><div>Tồn hiện tại: ${p.stock}</div><div style='margin-top:8px'><button id='c' class='btn'>Đóng</button></div>`); $('#c').addEventListener('click', closeModal); };
+}
+
+function calcTotalIn(pid,from,to){
+  // sum of imports for pid respecting range
+  let sum=0;
+  db.imports.forEach(im=>{ if(from && im.date < from) return; if(to && im.date > to) return; im.items.forEach(it=>{ if(it.productId===pid) sum += it.qty; }) });
+  return sum;
+}
+function calcTotalOut(pid,from,to){
+  // sum of orders (that were created) for pid respecting range
+  let sum=0;
+  db.orders.forEach(o=>{ if(from && o.date < from) return; if(to && o.date > to) return; o.items.forEach(it=>{ if(it.productId===pid) sum += it.qty; }) });
+  return sum;
+}
+
+/* Settings */
+$('#btnSaveSettings').onclick = ()=>{ db.settings.lowThreshold = Number($('#lowThreshold').value)||3; DB.save(db); alert('Lưu thành công'); };
+
+/* Modal helpers */
+function showModal(html){ $('#modalCard').innerHTML = html; $('#modal').style.display='flex'; }
+function closeModal(){ $('#modal').style.display='none'; $('#modalCard').innerHTML=''; }
+
+/* Init */
+initAuth();
+renderAll();
+
+// If user already logged (useful in dev), auto show
+const logged = localStorage.getItem('loggedInUser');
+if(logged){
+  const found = db.users.find(u=>u.name===logged || u.email===logged);
+  if(found){ state.user = found; showApp(); }
+}
+</script>
+</body>
+</html>
