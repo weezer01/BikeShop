@@ -28,13 +28,12 @@
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
   <style>
-/* Ẩn hoàn toàn các tab không cần thiết để xoá khoảng trắng phía dưới đơn hàng */
-#wishlist,
-#wallet,
-#reviews,
-#addresses,
-#settings {
-  display: none !important;
+/*Ẩn hoàn toàn các tab không cần thiết để xoá khoảng trắng phía dưới đơn hàng*/
+.tab-pane {
+  display: none;
+}
+.tab-pane.active.show {
+  display: block;
 }
 
 /* Giảm khoảng trống dưới phần nội dung tài khoản */
@@ -921,7 +920,7 @@
                     
 
                    <!-- Thêm thư viện SweetAlert2 (chỉ cần 1 lần, có thể đặt trong <head> hoặc trước </body>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!- Đơn hàng 3 -->
 <div class="order-card" data-aos="fade-up" data-aos-delay="300">
