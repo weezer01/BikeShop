@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Tài khoản - Trai đẹp bán xe đẹp</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="xe dap, xe 2 banh, xe hai banh, phuong tien">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/drift-zoom/drift-basic.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+  <style>
+/* Ẩn hoàn toàn các tab không cần thiết để xoá khoảng trắng phía dưới đơn hàng */
+#wishlist,
+#wallet,
+#reviews,
+#addresses,
+#settings {
+  display: none !important;
+}
+
+/* Giảm khoảng trống dưới phần nội dung tài khoản */
+.tab-content {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+</style>
+
+
+  <!-- =======================================================
+  * Template Name: Tra đẹp bán xe đẹp
+  * Template URL: https://bootstrapmade.com/niceshop-bootstrap-ecommerce-template/
+  * Updated: Aug 26 2025 with Bootstrap v5.3.7
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+
+
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header sticky-top">
+    <!-- Top Bar -->
+    <div class="top-bar py-2">
+      <div class="container-fluid container-xl">
+        <div class="row align-items-center">
+          <div class="col-lg-4 d-none d-lg-flex">
+            <div class="top-bar-item">
+              <i class="bi bi-telephone-fill me-2"></i>
+              <span>Liên hệ: </span>
+              <a href="tel:+1234567890">+84 123456789</a>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-12 text-center">
+            <div class="announcement-slider swiper init-swiper">
+              <script type="application/json" class="swiper-config">
+                {
+                  "loop": true,
+                  "speed": 600,
+                  "autoplay": {
+                    "delay": 5000
+                  },
+                  "slidesPerView": 1,
+                  "direction": "vertical",
+                  "effect": "slide"
+                }
+              </script>
+              <div class="swiper-wrapper">
+                <div class="swiper-slide">🚚 Miễn phí vận chuyển với hóa đơn trên 1.000.000 VND</div>
+                <div class="swiper-slide">💰 Miễn phí đổi hàng trong 30 ngày</div>
+                <div class="swiper-slide">🎁 Giảm 20% cho đơn hàng đầu tiên</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 d-none d-lg-block">
+            <div class="d-flex justify-content-end">
+              <div class="top-bar-item dropdown me-3">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                  <i class="bi bi-translate me-2"></i>VN
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#"><i class="bi bi-check2 me-2 selected-icon"></i>English</a></li>
+                  <li><a class="dropdown-item" href="#">English</a></li>
+                  <li><a class="dropdown-item" href="#">Français</a></li>
+                  <li><a class="dropdown-item" href="#">Deutsch</a></li>
+                </ul>
+              </div>
+              <div class="top-bar-item dropdown">
+                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                  <i class="bi bi-currency-dollar me-2"></i>VND
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#"><i class="bi bi-check2 me-2 selected-icon"></i>USD</a></li>
+                  <li><a class="dropdown-item" href="#">USD</a></li>
+                  <li><a class="dropdown-item" href="#">URP</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Header -->
+    <div class="main-header">
+      <div class="container-fluid container-xl">
+        <div class="d-flex py-3 align-items-center justify-content-between">
+
+          <!-- Logo -->
+          <a href="index.html" class="logo d-flex align-items-center">
+            <!-- Uncomment the line below if you also wish to use an image logo -->
+            <!-- <img src="assets/img/logo.webp" alt=""> -->
+            <h1 class="sitename">Trai đẹp bán xe đẹp</h1>
+          </a>
+
+          <!-- Search -->
+          <form class="search-form desktop-search-form">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+              <button class="btn" type="submit">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </form>
+
+          <!-- Actions -->
+          <div class="header-actions d-flex align-items-center justify-content-end">
+
+            <!-- Mobile Search Toggle -->
+            <button class="header-action-btn mobile-search-toggle d-xl-none" type="button" data-bs-toggle="collapse" data-bs-target="#mobileSearch" aria-expanded="false" aria-controls="mobileSearch">
+              <i class="bi bi-search"></i>
+            </button>
+
+            <!-- Account -->
+            <div class="dropdown account-dropdown">
+              <button class="header-action-btn" data-bs-toggle="dropdown">
+                <i class="bi bi-person"></i>
+              </button>
+              <div class="dropdown-menu">
+                <div class="dropdown-header">
+                  <h6>Chào mừng đến với <span class="sitename">trai đẹp bán xe đẹp</span></h6>
+                  <p class="mb-0">Tài khoản &amp; Quản lí đơn hàng</p>
+                </div>
+                <div class="dropdown-body">
+                  <a class="dropdown-item d-flex align-items-center" href="account.html">
+                    <i class="bi bi-person-circle me-2"></i>
+                    <span>Tài khoản của tôi</span>
+                  </a>
+                  <a class="dropdown-item d-flex align-items-center" href="account.html">
+                    <i class="bi bi-bag-check me-2"></i>
+                    <span>Đơn hàng của tôi</span>
+                  </a>
+                  <a class="dropdown-item d-flex align-items-center" href="account.html">
+                    <i class="bi bi-heart me-2"></i>
+                    <span>Yêu thích</span>
+                  </a>
+                  <a class="dropdown-item d-flex align-items-center" href="account.html">
+                    <i class="bi bi-gear me-2"></i>
+                    <span>Cài đặt</span>
+                  </a>
+                </div>
+                <div class="dropdown-footer" id="auth-buttons">
+  <a href="login.html" class="btn btn-primary w-100 mb-2">Đăng nhập</a>
+  <a href="register.html" class="btn btn-outline-primary w-100">Đăng ký</a>
+</div>
+
+<div class="dropdown-footer d-none" id="logout-section">
+  <button onclick="logout()" class="btn btn-danger w-100">Đăng xuất</button>
+</div>
+
+              </div>
+            </div>
+
+            <!-- Wishlist -->
+            <a href="account.html" class="header-action-btn d-none d-md-block">
+              <i class="bi bi-heart"></i>
+              <span class="badge">0</span>
+            </a>
+
+            <!-- Cart -->
+            <a href="cart.html" class="header-action-btn">
+              <i class="bi bi-cart3"></i>
+              <span class="badge">0</span>
+            </a>
+
+            <!-- Mobile Navigation Toggle -->
+            <i class="mobile-nav-toggle d-xl-none bi bi-list me-0"></i>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="header-nav">
+      <div class="container-fluid container-xl position-relative">
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="index.html" class="active">Trang chủ</a></li>
+            <li><a href="about.html">Giới thiệu</a></li>
+            <li><a href="category.html">Bộ sưu tập</a></li>
+            <li><a href="product-details.html">Sản phẩm chi tiết</a></li>
+            <li><a href="cart.html">Giỏ hàng</a></li>
+            <li><a href="checkout.html">Kiểm tra đơn hàng</a></li>
+            <li class="dropdown"><a href="category.html"><span>Sản phẩm</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <ul>
+                <li class="dropdown"><a href="category.html"><span>Xe đạp</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                  <ul>
+                    <li><a href="category.html">Xe đạp địa hình</a></li>
+                    <li><a href="category.html">Xe đạp đua</a></li>
+                    <li><a href="category.html">Xe đạp đường phố</a></li>
+                    <li><a href="category.html">Xe đạp trẻ em</a></li>
+                    <li><a href="category.html">Xe đạp fixed</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+
+            <!-- Products Mega Menu 1 -->
+            <li class="products-megamenu-1"><a href="#"><span>Menu</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+
+
+              <!-- Products Mega Menu 1 Desktop View -->
+              <div class="desktop-megamenu">
+
+                <div class="megamenu-tabs">
+                  <ul class="nav nav-tabs" id="productMegaMenuTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link active" id="featured-tab" data-bs-toggle="tab" data-bs-target="#featured-content-1862" type="button" aria-selected="true" role="tab">Hàng nổi bật</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="sale-tab" data-bs-toggle="tab" data-bs-target="#sale-content-1862" type="button" aria-selected="false" tabindex="-1" role="tab">Hàng đang khuyến mãi</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="category-tab" data-bs-toggle="tab" data-bs-target="#category-content-1862" type="button" aria-selected="false" tabindex="-1" role="tab">Bộ sưu tập</button>
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- Tabs Content -->
+                <div class="megamenu-content tab-content">
+<!-- Bộ lọc sản phẩm (Tìm kiếm nâng cao) -->
+<section id="filter-section" class="py-3">
+  <div class="container">
+    <h4 class="mb-3">Tìm kiếm nâng cao</h4>
+    <div class="row g-3 align-items-end">
+      <div class="col-md-4">
+        <label for="searchName" class="form-label">Tên sản phẩm</label>
+        <input type="text" id="searchName" class="form-control" placeholder="Nhập tên sản phẩm...">
+      </div>
+      <div class="col-md-3">
+        <label for="categoryFilter" class="form-label">Phân loại</label>
+        <select id="categoryFilter" class="form-select">
+          <option value="">Tất cả</option>
+          <option value="xedap">Xe đạp</option>
+          <option value="xedien">Xe điện</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Khoảng giá (VND)</label>
+        <div class="d-flex">
+          <input type="number" id="minPrice" class="form-control me-2" placeholder="Từ">
+          <input type="number" id="maxPrice" class="form-control" placeholder="Đến">
+        </div>
+      </div>
+      <div class="col-md-2 text-end">
+        <button id="btnFilter" class="btn btn-primary w-100">Lọc</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+                  <!-- Featured Tab -->
+                  <div class="tab-pane fade show active" id="featured-content-1862" role="tabpanel" aria-labelledby="featured-tab">
+                    <div class="product-grid">
+                      <div class="product-card">
+                        <div class="product-image">
+                          <img src="assets/img/product/qq.jpg" alt="Featured Product" loading="lazy">
+                        </div>
+                        <div class="product-info">
+                          <h5>Xe Đạp Đường Phố Fixed Gear VINBIKE Megatron – Bánh 700C</h5>
+                          <p class="price">3.990.000 VND</p>
+                          <a href="product-details.html" class="btn-view">Xem sản phẩm</a>
+                        </div>
+                      </div>
+                      <div class="product-card">
+                        <div class="product-image">
+                          <img src="assets/img/product/image.png" alt="Featured Product" loading="lazy">
+                        </div>
+                        <div class="product-info">
+                          <h5>Xe Đạp Điện Gấp E-BIKE ADO A20 LITE - PHANH ĐĨA, BÁNH 20 INCHES</h5>
+                          <p class="price">17.990.000 VND</p>
+                          <a href="product-details.html" class="btn-view">Xem sản phẩm</a>
+                        </div>
+                      </div>
+                      <div class="product-card">
+                        <div class="product-image">
+                          <img src="assets/img/product/ee.jpg" alt="Featured Product" loading="lazy">
+                        </div>
+                        <div class="product-info">
+                          <h5>Xe Đạp Đua Đường Trường Road JAVA Siluro6 - Top - 105 - Phanh Đĩa, Bánh 700C</h5>
+                          <p class="price">20.490.000 VND</p>
+                          <a href="product-details.html" class="btn-view">Xem sản phẩm</a>
+                        </div>
+                      </div>
+                      <div class="product-card">
+                        <div class="product-image">
+                          <img src="assets/img/product/rr.jpg" alt="Featured Product" loading="lazy">
+                        </div>
+                        <div class="product-info">
+                          <h5>Khung Sườn Xe Đạp GIANT Propel Advanced SL Frame And Fork (Team Color)</h5>
+                          <p class="price">68.000.000 VND</p>
+                          <a href="product-details.html" class="btn-view">Xem sản phẩm</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- New Arrivals Tab -->
+                  
+
+                  <!-- Sale Tab -->
+                  <div class="tab-pane fade" id="sale-content-1862" role="tabpanel" aria-labelledby="sale-tab">
+                    <div class="product-grid">
+                      <div class="product-card">
+                        <div class="product-image">
+                          <img src="assets/img/product/5.jpg" alt="Sale Product" loading="lazy">
+                          <span class="badge-sale">-10%</span>
+                        </div>
+                        <div class="product-info">
+                          <h5>Xe Đạp Đường Phố Touring RAPTOR Lily 4 - Bánh 26 Inch</h5>
+                          <p class="price"><span class="original-price">2.890.000 VND</span>2.601.000 VND</p>
+                          <a href="product-details.html" class="btn-view">Xem sản phẩm</a>
+                        </div>
+                      </div>
+                      <div class="product-card">
+                        <div class="product-image">
+                          <img src="assets/img/product/6.jpg" alt="Sale Product" loading="lazy">
+                          <span class="badge-sale">-25%</span>
+                        </div>
+                        <div class="product-info">
+                          <h5>Xe Đạp Đường Phố Touring LIV Alight 4 Disc - Phanh Đĩa, Bánh 700C - 2025</h5>
+                          <p class="price"><span class="original-price">10.790.000</span>8.632.000 VND</p>
+                          <a href="product-details.html" class="btn-view">Xem sản phẩm</a>
+                        </div>
+                      </div>
+                      <div class="product-card">
+                        <div class="product-image">
+                          <img src="assets/img/product/22.jpg" alt="Sale Product" loading="lazy">
+                          <span class="badge-sale">-24%</span>
+                        </div>
+                        <div class="product-info">
+                          <h5>Xe Đạp Đường Phố Touring JAVA Wahoo City - Phanh Đĩa, Bánh 700C</h5>
+                          <p class="price"><span class="original-price">1.130.000 VND</span>849.000 VND</p>
+                          <a href="product-details.html" class="btn-view">Xem sản phẩm</a>
+                        </div>
+                      </div>
+                      <div class="product-card">
+                        <div class="product-image">
+                          <img src="assets/img/product/16.jpg" alt="Sale Product" loading="lazy">
+                          <span class="badge-sale">-23%</span>
+                        </div>
+                        <div class="product-info">
+                          <h5>Xe Đạp Đường Phố Touring RAPTOR Feliz 2 - Phanh Đĩa, Bánh 700C/h5>
+                          <p class="price"><span class="original-price">13.000.000 VND</span>8.000.000 VND</p>
+                          <a href="product-details.html" class="btn-view">Xem sản phẩm</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Categories Tab -->
+                  <div class="tab-pane fade" id="category-content-1862" role="tabpanel" aria-labelledby="category-tab">
+                    <div class="category-grid">
+                      <div class="category-column">
+                        <h4>Xe đạp</h4>
+                        <ul>
+                          <li><a href="category.html">Xe đạp đường phố</a></li>
+                          <li><a href="category.html">Xe đạp địa hình</a></li>
+                          <li><a href="category.html">Xe đạp nữ</a></li>
+                          <li><a href="category.html">Xe đạp fixed gear</a></li>
+                          <li><a href="category.html">Xe đạp trẻ em</a></li>
+                        </ul>
+                      </div>
+                      <div class="category-column">
+                        <h4>Xe điện</h4>
+                        <ul>
+                          <li><a href="category.html">Xe đạp điện</a></li>
+                          <li><a href="category.html">Xe máy điện</a></li>
+                          <li><a href="category.html">Xe trợ lực</a></li>
+                        </ul>
+                      </div>
+                      <div class="category-column">
+                        <ul>
+                        </ul>
+                      </div>
+                      <div class="category-column">
+                        <ul>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div><!-- End Products Mega Menu 1 Desktop View -->
+
+            </li><!-- End Products Mega Menu 1 -->
+            <!-- Products Mega Menu 2 -->
+            <li class="products-megamenu-2"><a href="#"><span>Menu xe đạp</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+
+              <!-- Products Mega Menu 2 Mobile View -->
+<!-- End Products Mega Menu 2 Mobile View -->
+
+              <!-- Products Mega Menu 2 Desktop View -->
+              <div class="desktop-megamenu">
+
+                <div class="megamenu-tabs">
+                  <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                    </li>
+                    <li class="nav-item" role="presentation">
+                    </li>
+                    <li class="nav-item" role="presentation">
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- Tabs Content -->
+                <div class="megamenu-content tab-content">
+
+                  <!-- Xe đạp Tab -->
+                  <div class="tab-pane fade show active" id="womens-content-1883" role="tabpanel" aria-labelledby="womens-tab">
+                    <div class="category-layout">
+                      <div class="categories-section">
+                        <div class="category-headers">
+                        </div>
+
+                        <div class="category-links">
+                          <div class="link-row">
+                            <a href="category.html">Xe đạp đường phố</a>
+                            <a href="category.html">Xe đạp fixed gear</a>
+                            <a href="category.html">Xe đạp địa hình</a>
+                            <a href="category.html">Xe đạp nữ</a>
+                            <a href="category.html">Xe đạp trẻ em</a>
+                          </div>
+                          <div class="link-row">
+                          </div>
+                          <div class="link-row">
+                            <a href="#"></a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="featured-section">
+                        <div class="featured-image">
+                          <img src="assets/img/product/10.jpg" alt="Women's Heels Collection">
+                          <div class="featured-content">
+                            <h3>Bộ<br>sưu tập<br>xe đạp</h3>
+                            <a href="checkout.html" class="btn-shop">Mua ngay</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Phụ kiện cho người Tab -->
+                  <div class="tab-pane fade" id="mens-content-1883" role="tabpanel" aria-labelledby="mens-tab">
+                    <div class="category-layout">
+                      <div class="categories-section">
+                        <div class="category-headers">
+                        </div>
+
+                        <div class="category-links">
+                          <div class="link-row">
+                            <a href="aoquan.html">Áo, Quần</a>
+                            <a href="balotui.html">Balo - túi</a>
+                            <a href="gangtay.html">Găng tay</a>
+                            <a href="#">Giày</a>
+                          </div>
+                          <div class="link-row">
+                            <a href="matkinh.html">Mắt kính</a>
+                            <a href="vo.html">Vớ</a>
+                          </div>
+                          <div class="link-row">
+                            <a href="#"></a>
+                          </div>
+                          <div class="link-row">
+                          </div>
+                          <div class="link-row">
+                            <a href="#"></a>
+                          </div>
+                          <div class="link-row">
+                            <a href="#"></a>
+                          </div>
+                          <div class="link-row">
+                            <a href="#"></a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="featured-section">
+                        <div class="featured-image">
+                          <img src="assets/img/product/11.jpg" alt="Men's Footwear Collection">
+                          <div class="featured-content">
+                            <h3>Bộ sưu tập <br>xe đạp điện<br></h3>
+                            <a href="muahang.html" class="btn-shop">Mua ngay</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Phụ kiện cho xe Tab -->
+                  <div class="tab-pane fade" id="kids-content-1883" role="tabpanel" aria-labelledby="kids-tab">
+                    <div class="category-layout">
+                      <div class="categories-section">
+                        <div class="category-headers">
+                        </div>
+
+                        <div class="category-links">
+                          <div class="link-row">
+                          </div>
+                          <div class="link-row">
+                          </div>
+                          <div class="link-row">
+                          </div>
+                          <div class="link-row">
+                          </div>
+                          <div class="link-row">
+                            <a href="#"></a>
+                          </div>
+                          <div class="link-row">
+                            <a href="#"></a>
+                          </div>
+                          <div class="link-row">
+                            <a href="#"></a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="featured-section">
+                        <div class="featured-image">
+                          <img src="assets/img/product/12.jpg" alt="Kids' New Arrivals">
+                          <div class="featured-content">
+                            <h3>Phụ kiện<br> cho<br> xe</h3>
+                            <a href="#" class="btn-shop">Mua ngay</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div><!-- End Products Mega Menu 2 Desktop View -->
+
+            </li><!-- End Products Mega Menu 2 -->
+
+            <li><a href="contact.html">Liên hệ</a></li>
+
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Mobile Search Form -->
+    <div class="collapse" id="mobileSearch">
+      <div class="container">
+        <form class="search-form">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+            <button class="btn" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title light-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Tài khoản</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Trang chủ</a></li>
+            <li class="current">Tài khoản</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Account Section -->
+    <section id="account" class="account section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <!-- Mobile Menu Toggle -->
+        <div class="mobile-menu d-lg-none mb-4">
+          <button class="mobile-menu-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#profileMenu">
+            <i class="bi bi-grid"></i>
+            <span>Menu</span>
+          </button>
+        </div>
+
+        <div class="row g-4">
+          <!-- Profile Menu -->
+          <div class="col-lg-3">
+            <div class="profile-menu collapse d-lg-block" id="profileMenu">
+              <!-- User Info -->
+              <div class="user-info" data-aos="fade-right">
+                <div class="user-avatar">
+                  <img src="assets/img/product/55.jpg" alt="Profile" loading="lazy">
+                  <span class="status-badge"><i class="bi bi-shield-check"></i></span>
+                </div>
+                <h4>Trần Trung Hậu</h4>
+                <div class="user-status">
+                  <i class="bi bi-award"></i>
+                  <span>Khách hàng thân thiết</span>
+                </div>
+              </div>
+
+              <!-- Navigation Menu -->
+              <nav class="menu-nav">
+                <ul class="nav flex-column" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#orders">
+                      <i class="bi bi-box-seam"></i>
+                      <span>Đơn hàng của tôi</span>
+                      <span class="badge">3</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#wishlist">
+                      <i class="bi bi-heart"></i>
+                      <span>Yêu thích</span>
+                      <span class="badge">3</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#wallet">
+                      <i class="bi bi-wallet2"></i>
+                      <span>Phương thức thanh toán</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#reviews">
+                      <i class="bi bi-star"></i>
+                      <span>Đánh giá của tôi</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#addresses">
+                      <i class="bi bi-geo-alt"></i>
+                      <span>Địa chỉ</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#settings">
+                      <i class="bi bi-gear"></i>
+                      <span>Tài khoản</span>
+                    </a>
+                  </li>
+                </ul>
+
+                <div class="menu-footer">
+                  <a href="#" class="help-link">
+                    <i class="bi bi-question-circle"></i>
+                    <span>Trung tâm hỗ trợ</span>
+                  </a>
+                   <a href="#" class="logout-link text-danger" onclick="logout()">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Đăng xuất</span>
+                  </a>
+                </div>
+              </nav>
+            </div>
+          </div>
+
+          <!-- Content Area -->
+          <div class="col-lg-9">
+            <div class="content-area">
+              <div class="tab-content">
+                <!-- Orders Tab -->
+                <div class="tab-pane fade show active" id="orders">
+                  <div class="section-header" data-aos="fade-up">
+                    <h2>Đơn hàng của tôi</h2>
+                    <div class="header-actions">
+                      <div class="search-box">
+                        <i class="bi bi-search"></i>
+                        <input type="text" placeholder="Tìm kiếm...">
+                      </div>
+                      <div class="dropdown">
+                        <button class="filter-btn" data-bs-toggle="dropdown">
+                          <i class="bi bi-funnel"></i>
+                          <span>Lọc</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="#">Tất cả đơn hàng</a></li>
+                          <li><a class="dropdown-item" href="#">Đang xử lý</a></li>
+                          <li><a class="dropdown-item" href="#">Đã giao</a></li>
+                          <li><a class="dropdown-item" href="#">Đang giao</a></li>
+                          <li><a class="dropdown-item" href="#">Đã hủy</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="orders-grid">
+                    <!-- Order Card 1 -->
+                    <div class="order-card" data-aos="fade-up" data-aos-delay="100">
+                      <div class="order-header">
+                        <div class="order-id">
+                          <span class="label">Mã đơn hàng:</span>
+                          <span class="value">#ORD-2025-1278</span>
+                        </div>
+                        <div class="order-date">Ngày đặt: 20/05/2025</div>
+                      </div>
+                      <div class="order-content">
+                        <div class="product-grid">
+                          <img src="assets/img/product/6.jpg" alt="Product" loading="lazy">
+                          <img src="assets/img/product/13.jpg" alt="Product" loading="lazy">
+                        </div>
+                        <div class="order-info">
+                          <div class="info-row">
+                            <span>Trạng thái</span>
+                            <span class="status processing">Đang xử lý</span>
+                          </div>
+                          <div class="info-row">
+                            <span>Số lượng</span>
+                            <span>2 sản phẩm</span>
+                          </div>
+                          <div class="info-row">
+                            <span>Tổng cộng</span>
+                            <span class="price">29.850.000 VND</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="order-footer">
+                        <button type="button" class="btn-track" data-bs-toggle="collapse" data-bs-target="#tracking1" aria-expanded="false">Theo dõi đơn hàng</button>
+                        <button type="button" class="btn-details" data-bs-toggle="collapse" data-bs-target="#details1" aria-expanded="false">Xem chi tiết</button>
+                      </div>
+
+                      <!-- Order Tracking -->
+                      <div class="collapse tracking-info" id="tracking1">
+                        <div class="tracking-timeline">
+                          <div class="timeline-item completed">
+                            <div class="timeline-icon">
+                              <i class="bi bi-check-circle-fill"></i>
+                            </div>
+                            <div class="timeline-content">
+                              <h5>Đơn hàng đã được xác nhận</h5>
+                              <p>Đơn hàng của bạn đã được nhận và xác nhận.</p>
+                              <span class="timeline-date">20/05/2025 - 10:30</span>
+                            </div>
+                          </div>
+
+                          <div class="timeline-item completed">
+                            <div class="timeline-icon">
+                              <i class="bi bi-check-circle-fill"></i>
+                            </div>
+                            <div class="timeline-content">
+                              <h5>Đang xử lý</h5>
+                              <p>Đơn hàng của bạn đang được chuẩn bị để giao đi</p>
+                              <span class="timeline-date">20/05/2025 - 14:45</span>
+                            </div>
+                          </div>
+
+                          <div class="timeline-item active">
+                            <div class="timeline-icon">
+                              <i class="bi bi-box-seam"></i>
+                            </div>
+                            <div class="timeline-content">
+                              <h5>Đang đóng gói</h5>
+                              <p>Sản phẩm của bạn đang được đóng gói để vận chuyển</p>
+                              <span class="timeline-date">20/05/2025 - 16:15</span>
+                            </div>
+                          </div>
+
+                          <div class="timeline-item">
+                            <div class="timeline-icon">
+                              <i class="bi bi-truck"></i>
+                            </div>
+                            <div class="timeline-content">
+                              <h5>Đang vận chuyển</h5>
+                              <p>Dự kiến gửi trong vòng 24 giờ</p>
+                            </div>
+                          </div>
+
+                          <div class="timeline-item">
+                            <div class="timeline-icon">
+                              <i class="bi bi-house-door"></i>
+                            </div>
+                            <div class="timeline-content">
+                              <h5>Giao hàng</h5>
+                              <p>Dự kiến giao hàng: 22/05/2025</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+  <!-- Chi tiết đơn hàng -->
+<div class="collapse order-details" id="details1">
+  <div class="details-content">
+
+    <!-- Phương thức đặt hàng -->
+    <div class="detail-section">
+      <h5>Thông tin đặt hàng</h5>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">Phương thức thanh toán</span>
+          <span class="value">Thẻ tín dụng (**** 4589)</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Phương thức giao hàng</span>
+          <span class="value">Giao hàng nhanh (2-3 ngày)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sản phẩm -->
+    <div class="detail-section">
+      <h5>Sản phẩm (2)</h5>
+      <div class="order-items">
+
+        <div class="item">
+          <img src="assets/img/product/6.jpg" alt="Sản phẩm" loading="lazy">
+          <div class="item-info">
+            <h6>Xe Đạp Đường Phố Touring GIANT Fastroad AR Advanced 1-Asia - Phanh Đĩa, Bánh 700C - 2026</h6>
+            <div class="item-meta">
+              <span class="sku">Mã sản phẩm: XD-001</span>
+              <span class="qty">Số lượng: 1</span>
+            </div>
+          </div>
+          <div class="item-price">18.850.000 VND</div>
+        </div>
+
+        <div class="item">
+          <img src="assets/img/product/13.jpg" alt="Sản phẩm" loading="lazy">
+          <div class="item-info">
+            <h6>Xe Đạp Đường Phố Touring JAVA Sequoia-7S-City - Phanh Đĩa, Bánh 700C</h6>
+            <div class="item-meta">
+              <span class="sku">Mã sản phẩm: XD-002</span>
+              <span class="qty">Số lượng: 1</span>
+            </div>
+          </div>
+          <div class="item-price">10.000.000 VND</div>
+        </div>
+
+        <div class="item">
+          <div class="item-info">
+            <div class="item-meta">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+     <!-- Giá tiền -->
+    <div class="detail-section">
+      <h5>Chi tiết giá</h5>
+      <div class="price-breakdown">
+        <div class="price-row">
+          <span>Tạm tính</span>
+          <span>28.850.000 VND</span>
+        </div>
+        <div class="price-row">
+          <span>Phí vận chuyển</span>
+          <span>800.000 VND</span>
+        </div>
+        <div class="price-row">
+          <span>Thuế</span>
+          <span>200.000 VND</span>
+        </div>
+        <div class="price-row total">
+          <span>Tổng cộng</span>
+          <span>29.850.000 VND</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Địa chỉ giao hàng -->
+    <div class="detail-section">
+      <h5>Địa chỉ giao hàng</h5>
+      <div class="address-info">
+        <p>Trần Trung Hậu<br>123 Đường Lê Văn Quới<br> Phường Bình Trị Đông <br>Thành phố Hồ Chí Minh, TPHCM 70000<br>Việt Nam</p>
+        <p class="contact">+84 908 546 274</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+                    
+
+                   <!-- Thêm thư viện SweetAlert2 (chỉ cần 1 lần, có thể đặt trong <head> hoặc trước </body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!- Đơn hàng 3 -->
+<div class="order-card" data-aos="fade-up" data-aos-delay="300">
+  <div class="order-header">
+    <div class="order-id">
+      <span class="label">Mã đơn hàng:</span>
+      <span class="value">#ORD-2025-1252</span>
+    </div>
+    <div class="order-date">Ngày đặt: 25/06/2025</div>
+  </div>
+
+  <div class="order-content">
+    <div class="product-grid">
+      <img src="assets/img/product/21.jpg" alt="Sản phẩm" loading="lazy">
+    </div>
+
+    <div class="order-info">
+      <div class="info-row">
+        <span>Trạng thái</span>
+        <span class="status delivered">Đã giao</span>
+      </div>
+      <div class="info-row">
+        <span>Số lượng</span>
+        <span>1 sản phẩm</span>
+      </div>
+      <div class="info-row">
+        <span>Tổng tiền</span>
+        <span class="price">12.950.000 VND</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nút hành động -->
+  <div class="order-footer">
+    <button type="button" class="btn-track" onclick="reorder()">Mua lại</button>
+    <button type="button" class="btn-details" onclick="contactSupport()">Liên hệ hỗ trợ</button>
+  </div>
+</div>
+
+<script>
+  // 🛒 Nút MUA LẠI
+  function reorder() {
+    Swal.fire({
+      title: '🛍️ Trai đẹp bán xe đẹp',
+      text: 'Bạn có muốn mua lại sản phẩm này không?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Mua lại ngay',
+      cancelButtonText: 'Hủy',
+      confirmButtonColor: '#000',
+      cancelButtonColor: '#888'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Đã thêm vào giỏ hàng!',
+          text: 'Sản phẩm đã được thêm lại vào giỏ hàng của bạn.',
+          icon: 'success',
+          confirmButtonColor: '#000'
+        });
+        // Nếu muốn chuyển trang sau khi xác nhận:
+         window.location.href = 'cart.html';
+      }
+    });
+  }
+
+  // 📞 Nút LIÊN HỆ HỖ TRỢ
+  function contactSupport() {
+    Swal.fire({
+      title: '🛒 Trai đẹp bán xe đẹp',
+      html: `
+        <p>Vui lòng liên hệ bộ phận hỗ trợ qua:</p>
+        <p><strong>Email:</strong> traidepbanxedep@gmail.com</p>
+        <p><strong>Hotline:</strong> 1900-1234</p>
+      `,
+      icon: 'info',
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#000'
+    });
+  }
+</script>
+
+
+                  <!-- Đơn hàng 3 -->
+<div class="order-card" data-aos="fade-up" data-aos-delay="400">
+  <div class="order-header">
+    <div class="order-id">
+      <span class="label">Mã đơn hàng:</span>
+      <span class="value">#ORD-2025-1245</span>
+    </div>
+    <div class="order-date">Ngày đặt: 25/05/2025</div>
+  </div>
+
+  <div class="order-content">
+    <div class="product-grid">
+      <img src="assets/img/product/21.jpg" alt="Sản phẩm" loading="lazy">
+      <img src="assets/img/product/22.jpg" alt="Sản phẩm" loading="lazy">
+      <img src="assets/img/product/23.jpg" alt="Sản phẩm" loading="lazy">
+    </div>
+
+    <div class="order-info">
+      <div class="info-row">
+        <span>Trạng thái</span>
+        <span class="status cancelled">Đã hủy</span>
+      </div>
+      <div class="info-row">
+        <span>Số lượng</span>
+        <span>3 sản phẩm</span>
+      </div>
+      <div class="info-row">
+        <span>Tổng tiền</span>
+        <span class="price">18.900.000 VND</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nút hành động -->
+  <div class="order-footer">
+    <button type="button" class="btn-track" onclick="reorderCancelled()">Đặt lại đơn</button>
+    <button type="button" class="btn-details" onclick="viewReason()">Xem lý do hủy</button>
+  </div>
+</div>
+
+<script>
+  // ⚡ Hàm xử lý "Đặt lại đơn"
+  function reorderCancelled() {
+    Swal.fire({
+      title: '🛍️ Trai đẹp bán xe đẹp',
+      text: 'Bạn có muốn đặt lại đơn hàng này không?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Đặt lại',
+      cancelButtonText: 'Không',
+      confirmButtonColor: '#000',
+      cancelButtonColor: '#888'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Đơn hàng đã được thêm lại!',
+          text: 'Sản phẩm trong đơn đã được thêm vào giỏ hàng.',
+          icon: 'success',
+          confirmButtonColor: '#000'
+        });
+        // window.location.href = 'cart.html';
+      }
+    });
+  }
+
+  // 💬 Hàm xử lý "Xem lý do hủy"
+  function viewReason() {
+    Swal.fire({
+      title: '🛒 Trai đẹp bán xe đẹp',
+      html: `
+        <p><strong>Lý do hủy đơn:</strong></p>
+        <p>Khách hàng yêu cầu hủy đơn trước khi giao.</p>
+        <hr>
+        <p>Bạn có thể đặt lại đơn hàng này bất cứ lúc nào.</p>
+      `,
+      icon: 'info',
+      confirmButtonText: 'Đã hiểu',
+      confirmButtonColor: '#000'
+    });
+  }
+</script>
+                    </div>         
+                    </div>
+</div>
+</div>
+                <!-- Wishlist Tab -->
+                <div class="tab-pane fade" id="wishlist">
+                  <div class="section-header" data-aos="fade-up">
+                    <h2>My Wishlist</h2>
+                    <div class="header-actions">
+                      <button type="button" class="btn-add-all">Add All to Cart</button>
+                    </div>
+                  </div>
+
+                  <div class="wishlist-grid">
+                    <!-- Wishlist Item 1 -->
+                    <div class="wishlist-card" data-aos="fade-up" data-aos-delay="100">
+                      <div class="wishlist-image">
+                        <img src="assets/img/product/product-1.webp" alt="Product" loading="lazy">
+                        <button class="btn-remove" type="button" aria-label="Remove from wishlist">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                        <div class="sale-badge">-20%</div>
+                      </div>
+                      <div class="wishlist-content">
+                        <h4>Lorem ipsum dolor sit amet</h4>
+                        <div class="product-meta">
+                          <div class="rating">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-half"></i>
+                            <span>(4.5)</span>
+                          </div>
+                          <div class="price">
+                            <span class="current">$79.99</span>
+                            <span class="original">$99.99</span>
+                          </div>
+                        </div>
+                        <button type="button" class="btn-add-cart">Add to Cart</button>
+                      </div>
+                    </div>
+
+                    <!-- Wishlist Item 2 -->
+                    <div class="wishlist-card" data-aos="fade-up" data-aos-delay="200">
+                      <div class="wishlist-image">
+                        <img src="assets/img/product/product-2.webp" alt="Product" loading="lazy">
+                        <button class="btn-remove" type="button" aria-label="Remove from wishlist">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                      <div class="wishlist-content">
+                        <h4>Consectetur adipiscing elit</h4>
+                        <div class="product-meta">
+                          <div class="rating">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star"></i>
+                            <span>(4.0)</span>
+                          </div>
+                          <div class="price">
+                            <span class="current">$149.99</span>
+                          </div>
+                        </div>
+                        <button type="button" class="btn-add-cart">Add to Cart</button>
+                      </div>
+                    </div>
+
+                    <!-- Wishlist Item 3 -->
+                    <div class="wishlist-card" data-aos="fade-up" data-aos-delay="300">
+                      <div class="wishlist-image">
+                        <img src="assets/img/product/product-3.webp" alt="Product" loading="lazy">
+                        <button class="btn-remove" type="button" aria-label="Remove from wishlist">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                        <div class="out-of-stock-badge">Out of Stock</div>
+                      </div>
+                      <div class="wishlist-content">
+                        <h4>Sed do eiusmod tempor</h4>
+                        <div class="product-meta">
+                          <div class="rating">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <span>(5.0)</span>
+                          </div>
+                          <div class="price">
+                            <span class="current">$199.99</span>
+                          </div>
+                        </div>
+                        <button type="button" class="btn-notify">Notify When Available</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Payment Methods Tab -->
+                <div class="tab-pane fade" id="wallet">
+                  <div class="section-header" data-aos="fade-up">
+                    <h2>Payment Methods</h2>
+                    <div class="header-actions">
+                      <button type="button" class="btn-add-new">
+                        <i class="bi bi-plus-lg"></i>
+                        Add New Card
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="payment-cards-grid">
+                    <!-- Payment Card 1 -->
+                    <div class="payment-card default" data-aos="fade-up" data-aos-delay="100">
+                      <div class="card-header">
+                        <i class="bi bi-credit-card"></i>
+                        <div class="card-badges">
+                          <span class="default-badge">Default</span>
+                          <span class="card-type">Visa</span>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <div class="card-number">•••• •••• •••• 4589</div>
+                        <div class="card-info">
+                          <span>Expires 09/2026</span>
+                        </div>
+                      </div>
+                      <div class="card-actions">
+                        <button type="button" class="btn-edit">
+                          <i class="bi bi-pencil"></i>
+                          Edit
+                        </button>
+                        <button type="button" class="btn-remove">
+                          <i class="bi bi-trash"></i>
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Payment Card 2 -->
+                    <div class="payment-card" data-aos="fade-up" data-aos-delay="200">
+                      <div class="card-header">
+                        <i class="bi bi-credit-card"></i>
+                        <div class="card-badges">
+                          <span class="card-type">Mastercard</span>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <div class="card-number">•••• •••• •••• 7821</div>
+                        <div class="card-info">
+                          <span>Expires 05/2025</span>
+                        </div>
+                      </div>
+                      <div class="card-actions">
+                        <button type="button" class="btn-edit">
+                          <i class="bi bi-pencil"></i>
+                          Edit
+                        </button>
+                        <button type="button" class="btn-remove">
+                          <i class="bi bi-trash"></i>
+                          Remove
+                        </button>
+                        <button type="button" class="btn-make-default">Make Default</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Reviews Tab -->
+                <div class="tab-pane fade" id="reviews">
+                  <div class="section-header" data-aos="fade-up">
+                    <h2>My Reviews</h2>
+                    <div class="header-actions">
+                      <div class="dropdown">
+                        <button class="filter-btn" data-bs-toggle="dropdown">
+                          <i class="bi bi-funnel"></i>
+                          <span>Sort by: Recent</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="#">Recent</a></li>
+                          <li><a class="dropdown-item" href="#">Highest Rating</a></li>
+                          <li><a class="dropdown-item" href="#">Lowest Rating</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="reviews-grid">
+                    <!-- Review Card 1 -->
+                    <div class="review-card" data-aos="fade-up" data-aos-delay="100">
+                      <div class="review-header">
+                        <img src="assets/img/product/product-1.webp" alt="Product" class="product-image" loading="lazy">
+                        <div class="review-meta">
+                          <h4>Lorem ipsum dolor sit amet</h4>
+                          <div class="rating">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <span>(5.0)</span>
+                          </div>
+                          <div class="review-date">Reviewed on Feb 15, 2025</div>
+                        </div>
+                      </div>
+                      <div class="review-content">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                      </div>
+                      <div class="review-footer">
+                        <button type="button" class="btn-edit">Edit Review</button>
+                        <button type="button" class="btn-delete">Delete</button>
+                      </div>
+                    </div>
+
+                    <!-- Review Card 2 -->
+                    <div class="review-card" data-aos="fade-up" data-aos-delay="200">
+                      <div class="review-header">
+                        <img src="assets/img/product/product-2.webp" alt="Product" class="product-image" loading="lazy">
+                        <div class="review-meta">
+                          <h4>Consectetur adipiscing elit</h4>
+                          <div class="rating">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star"></i>
+                            <span>(4.0)</span>
+                          </div>
+                          <div class="review-date">Reviewed on Feb 10, 2025</div>
+                        </div>
+                      </div>
+                      <div class="review-content">
+                        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                      </div>
+                      <div class="review-footer">
+                        <button type="button" class="btn-edit">Edit Review</button>
+                        <button type="button" class="btn-delete">Delete</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Addresses Tab -->
+                <div class="tab-pane fade" id="addresses">
+                  <div class="section-header" data-aos="fade-up">
+                    <h2>My Addresses</h2>
+                    <div class="header-actions">
+                      <button type="button" class="btn-add-new">
+                        <i class="bi bi-plus-lg"></i>
+                        Add New Address
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="addresses-grid">
+                    <!-- Address Card 1 -->
+                    <div class="address-card default" data-aos="fade-up" data-aos-delay="100">
+                      <div class="card-header">
+                        <h4>Home</h4>
+                        <span class="default-badge">Default</span>
+                      </div>
+                      <div class="card-body">
+                        <p class="address-text">123 Main Street<br>Apt 4B<br>New York, NY 10001<br>United States</p>
+                        <div class="contact-info">
+                          <div><i class="bi bi-person"></i> Sarah Anderson</div>
+                          <div><i class="bi bi-telephone"></i> +1 (555) 123-4567</div>
+                        </div>
+                      </div>
+                      <div class="card-actions">
+                        <button type="button" class="btn-edit">
+                          <i class="bi bi-pencil"></i>
+                          Edit
+                        </button>
+                        <button type="button" class="btn-remove">
+                          <i class="bi bi-trash"></i>
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Address Card 2 -->
+                    <div class="address-card" data-aos="fade-up" data-aos-delay="200">
+                      <div class="card-header">
+                        <h4>Office</h4>
+                      </div>
+                      <div class="card-body">
+                        <p class="address-text">456 Business Ave<br>Suite 200<br>San Francisco, CA 94107<br>United States</p>
+                        <div class="contact-info">
+                          <div><i class="bi bi-person"></i> Sarah Anderson</div>
+                          <div><i class="bi bi-telephone"></i> +1 (555) 987-6543</div>
+                        </div>
+                      </div>
+                      <div class="card-actions">
+                        <button type="button" class="btn-edit">
+                          <i class="bi bi-pencil"></i>
+                          Edit
+                        </button>
+                        <button type="button" class="btn-remove">
+                          <i class="bi bi-trash"></i>
+                          Remove
+                        </button>
+                        <button type="button" class="btn-make-default">Make Default</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div class="tab-pane fade" id="settings">
+                  <div class="section-header" data-aos="fade-up">
+                    <h2>Account Settings</h2>
+                  </div>
+
+                  <div class="settings-content">
+                    <!-- Personal Information -->
+                    <div class="settings-section" data-aos="fade-up">
+                      <h3>Personal Information</h3>
+                      <form class="php-email-form settings-form">
+                        <div class="row g-3">
+                          <div class="col-md-6">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName" value="Sarah" required="">
+                          </div>
+                          <div class="col-md-6">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" value="Anderson" required="">
+                          </div>
+                          <div class="col-md-6">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" value="sarah@example.com" required="">
+                          </div>
+                          <div class="col-md-6">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="phone" value="+1 (555) 123-4567">
+                          </div>
+                        </div>
+
+                        <div class="form-buttons">
+                          <button type="submit" class="btn-save">Save Changes</button>
+                        </div>
+
+                        <div class="loading">Loading</div>
+                        <div class="error-message"></div>
+                        <div class="sent-message">Your changes have been saved successfully!</div>
+                      </form>
+                    </div>
+
+                    <!-- Email Preferences -->
+                    <div class="settings-section" data-aos="fade-up" data-aos-delay="100">
+                      <h3>Email Preferences</h3>
+                      <div class="preferences-list">
+                        <div class="preference-item">
+                          <div class="preference-info">
+                            <h4>Order Updates</h4>
+                            <p>Receive notifications about your order status</p>
+                          </div>
+                          <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="orderUpdates" checked="">
+                          </div>
+                        </div>
+
+                        <div class="preference-item">
+                          <div class="preference-info">
+                            <h4>Promotions</h4>
+                            <p>Receive emails about new promotions and deals</p>
+                          </div>
+                          <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="promotions">
+                          </div>
+                        </div>
+
+                        <div class="preference-item">
+                          <div class="preference-info">
+                            <h4>Newsletter</h4>
+                            <p>Subscribe to our weekly newsletter</p>
+                          </div>
+                          <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="newsletter" checked="">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Security Settings -->
+                    <div class="settings-section" data-aos="fade-up" data-aos-delay="200">
+                      <h3>Security</h3>
+                      <form class="php-email-form settings-form">
+                        <div class="row g-3">
+                          <div class="col-md-12">
+                            <label for="currentPassword" class="form-label">Current Password</label>
+                            <input type="password" class="form-control" id="currentPassword" required="">
+                          </div>
+                          <div class="col-md-6">
+                            <label for="newPassword" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="newPassword" required="">
+                          </div>
+                          <div class="col-md-6">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" required="">
+                          </div>
+                        </div>
+
+                        <div class="form-buttons">
+                          <button type="submit" class="btn-save">Update Password</button>
+                        </div>
+
+                        <div class="loading">Loading</div>
+                        <div class="error-message"></div>
+                        <div class="sent-message">Your password has been updated successfully!</div>
+                      </form>
+                    </div>
+
+                    <!-- Delete Account -->
+                    <div class="settings-section danger-zone" data-aos="fade-up" data-aos-delay="300">
+                      <h3>Delete Account</h3>
+                      <div class="danger-zone-content">
+                        <p>Once you delete your account, there is no going back. Please be certain.</p>
+                        <button type="button" class="btn-danger">Delete Account</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Account Section -->
+
+ </main>
+
+  <footer id="footer" class="footer dark-background">
+    <div class="footer-main">
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-4 col-md-6">
+            <div class="footer-widget footer-about">
+              <a href="index.html" class="logo">
+                <span class="sitename">Trai đẹp bán xe đẹp</span>
+              </a>
+              <p>Sống Xanh, Sống Khỏe, Sống Chất! Khám phá ngay bộ sưu tập xe đạp đa dạng tại cửa hàng chúng tôi. Từ xe đạp địa hình mạnh mẽ đến xe đạp thành phố thanh lịch – mỗi chiếc xe là một lời cam kết về chất lượng và hành trình đầy cảm hứng của bạn. Đạp xe, không chỉ là di chuyển, mà là tự do!</p>
+
+              <div class="social-links mt-4">
+                <h5>Hãy liên lạc với chúng tôi</h5>
+                <div class="social-icons">
+                  <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                  <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                  <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+                  <a href="#" aria-label="TikTok"><i class="bi bi-tiktok"></i></a>
+                  <a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-6 col-sm-6">
+            <div class="footer-widget">
+              <h4>Cửa hàng</h4>
+              <ul class="footer-links">
+                <li><a href="category.html">Hàng mới về</a></li>
+                <li><a href="category.html">Bestsellers</a></li>
+                <li><a href="category.html">Xe đạp</a></li>
+                <li><a href="category.html">Xe điện</a></li>
+                <li><a href="category.html">Hàng khuyến mãi</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-6 col-sm-6">
+            <div class="footer-widget">
+              <h4>Hỗ trợ</h4>
+              <ul class="footer-links">
+                <li><a href="support.html">Trung tâm trợ giúp</a></li>
+                <li><a href="account.html">Tình trạng đơn hàng</a></li>
+                <li><a href="shiping-info.html">Thông tin vận chuyển</a></li>
+                <li><a href="return-policy.html">Đổi &amp; Trả hàng</a></li>
+                <li><a href="contact.html">Liên hệ với chúng tôi</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6">
+            <div class="footer-widget">
+              <h4>Thông tin liên hệ</h4>
+              <div class="footer-contact">
+                <div class="contact-item">
+                  <i class="bi bi-geo-alt"></i>
+                  <span>273 An Dương Vương, Phường Chợ Quán, Thành Phố Hồ Chí Minh 700000</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-telephone"></i>
+                  <span>+84 123456789</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-envelope"></i>
+                  <span>traidepbanxedep@gmail.com</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-clock"></i>
+                  <span>Thứ hai-Thứ sáu: 9:00 - 18:00<br>Thứ bảy: 10:00 - 18:00<br>Chủ nhật: Nghỉ</span>
+                </div>
+              </div>
+
+              <div class="app-buttons mt-4">
+                <a href="#" class="app-btn">
+                  <i class="bi bi-apple"></i>
+                  <span>App Store</span>
+                </a>
+                <a href="#" class="app-btn">
+                  <i class="bi bi-google-play"></i>
+                  <span>Google Play</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="row gy-3 align-items-center">
+          <div class="col-lg-6 col-md-12">
+            <div class="copyright">
+              <p>© <span>Copyright</span> <strong class="sitename">Trai đẹp bán xe đẹp</strong>. All Rights Reserved.</p>
+            </div>
+            <div class="credits mt-1">
+              <!-- All the links in the footer should remain intact. -->
+              <!-- You can delete the links only if you've purchased the pro version. -->
+              <!-- Licensing information: https://bootstrapmade.com/license/ -->
+              <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+              Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-md-12">
+            <div class="d-flex flex-wrap justify-content-lg-end justify-content-center align-items-center gap-4">
+              <div class="payment-methods">
+                <div class="payment-icons">
+                  <i class="bi bi-credit-card" aria-label="Credit Card"></i>
+                  <i class="bi bi-paypal" aria-label="PayPal"></i>
+                  <i class="bi bi-apple" aria-label="Apple Pay"></i>
+                  <i class="bi bi-google" aria-label="Google Pay"></i>
+                  <i class="bi bi-shop" aria-label="Shop Pay"></i>
+                  <i class="bi bi-cash" aria-label="Cash on Delivery"></i>
+                </div>
+              </div>
+
+              <div class="legal-links">
+                <a href="tos.html">Terms</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="tos.html">Cookies</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/drift-zoom/Drift.min.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+
+  <!-- Main JS File -->
+<script src="assets/js/main.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const isLoggedIn = localStorage.getItem("loggedIn");
+  const preloader = document.getElementById("preloader");
+  const accountSection = document.querySelector("section#account");
+  const sidebar = document.querySelector(".col-lg-3");
+  const contentArea = document.querySelector(".col-lg-9");
+  const authButtons = document.getElementById("auth-buttons");
+  const logoutSection = document.getElementById("logout-section");
+
+  // Ẩn preloader nếu có
+  if (preloader) preloader.style.display = "none";
+
+  if (isLoggedIn !== "true") {
+    // ❌ Chưa đăng nhập
+    if (sidebar) sidebar.style.display = "none";
+    if (contentArea) {
+      contentArea.innerHTML = `
+        <div class="d-flex justify-content-center align-items-center" style="min-height:70vh;">
+          <div class="text-center">
+            <h3 class="mb-4">Bạn cần đăng nhập để xem đơn hàng của mình</h3>
+            <a href="login.html" class="btn btn-primary px-4">Đăng nhập ngay</a>
+          </div>
+        </div>
+      `;
+    }
+
+    // Hiện nút Đăng nhập / Đăng ký, ẩn Đăng xuất
+    if (authButtons) authButtons.classList.remove("d-none");
+    if (logoutSection) logoutSection.classList.add("d-none");
+
+  } else {
+    // ✅ Đã đăng nhập
+    if (accountSection) accountSection.style.display = "block";
+    if (sidebar) sidebar.style.display = "";
+    if (contentArea) contentArea.style.display = "";
+
+    // Ẩn nút Đăng nhập, hiện Đăng xuất
+    if (authButtons) authButtons.classList.add("d-none");
+    if (logoutSection) logoutSection.classList.remove("d-none");
+  }
+});
+
+// Hàm đăng xuất
+function logout() {
+  localStorage.removeItem("loggedIn");
+  window.location.href = "login.html";
+}
+</script>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</body>
+</html>
