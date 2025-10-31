@@ -1,5 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+/* Xóa gạch chân ở logo và thanh menu trên cùng */
+header a,
+.navbar a,
+.navbar-nav a,
+.navbar a:hover,
+.navbar-nav a:hover,
+.navbar-nav .nav-link,
+.navbar-nav .nav-link:hover,
+.navbar-brand,
+.navbar-brand:hover {
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Nếu vẫn bị, ép toàn bộ liên kết trong header không gạch chân */
+header a:link,
+header a:visited,
+header a:hover,
+header a:active {
+  text-decoration: none !important;
+}
+
+/* Nếu menu có màu khác khi hover thì có thể thêm */
+.navbar a:hover {
+  color: inherit !important;
+}
+</style>
 
 <head>
   <meta charset="utf-8">
@@ -28,6 +57,7 @@
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
   <style>
+    
 /*Ẩn hoàn toàn các tab không cần thiết để xoá khoảng trắng phía dưới đơn hàng*/
 .tab-pane {
   display: none;
@@ -1093,9 +1123,9 @@
                 <!-- Wishlist Tab -->
                 <div class="tab-pane fade" id="wishlist">
                   <div class="section-header" data-aos="fade-up">
-                    <h2>My Wishlist</h2>
+                    <h2>Yêu thích</h2>
                     <div class="header-actions">
-                      <button type="button" class="btn-add-all">Add All to Cart</button>
+                      <button type="button" class="btn-add-all">Thêm tất cả vào giỏ hàng</button>
                     </div>
                   </div>
 
@@ -1103,14 +1133,14 @@
                     <!-- Wishlist Item 1 -->
                     <div class="wishlist-card" data-aos="fade-up" data-aos-delay="100">
                       <div class="wishlist-image">
-                        <img src="assets/img/product/product-1.webp" alt="Product" loading="lazy">
+                        <img src="assets/img/product/45.jpg" alt="Product" loading="lazy">
                         <button class="btn-remove" type="button" aria-label="Remove from wishlist">
                           <i class="bi bi-trash"></i>
                         </button>
-                        <div class="sale-badge">-20%</div>
+                        <div class="sale-badge">-29%</div>
                       </div>
                       <div class="wishlist-content">
-                        <h4>Lorem ipsum dolor sit amet</h4>
+                        <h4>Xe Đạp Đường Trường Road JAVA Wahoo-7S - Phanh Đĩa, Bánh 700C</h4>
                         <div class="product-meta">
                           <div class="rating">
                             <i class="bi bi-star-fill"></i>
@@ -1121,24 +1151,24 @@
                             <span>(4.5)</span>
                           </div>
                           <div class="price">
-                            <span class="current">$79.99</span>
-                            <span class="original">$99.99</span>
+                            <span class="current">13.290.000 VND</span>
+                            <span class="original">18.890.000 VND</span>
                           </div>
                         </div>
-                        <button type="button" class="btn-add-cart">Add to Cart</button>
+                        <button type="button" class="btn-add-cart">Thêm vào giỏ</button>
                       </div>
                     </div>
 
                     <!-- Wishlist Item 2 -->
                     <div class="wishlist-card" data-aos="fade-up" data-aos-delay="200">
                       <div class="wishlist-image">
-                        <img src="assets/img/product/product-2.webp" alt="Product" loading="lazy">
+                        <img src="assets/img/product/13.jpg" alt="Product" loading="lazy">
                         <button class="btn-remove" type="button" aria-label="Remove from wishlist">
                           <i class="bi bi-trash"></i>
                         </button>
                       </div>
                       <div class="wishlist-content">
-                        <h4>Consectetur adipiscing elit</h4>
+                        <h4>Xe Đạp Đua Đường Trường Road JAVA Fuoco - Top - Phanh Đĩa, Bánh 700C</h4>
                         <div class="product-meta">
                           <div class="rating">
                             <i class="bi bi-star-fill"></i>
@@ -1149,24 +1179,24 @@
                             <span>(4.0)</span>
                           </div>
                           <div class="price">
-                            <span class="current">$149.99</span>
+                            <span class="current">13.890.000 VND</span>
                           </div>
                         </div>
-                        <button type="button" class="btn-add-cart">Add to Cart</button>
+                        <button type="button" class="btn-add-cart">Thêm vào giỏ</button>
                       </div>
                     </div>
 
                     <!-- Wishlist Item 3 -->
                     <div class="wishlist-card" data-aos="fade-up" data-aos-delay="300">
                       <div class="wishlist-image">
-                        <img src="assets/img/product/product-3.webp" alt="Product" loading="lazy">
+                        <img src="assets/img/product/22.jpg" alt="Product" loading="lazy">
                         <button class="btn-remove" type="button" aria-label="Remove from wishlist">
                           <i class="bi bi-trash"></i>
                         </button>
-                        <div class="out-of-stock-badge">Out of Stock</div>
+                        <div class="out-of-stock-badge">Hết hàng</div>
                       </div>
                       <div class="wishlist-content">
-                        <h4>Sed do eiusmod tempor</h4>
+                        <h4>Xe Đạp Đua Đường Trường Road JAVA Siluro6 - Top - 105 - Phanh Đĩa, Bánh 700C</h4>
                         <div class="product-meta">
                           <div class="rating">
                             <i class="bi bi-star-fill"></i>
@@ -1177,344 +1207,354 @@
                             <span>(5.0)</span>
                           </div>
                           <div class="price">
-                            <span class="current">$199.99</span>
+                            <span class="current">17.000.000 VND</span>
                           </div>
                         </div>
-                        <button type="button" class="btn-notify">Notify When Available</button>
+                        <button type="button" class="btn-notify">Thông báo khi có hàng</button>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <!-- Payment Methods Tab -->
-                <div class="tab-pane fade" id="wallet">
-                  <div class="section-header" data-aos="fade-up">
-                    <h2>Payment Methods</h2>
-                    <div class="header-actions">
-                      <button type="button" class="btn-add-new">
-                        <i class="bi bi-plus-lg"></i>
-                        Add New Card
-                      </button>
-                    </div>
-                  </div>
+              <!-- Phương thức thanh toán -->
+<div class="tab-pane fade" id="wallet">
+  <div class="section-header" data-aos="fade-up">
+    <h2>Phương thức thanh toán</h2>
+    <div class="header-actions">
+      <button type="button" class="btn-add-new">
+        <i class="bi bi-plus-lg"></i>
+        Thêm thẻ mới
+      </button>
+    </div>
+  </div>
 
-                  <div class="payment-cards-grid">
-                    <!-- Payment Card 1 -->
-                    <div class="payment-card default" data-aos="fade-up" data-aos-delay="100">
-                      <div class="card-header">
-                        <i class="bi bi-credit-card"></i>
-                        <div class="card-badges">
-                          <span class="default-badge">Default</span>
-                          <span class="card-type">Visa</span>
-                        </div>
-                      </div>
-                      <div class="card-body">
-                        <div class="card-number">•••• •••• •••• 4589</div>
-                        <div class="card-info">
-                          <span>Expires 09/2026</span>
-                        </div>
-                      </div>
-                      <div class="card-actions">
-                        <button type="button" class="btn-edit">
-                          <i class="bi bi-pencil"></i>
-                          Edit
-                        </button>
-                        <button type="button" class="btn-remove">
-                          <i class="bi bi-trash"></i>
-                          Remove
-                        </button>
-                      </div>
-                    </div>
+  <div class="payment-cards-grid">
+    <!-- Thẻ thanh toán 1 -->
+    <div class="payment-card default" data-aos="fade-up" data-aos-delay="100">
+      <div class="card-header">
+        <i class="bi bi-credit-card"></i>
+        <div class="card-badges">
+          <span class="default-badge">Mặc định</span>
+          <span class="card-type">Visa</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-number">•••• •••• •••• 4589</div>
+        <div class="card-info">
+          <span>Hết hạn: 09/2026</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button type="button" class="btn-edit">
+          <i class="bi bi-pencil"></i>
+          Chỉnh sửa
+        </button>
+        <button type="button" class="btn-remove">
+          <i class="bi bi-trash"></i>
+          Xóa
+        </button>
+      </div>
+    </div>
 
-                    <!-- Payment Card 2 -->
-                    <div class="payment-card" data-aos="fade-up" data-aos-delay="200">
-                      <div class="card-header">
-                        <i class="bi bi-credit-card"></i>
-                        <div class="card-badges">
-                          <span class="card-type">Mastercard</span>
-                        </div>
-                      </div>
-                      <div class="card-body">
-                        <div class="card-number">•••• •••• •••• 7821</div>
-                        <div class="card-info">
-                          <span>Expires 05/2025</span>
-                        </div>
-                      </div>
-                      <div class="card-actions">
-                        <button type="button" class="btn-edit">
-                          <i class="bi bi-pencil"></i>
-                          Edit
-                        </button>
-                        <button type="button" class="btn-remove">
-                          <i class="bi bi-trash"></i>
-                          Remove
-                        </button>
-                        <button type="button" class="btn-make-default">Make Default</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+    <!-- Thẻ thanh toán 2 -->
+    <div class="payment-card" data-aos="fade-up" data-aos-delay="200">
+      <div class="card-header">
+        <i class="bi bi-credit-card"></i>
+        <div class="card-badges">
+          <span class="card-type">Mastercard</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-number">•••• •••• •••• 7821</div>
+        <div class="card-info">
+          <span>Hết hạn: 05/2025</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button type="button" class="btn-edit">
+          <i class="bi bi-pencil"></i>
+          Chỉnh sửa
+        </button>
+        <button type="button" class="btn-remove">
+          <i class="bi bi-trash"></i>
+          Xóa
+        </button>
+        <button type="button" class="btn-make-default">Đặt làm mặc định</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-                <!-- Reviews Tab -->
-                <div class="tab-pane fade" id="reviews">
-                  <div class="section-header" data-aos="fade-up">
-                    <h2>My Reviews</h2>
-                    <div class="header-actions">
-                      <div class="dropdown">
-                        <button class="filter-btn" data-bs-toggle="dropdown">
-                          <i class="bi bi-funnel"></i>
-                          <span>Sort by: Recent</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="#">Recent</a></li>
-                          <li><a class="dropdown-item" href="#">Highest Rating</a></li>
-                          <li><a class="dropdown-item" href="#">Lowest Rating</a></li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
 
-                  <div class="reviews-grid">
-                    <!-- Review Card 1 -->
-                    <div class="review-card" data-aos="fade-up" data-aos-delay="100">
-                      <div class="review-header">
-                        <img src="assets/img/product/product-1.webp" alt="Product" class="product-image" loading="lazy">
-                        <div class="review-meta">
-                          <h4>Lorem ipsum dolor sit amet</h4>
-                          <div class="rating">
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <span>(5.0)</span>
-                          </div>
-                          <div class="review-date">Reviewed on Feb 15, 2025</div>
-                        </div>
-                      </div>
-                      <div class="review-content">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                      </div>
-                      <div class="review-footer">
-                        <button type="button" class="btn-edit">Edit Review</button>
-                        <button type="button" class="btn-delete">Delete</button>
-                      </div>
-                    </div>
+               <!-- Đánh giá của tôi -->
+<div class="tab-pane fade" id="reviews">
+  <div class="section-header" data-aos="fade-up">
+    <h2>Đánh giá của tôi</h2>
+    <div class="header-actions">
+      <div class="dropdown">
+        <button class="filter-btn" data-bs-toggle="dropdown">
+          <i class="bi bi-funnel"></i>
+          <span>Sắp xếp theo: Mới nhất</span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Mới nhất</a></li>
+          <li><a class="dropdown-item" href="#">Đánh giá cao nhất</a></li>
+          <li><a class="dropdown-item" href="#">Đánh giá thấp nhất</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
 
-                    <!-- Review Card 2 -->
-                    <div class="review-card" data-aos="fade-up" data-aos-delay="200">
-                      <div class="review-header">
-                        <img src="assets/img/product/product-2.webp" alt="Product" class="product-image" loading="lazy">
-                        <div class="review-meta">
-                          <h4>Consectetur adipiscing elit</h4>
-                          <div class="rating">
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star"></i>
-                            <span>(4.0)</span>
-                          </div>
-                          <div class="review-date">Reviewed on Feb 10, 2025</div>
-                        </div>
-                      </div>
-                      <div class="review-content">
-                        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                      </div>
-                      <div class="review-footer">
-                        <button type="button" class="btn-edit">Edit Review</button>
-                        <button type="button" class="btn-delete">Delete</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+  <div class="reviews-grid">
+    <!-- Đánh giá 1 -->
+    <div class="review-card" data-aos="fade-up" data-aos-delay="100">
+      <div class="review-header">
+        <img src="assets/img/product/6.jpg" alt="Xe đạp" class="product-image" loading="lazy">
+        <div class="review-meta">
+          <h4>Xe đạp địa hình MTB Pro 2025</h4>
+          <div class="rating">
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <span>(5.0)</span>
+          </div>
+          <div class="review-date">Đánh giá ngày 15/02/2025</div>
+        </div>
+      </div>
+      <div class="review-content">
+        <p>Xe đạp chạy rất êm, khung chắc chắn, thiết kế đẹp. Mình rất hài lòng với chất lượng và dịch vụ giao hàng nhanh chóng!</p>
+      </div>
+      <div class="review-footer">
+        <button type="button" class="btn-edit">Chỉnh sửa đánh giá</button>
+        <button type="button" class="btn-delete">Xóa</button>
+      </div>
+    </div>
 
-                <!-- Addresses Tab -->
-                <div class="tab-pane fade" id="addresses">
-                  <div class="section-header" data-aos="fade-up">
-                    <h2>My Addresses</h2>
-                    <div class="header-actions">
-                      <button type="button" class="btn-add-new">
-                        <i class="bi bi-plus-lg"></i>
-                        Add New Address
-                      </button>
-                    </div>
-                  </div>
+    <!-- Đánh giá 2 -->
+    <div class="review-card" data-aos="fade-up" data-aos-delay="200">
+      <div class="review-header">
+        <img src="assets/img/product/5.jpg" alt="Xe đạp" class="product-image" loading="lazy">
+        <div class="review-meta">
+          <h4>Xe đạp đường trường Roadster X</h4>
+          <div class="rating">
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star"></i>
+            <span>(4.0)</span>
+          </div>
+          <div class="review-date">Đánh giá ngày 10/02/2025</div>
+        </div>
+      </div>
+      <div class="review-content">
+        <p>Xe đạp chạy nhanh, nhẹ, phù hợp cho luyện tập thể thao. Tuy nhiên yên hơi cứng, nên trang bị thêm yên mềm sẽ thoải mái hơn.</p>
+      </div>
+      <div class="review-footer">
+        <button type="button" class="btn-edit">Chỉnh sửa đánh giá</button>
+        <button type="button" class="btn-delete">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-                  <div class="addresses-grid">
-                    <!-- Address Card 1 -->
-                    <div class="address-card default" data-aos="fade-up" data-aos-delay="100">
-                      <div class="card-header">
-                        <h4>Home</h4>
-                        <span class="default-badge">Default</span>
-                      </div>
-                      <div class="card-body">
-                        <p class="address-text">123 Main Street<br>Apt 4B<br>New York, NY 10001<br>United States</p>
-                        <div class="contact-info">
-                          <div><i class="bi bi-person"></i> Sarah Anderson</div>
-                          <div><i class="bi bi-telephone"></i> +1 (555) 123-4567</div>
-                        </div>
-                      </div>
-                      <div class="card-actions">
-                        <button type="button" class="btn-edit">
-                          <i class="bi bi-pencil"></i>
-                          Edit
-                        </button>
-                        <button type="button" class="btn-remove">
-                          <i class="bi bi-trash"></i>
-                          Remove
-                        </button>
-                      </div>
-                    </div>
 
-                    <!-- Address Card 2 -->
-                    <div class="address-card" data-aos="fade-up" data-aos-delay="200">
-                      <div class="card-header">
-                        <h4>Office</h4>
-                      </div>
-                      <div class="card-body">
-                        <p class="address-text">456 Business Ave<br>Suite 200<br>San Francisco, CA 94107<br>United States</p>
-                        <div class="contact-info">
-                          <div><i class="bi bi-person"></i> Sarah Anderson</div>
-                          <div><i class="bi bi-telephone"></i> +1 (555) 987-6543</div>
-                        </div>
-                      </div>
-                      <div class="card-actions">
-                        <button type="button" class="btn-edit">
-                          <i class="bi bi-pencil"></i>
-                          Edit
-                        </button>
-                        <button type="button" class="btn-remove">
-                          <i class="bi bi-trash"></i>
-                          Remove
-                        </button>
-                        <button type="button" class="btn-make-default">Make Default</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <!-- Tab Địa chỉ -->
+<div class="tab-pane fade" id="addresses">
+  <div class="section-header" data-aos="fade-up">
+    <h2>Địa chỉ của tôi</h2>
+    <div class="header-actions">
+      <button type="button" class="btn-add-new">
+        <i class="bi bi-plus-lg"></i>
+        Thêm địa chỉ mới
+      </button>
+    </div>
+  </div>
+
+  <div class="addresses-grid">
+    <!-- Thẻ địa chỉ 1 -->
+    <div class="address-card default" data-aos="fade-up" data-aos-delay="100">
+      <div class="card-header">
+        <h4>Nhà riêng</h4>
+        <span class="default-badge">Mặc định</span>
+      </div>
+      <div class="card-body">
+        <p class="address-text">
+          123 Đường Lê Lợi<br>
+          Phường Bến Thành, Quận 1<br>
+          TP. Hồ Chí Minh<br>
+          Việt Nam
+        </p>
+        <div class="contact-info">
+          <div><i class="bi bi-person"></i> Nguyễn Văn Tú</div>
+          <div><i class="bi bi-telephone"></i> 0901 234 567</div>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button type="button" class="btn-edit">
+          <i class="bi bi-pencil"></i>
+          Chỉnh sửa
+        </button>
+        <button type="button" class="btn-remove">
+          <i class="bi bi-trash"></i>
+          Xóa
+        </button>
+      </div>
+    </div>
+
+    <!-- Thẻ địa chỉ 2 -->
+    <div class="address-card" data-aos="fade-up" data-aos-delay="200">
+      <div class="card-header">
+        <h4>Văn phòng</h4>
+      </div>
+      <div class="card-body">
+        <p class="address-text">
+          Tầng 5, Tòa nhà Vincom Center<br>
+          72 Lê Thánh Tôn, Quận 1<br>
+          TP. Hồ Chí Minh<br>
+          Việt Nam
+        </p>
+        <div class="contact-info">
+          <div><i class="bi bi-person"></i>Trần Văn Ngọc</div>
+          <div><i class="bi bi-telephone"></i> 0908 765 432</div>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button type="button" class="btn-edit">
+          <i class="bi bi-pencil"></i>
+          Chỉnh sửa
+        </button>
+        <button type="button" class="btn-remove">
+          <i class="bi bi-trash"></i>
+          Xóa
+        </button>
+        <button type="button" class="btn-make-default">
+          Đặt làm mặc định
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
                 <!-- Settings Tab -->
                 <div class="tab-pane fade" id="settings">
                   <div class="section-header" data-aos="fade-up">
-                    <h2>Account Settings</h2>
+                    <h2>Cài đặt tài khoản</h2>
                   </div>
 
                   <div class="settings-content">
                     <!-- Personal Information -->
                     <div class="settings-section" data-aos="fade-up">
-                      <h3>Personal Information</h3>
+                      <h3>Thông tin cá nhân</h3>
                       <form class="php-email-form settings-form">
                         <div class="row g-3">
                           <div class="col-md-6">
-                            <label for="firstName" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="firstName" value="Sarah" required="">
+                            <label for="firstName" class="form-label">Tên</label>
+                            <input type="text" class="form-control" id="firstName" value="Hậu" required="">
                           </div>
                           <div class="col-md-6">
-                            <label for="lastName" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="lastName" value="Anderson" required="">
+                            <label for="lastName" class="form-label">Họ</label>
+                            <input type="text" class="form-control" id="lastName" value="Trần Trung" required="">
                           </div>
                           <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" value="sarah@example.com" required="">
+                            <input type="email" class="form-control" id="email" value="trantrunghau@gmail.com" required="">
                           </div>
                           <div class="col-md-6">
                             <label for="phone" class="form-label">Phone</label>
-                            <input type="tel" class="form-control" id="phone" value="+1 (555) 123-4567">
+                            <input type="tel" class="form-control" id="phone" value="0908 765 432">
                           </div>
                         </div>
 
                         <div class="form-buttons">
-                          <button type="submit" class="btn-save">Save Changes</button>
+                          <button type="submit" class="btn-save">Lưu thay đổi</button>
                         </div>
 
                         <div class="loading">Loading</div>
                         <div class="error-message"></div>
-                        <div class="sent-message">Your changes have been saved successfully!</div>
+                        <div class="sent-message">Thay đổi của bạn đã được lưu!</div>
                       </form>
                     </div>
 
-                    <!-- Email Preferences -->
-                    <div class="settings-section" data-aos="fade-up" data-aos-delay="100">
-                      <h3>Email Preferences</h3>
-                      <div class="preferences-list">
-                        <div class="preference-item">
-                          <div class="preference-info">
-                            <h4>Order Updates</h4>
-                            <p>Receive notifications about your order status</p>
-                          </div>
-                          <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="orderUpdates" checked="">
-                          </div>
-                        </div>
+                   <!-- Tùy chọn email -->
+<div class="settings-section" data-aos="fade-up" data-aos-delay="100">
+  <h3>Tùy chọn email</h3>
+  <div class="preferences-list">
 
-                        <div class="preference-item">
-                          <div class="preference-info">
-                            <h4>Promotions</h4>
-                            <p>Receive emails about new promotions and deals</p>
-                          </div>
-                          <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="promotions">
-                          </div>
-                        </div>
-
-                        <div class="preference-item">
-                          <div class="preference-info">
-                            <h4>Newsletter</h4>
-                            <p>Subscribe to our weekly newsletter</p>
-                          </div>
-                          <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="newsletter" checked="">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Security Settings -->
-                    <div class="settings-section" data-aos="fade-up" data-aos-delay="200">
-                      <h3>Security</h3>
-                      <form class="php-email-form settings-form">
-                        <div class="row g-3">
-                          <div class="col-md-12">
-                            <label for="currentPassword" class="form-label">Current Password</label>
-                            <input type="password" class="form-control" id="currentPassword" required="">
-                          </div>
-                          <div class="col-md-6">
-                            <label for="newPassword" class="form-label">New Password</label>
-                            <input type="password" class="form-control" id="newPassword" required="">
-                          </div>
-                          <div class="col-md-6">
-                            <label for="confirmPassword" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="confirmPassword" required="">
-                          </div>
-                        </div>
-
-                        <div class="form-buttons">
-                          <button type="submit" class="btn-save">Update Password</button>
-                        </div>
-
-                        <div class="loading">Loading</div>
-                        <div class="error-message"></div>
-                        <div class="sent-message">Your password has been updated successfully!</div>
-                      </form>
-                    </div>
-
-                    <!-- Delete Account -->
-                    <div class="settings-section danger-zone" data-aos="fade-up" data-aos-delay="300">
-                      <h3>Delete Account</h3>
-                      <div class="danger-zone-content">
-                        <p>Once you delete your account, there is no going back. Please be certain.</p>
-                        <button type="button" class="btn-danger">Delete Account</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+    <div class="preference-item">
+      <div class="preference-info">
+        <h4>Cập nhật đơn hàng</h4>
+        <p>Nhận thông báo về tình trạng đơn hàng của bạn</p>
       </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="orderUpdates" checked="">
+      </div>
+    </div>
+
+    <div class="preference-item">
+      <div class="preference-info">
+        <h4>Khuyến mãi</h4>
+        <p>Nhận email về các chương trình khuyến mãi và ưu đãi mới</p>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="promotions">
+      </div>
+    </div>
+
+    <div class="preference-item">
+      <div class="preference-info">
+        <h4>Bản tin</h4>
+        <p>Đăng ký nhận bản tin hàng tuần của chúng tôi</p>
+      </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="newsletter" checked="">
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Cài đặt bảo mật -->
+<div class="settings-section" data-aos="fade-up" data-aos-delay="200">
+  <h3>Bảo mật</h3>
+  <form class="php-email-form settings-form">
+    <div class="row g-3">
+      <div class="col-md-12">
+        <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
+        <input type="password" class="form-control" id="currentPassword" required="">
+      </div>
+      <div class="col-md-6">
+        <label for="newPassword" class="form-label">Mật khẩu mới</label>
+        <input type="password" class="form-control" id="newPassword" required="">
+      </div>
+      <div class="col-md-6">
+        <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
+        <input type="password" class="form-control" id="confirmPassword" required="">
+      </div>
+    </div>
+
+    <div class="form-buttons">
+      <button type="submit" class="btn-save">Cập nhật mật khẩu</button>
+    </div>
+
+    <div class="loading">Đang xử lý...</div>
+    <div class="error-message"></div>
+    <div class="sent-message">Mật khẩu của bạn đã được cập nhật thành công!</div>
+  </form>
+</div>
+
+<!-- Xóa tài khoản -->
+<div class="settings-section danger-zone" data-aos="fade-up" data-aos-delay="300">
+  <h3>Xóa tài khoản</h3>
+  <div class="danger-zone-content">
+    <p>Một khi bạn xóa tài khoản, sẽ không thể khôi phục lại. Vui lòng cân nhắc kỹ trước khi thực hiện.</p>
+    <button type="button" class="btn-danger">Xóa tài khoản</button>
+  </div>
+</div>
+
 
     </section><!-- /Account Section -->
 
