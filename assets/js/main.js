@@ -957,4 +957,65 @@
     });
   });
 
+  document.addEventListener("DOMContentLoaded", function () {
+  const isLoggedIn = localStorage.getItem("loggedIn");
+
+  // Tìm nút đăng nhập & dropdown tài khoản trong header
+  const loginBtn = document.querySelector('.account-dropdown .btn.btn-primary');
+  const accountDropdown = document.querySelector('.account-dropdown');
+
+  if (isLoggedIn && accountDropdown) {
+    // Ẩn nút đăng nhập, hiện menu tài khoản
+    if (loginBtn) loginBtn.style.display = 'none';
+    accountDropdown.classList.add('logged-in');
+  }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Kiểm tra trạng thái đăng nhập
+  const isLoggedIn = localStorage.getItem("loggedIn");
+
+  // Ẩn nút đăng nhập nếu đã đăng nhập
+  const loginBtn = document.querySelector('.account-dropdown .btn.btn-primary');
+  if (isLoggedIn && loginBtn) {
+    loginBtn.style.display = 'none';
+  }
+
+  // Xử lý đăng xuất
+  const logoutBtn = document.querySelector('.logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      localStorage.removeItem('loggedIn');
+      window.location.href = 'login.html';
+    });
+  }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const isLoggedIn = localStorage.getItem("loggedIn");
+  const loginBtn = document.querySelector('.dropdown-footer .btn.btn-primary');
+  const registerBtn = document.querySelector('.dropdown-footer .btn.btn-outline-primary');
+
+  if (isLoggedIn) {
+    // Ẩn nút Đăng nhập
+    if (loginBtn) loginBtn.style.display = 'none';
+
+    // Thay đổi nút Đăng ký thành Đăng xuất
+    if (registerBtn) {
+      registerBtn.textContent = "Đăng xuất";
+      registerBtn.classList.remove("btn-outline-primary");
+      registerBtn.classList.add("btn-danger");
+      registerBtn.href = "#";
+      registerBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        localStorage.removeItem("loggedIn");
+        alert("Bạn đã đăng xuất!");
+        window.location.href = "login.html";
+      });
+    }
+  }
+});
+
+
 })();
