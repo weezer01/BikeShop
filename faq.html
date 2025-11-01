@@ -47,8 +47,7 @@
           <div class="col-lg-4 d-none d-lg-flex">
             <div class="top-bar-item">
               <i class="bi bi-telephone-fill me-2"></i>
-              <span>Liên hệ: </span>
-              <a href="tel:+1234567890">+84 123456789</a>
+              <a href="tel:+1234567890">Liên hệ: +84 123456789</a>
             </div>
           </div>
 
@@ -81,10 +80,10 @@
                   <i class="bi bi-translate me-2"></i>VN
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#"><i class="bi bi-check2 me-2 selected-icon"></i>English</a></li>
-                  <li><a class="dropdown-item" href="#">English</a></li>
+                  <li><a class="dropdown-item" href="#"><i class="bi bi-check2 me-2 selected-icon"></i>Vietnam</a></li>
+                  <li><a class="dropdown-item" href="#">Español</a></li>
                   <li><a class="dropdown-item" href="#">Français</a></li>
-                  <li><a class="dropdown-item" href="#">Deutsch</a></li>
+                  <li><a class="dropdown-item" href="#">English</a></li>
                 </ul>
               </div>
               <div class="top-bar-item dropdown">
@@ -92,9 +91,10 @@
                   <i class="bi bi-currency-dollar me-2"></i>VND
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#"><i class="bi bi-check2 me-2 selected-icon"></i>USD</a></li>
+                  <li><a class="dropdown-item" href="#"><i class="bi bi-check2 me-2 selected-icon"></i>VND</a></li>
+                  <li><a class="dropdown-item" href="#">EUR</a></li>
                   <li><a class="dropdown-item" href="#">USD</a></li>
-                  <li><a class="dropdown-item" href="#">URP</a></li>
+                  <li><a class="dropdown-item" href="#">GBP</a></li>
                 </ul>
               </div>
             </div>
@@ -161,28 +161,23 @@
                     <span>Cài đặt</span>
                   </a>
                 </div>
-                <div class="dropdown-footer" id="auth-buttons">
-  <a href="login.html" class="btn btn-primary w-100 mb-2">Đăng nhập</a>
-  <a href="register.html" class="btn btn-outline-primary w-100">Đăng ký</a>
-</div>
-
-<div class="dropdown-footer d-none" id="logout-section">
-  <button onclick="logout()" class="btn btn-danger w-100">Đăng xuất</button>
-</div>
-
+                <div class="dropdown-footer">
+                  <a href="register.html" class="btn btn-primary w-100 mb-2">Đăng nhập</a>
+                  <a href="login.html" class="btn btn-outline-primary w-100">Đăng kí</a>
+                </div>
               </div>
             </div>
 
             <!-- Wishlist -->
             <a href="account.html" class="header-action-btn d-none d-md-block">
               <i class="bi bi-heart"></i>
-              <span class="badge">0</span>
+              <span class="badge">3</span>
             </a>
 
             <!-- Cart -->
             <a href="cart.html" class="header-action-btn">
               <i class="bi bi-cart3"></i>
-              <span class="badge">0</span>
+              <span class="badge">3</span>
             </a>
 
             <!-- Mobile Navigation Toggle -->
@@ -198,29 +193,29 @@
       <div class="container-fluid container-xl position-relative">
         <nav id="navmenu" class="navmenu">
           <ul>
-            <li><a href="index.html" class="active">Trang chủ</a></li>
+            <li><a href="index.html">Trang chủ</a></li>
             <li><a href="about.html">Giới thiệu</a></li>
-            <li><a href="category.html">Bộ sưu tập</a></li>
+            <li><a href="category.html" class="active">Bộ sưu tập</a></li>
             <li><a href="product-details.html">Sản phẩm chi tiết</a></li>
             <li><a href="cart.html">Giỏ hàng</a></li>
             <li><a href="checkout.html">Kiểm tra đơn hàng</a></li>
-            <li class="dropdown"><a href="category.html"><span>Sản phẩm</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <li class="dropdown"><a href="#"><span>Sản phẩm</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
               <ul>
-                <li class="dropdown"><a href="category.html"><span>Xe đạp</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                  <ul>
-                    <li><a href="category.html">Xe đạp địa hình</a></li>
-                    <li><a href="category.html">Xe đạp đua</a></li>
-                    <li><a href="category.html">Xe đạp đường phố</a></li>
-                    <li><a href="category.html">Xe đạp trẻ em</a></li>
-                    <li><a href="category.html">Xe đạp fixed</a></li>
-                  </ul>
-                </li>
+                <li><a href="#">Xe đạp</a></li>
               </ul>
             </li>
 
             <!-- Products Mega Menu 1 -->
             <li class="products-megamenu-1"><a href="#"><span>Menu</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
 
+              <!-- Products Mega Menu 1 Mobile View -->
+              <ul class="mobile-megamenu">
+
+                <li><a href="#">Sản phẩm nổi bật</a></li>
+                <li><a href="#">Sản phẩm khuyến mãi</a></li>
+                <li><a href="#">Bộ sưu tập</a></li>
+
+              </ul><!-- End Products Mega Menu 1 Mobile View -->
 
               <!-- Products Mega Menu 1 Desktop View -->
               <div class="desktop-megamenu">
@@ -228,12 +223,10 @@
                 <div class="megamenu-tabs">
                   <ul class="nav nav-tabs" id="productMegaMenuTabs" role="tablist">
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link active" id="featured-tab" data-bs-toggle="tab" data-bs-target="#featured-content-1862" type="button" aria-selected="true" role="tab">Hàng nổi bật</button>
+                      <button class="nav-link active" id="featured-tab" data-bs-toggle="tab" data-bs-target="#featured-content-1862" type="button" aria-selected="true" role="tab">Sản phẩm nổi bật</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                    </li>
-                    <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="sale-tab" data-bs-toggle="tab" data-bs-target="#sale-content-1862" type="button" aria-selected="false" tabindex="-1" role="tab">Hàng đang khuyến mãi</button>
+                      <button class="nav-link" id="sale-tab" data-bs-toggle="tab" data-bs-target="#sale-content-1862" type="button" aria-selected="false" tabindex="-1" role="tab">Sản phẩm khuyến mãi</button>
                     </li>
                     <li class="nav-item" role="presentation">
                       <button class="nav-link" id="category-tab" data-bs-toggle="tab" data-bs-target="#category-content-1862" type="button" aria-selected="false" tabindex="-1" role="tab">Bộ sưu tập</button>
@@ -243,58 +236,28 @@
 
                 <!-- Tabs Content -->
                 <div class="megamenu-content tab-content">
-<!-- Bộ lọc sản phẩm (Tìm kiếm nâng cao) -->
-<section id="filter-section" class="py-3">
-  <div class="container">
-    <h4 class="mb-3">Tìm kiếm nâng cao</h4>
-    <div class="row g-3 align-items-end">
-      <div class="col-md-4">
-        <label for="searchName" class="form-label">Tên sản phẩm</label>
-        <input type="text" id="searchName" class="form-control" placeholder="Nhập tên sản phẩm...">
-      </div>
-      <div class="col-md-3">
-        <label for="categoryFilter" class="form-label">Phân loại</label>
-        <select id="categoryFilter" class="form-select">
-          <option value="">Tất cả</option>
-          <option value="xedap">Xe đạp</option>
-          <option value="xedien">Xe điện</option>
-        </select>
-      </div>
-      <div class="col-md-3">
-        <label class="form-label">Khoảng giá (VND)</label>
-        <div class="d-flex">
-          <input type="number" id="minPrice" class="form-control me-2" placeholder="Từ">
-          <input type="number" id="maxPrice" class="form-control" placeholder="Đến">
-        </div>
-      </div>
-      <div class="col-md-2 text-end">
-        <button id="btnFilter" class="btn btn-primary w-100">Lọc</button>
-      </div>
-    </div>
-  </div>
-</section>
 
                   <!-- Featured Tab -->
                   <div class="tab-pane fade show active" id="featured-content-1862" role="tabpanel" aria-labelledby="featured-tab">
                     <div class="product-grid">
                       <div class="product-card">
                         <div class="product-image">
-                          <img src="assets/img/product/qq.jpg" alt="Featured Product" loading="lazy">
+                          <img src="assets/img/product/21.jpg" alt="Featured Product" loading="lazy">
                         </div>
                         <div class="product-info">
                           <h5>Xe Đạp Đường Phố Fixed Gear VINBIKE Megatron – Bánh 700C</h5>
                           <p class="price">3.990.000 VND</p>
-                          <a href="product-details.html" class="btn-view">Xem sản phẩm</a>
+                          <a href="#" class="btn-view">Xem sản phẩm</a>
                         </div>
                       </div>
                       <div class="product-card">
                         <div class="product-image">
-                          <img src="assets/img/product/image.png" alt="Featured Product" loading="lazy">
+                          <img src="assets/img/product/17.jpg" alt="Featured Product" loading="lazy">
                         </div>
                         <div class="product-info">
                           <h5>Xe Đạp Điện Gấp E-BIKE ADO A20 LITE - PHANH ĐĨA, BÁNH 20 INCHES</h5>
                           <p class="price">17.990.000 VND</p>
-                          <a href="product-details.html" class="btn-view">Xem sản phẩm</a>
+                          <a href="#" class="btn-view">Xem sản phẩm</a>
                         </div>
                       </div>
                       <div class="product-card">
@@ -304,7 +267,7 @@
                         <div class="product-info">
                           <h5>Xe Đạp Đua Đường Trường Road JAVA Siluro6 - Top - 105 - Phanh Đĩa, Bánh 700C</h5>
                           <p class="price">20.490.000 VND</p>
-                          <a href="product-details.html" class="btn-view">Xem sản phẩm</a>
+                          <a href="#" class="btn-view">Xem sản phẩm</a>
                         </div>
                       </div>
                       <div class="product-card">
@@ -314,14 +277,11 @@
                         <div class="product-info">
                           <h5>Khung Sườn Xe Đạp GIANT Propel Advanced SL Frame And Fork (Team Color)</h5>
                           <p class="price">68.000.000 VND</p>
-                          <a href="product-details.html" class="btn-view">Xem sản phẩm</a>
+                          <a href="#" class="btn-view">Xem sản phẩm</a>
                         </div>
                       </div>
                     </div>
                   </div>
-
-                  <!-- New Arrivals Tab -->
-                  
 
                   <!-- Sale Tab -->
                   <div class="tab-pane fade" id="sale-content-1862" role="tabpanel" aria-labelledby="sale-tab">
@@ -333,8 +293,8 @@
                         </div>
                         <div class="product-info">
                           <h5>Xe Đạp Đường Phố Touring RAPTOR Lily 4 - Bánh 26 Inch</h5>
-                          <p class="price"><span class="original-price">2.890.000 VND</span>2.601.000 VND</p>
-                          <a href="product-details.html" class="btn-view">Xem sản phẩm</a>
+                          <p class="price"><span class="original-price">2.890.000 VND</span> 2.601.000 VND</p>
+                          <a href="#" class="btn-view">Xem sản phẩm</a>
                         </div>
                       </div>
                       <div class="product-card">
@@ -344,8 +304,8 @@
                         </div>
                         <div class="product-info">
                           <h5>Xe Đạp Đường Phố Touring LIV Alight 4 Disc - Phanh Đĩa, Bánh 700C - 2025</h5>
-                          <p class="price"><span class="original-price">10.790.000</span>8.632.000 VND</p>
-                          <a href="product-details.html" class="btn-view">Xem sản phẩm</a>
+                          <p class="price"><span class="original-price">10.790.000 VND</span>8.632.000 VND</p>
+                          <a href="#" class="btn-view">Xem sản phẩm</a>
                         </div>
                       </div>
                       <div class="product-card">
@@ -355,8 +315,8 @@
                         </div>
                         <div class="product-info">
                           <h5>Xe Đạp Đường Phố Touring JAVA Wahoo City - Phanh Đĩa, Bánh 700C</h5>
-                          <p class="price"><span class="original-price">1.130.000 VND</span>849.000 VND</p>
-                          <a href="product-details.html" class="btn-view">Xem sản phẩm</a>
+                          <p class="price"><span class="original-price">1.130.000 VND</span> 849.000 VND</p>
+                          <a href="#" class="btn-view">Xem sản phẩm</a>
                         </div>
                       </div>
                       <div class="product-card">
@@ -365,9 +325,9 @@
                           <span class="badge-sale">-23%</span>
                         </div>
                         <div class="product-info">
-                          <h5>Xe Đạp Đường Phố Touring RAPTOR Feliz 2 - Phanh Đĩa, Bánh 700C/h5>
-                          <p class="price"><span class="original-price">13.000.000 VND</span>8.000.000 VND</p>
-                          <a href="product-details.html" class="btn-view">Xem sản phẩm</a>
+                          <h5>Xe Đạp Đường Phố Touring RAPTOR Feliz 2 - Phanh Đĩa, Bánh 700C</h5>
+                          <p class="price"><span class="original-price">13.000.000 VND</span> 8.000.000 VND</p>
+                          <a href="#" class="btn-view">Xem sản phẩm</a>
                         </div>
                       </div>
                     </div>
@@ -379,27 +339,19 @@
                       <div class="category-column">
                         <h4>Xe đạp</h4>
                         <ul>
-                          <li><a href="category.html">Xe đạp đường phố</a></li>
-                          <li><a href="category.html">Xe đạp địa hình</a></li>
-                          <li><a href="category.html">Xe đạp nữ</a></li>
-                          <li><a href="category.html">Xe đạp fixed gear</a></li>
-                          <li><a href="category.html">Xe đạp trẻ em</a></li>
+                          <li><a href="#">Xe đạp đường phố</a></li>
+                          <li><a href="#">Xe đạp địa hình</a></li>
+                          <li><a href="#">Xe đạp nữ</a></li>
+                          <li><a href="#">Xe đạp fixed gear</a></li>
+                          <li><a href="#">Xe đạp trẻ em</a></li>
                         </ul>
                       </div>
                       <div class="category-column">
                         <h4>Xe điện</h4>
                         <ul>
-                          <li><a href="category.html">Xe đạp điện</a></li>
-                          <li><a href="category.html">Xe máy điện</a></li>
-                          <li><a href="category.html">Xe trợ lực</a></li>
-                        </ul>
-                      </div>
-                      <div class="category-column">
-                        <ul>
-                        </ul>
-                      </div>
-                      <div class="category-column">
-                        <ul>
+                          <li><a href="#">Xe đạp điện</a></li>
+                          <li><a href="#">Xe đạp máy điện</a></li>
+                          <li><a href="#">Xe trợ lực</a></li>
                         </ul>
                       </div>
                     </div>
@@ -407,156 +359,9 @@
 
                 </div>
 
-              </div><!-- End Products Mega Menu 1 Desktop View -->
+              </div><!-- End Products Menu Desktop View -->
 
-            </li><!-- End Products Mega Menu 1 -->
-            <!-- Products Mega Menu 2 -->
-            <li class="products-megamenu-2"><a href="#"><span>Menu xe đạp</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-
-              <!-- Products Mega Menu 2 Mobile View -->
-<!-- End Products Mega Menu 2 Mobile View -->
-
-              <!-- Products Mega Menu 2 Desktop View -->
-              <div class="desktop-megamenu">
-
-                <div class="megamenu-tabs">
-                  <ul class="nav nav-tabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                    </li>
-                    <li class="nav-item" role="presentation">
-                    </li>
-                    <li class="nav-item" role="presentation">
-                    </li>
-                  </ul>
-                </div>
-
-                <!-- Tabs Content -->
-                <div class="megamenu-content tab-content">
-
-                  <!-- Xe đạp Tab -->
-                  <div class="tab-pane fade show active" id="womens-content-1883" role="tabpanel" aria-labelledby="womens-tab">
-                    <div class="category-layout">
-                      <div class="categories-section">
-                        <div class="category-headers">
-                        </div>
-
-                        <div class="category-links">
-                          <div class="link-row">
-                            <a href="category.html">Xe đạp đường phố</a>
-                            <a href="category.html">Xe đạp fixed gear</a>
-                            <a href="category.html">Xe đạp địa hình</a>
-                            <a href="category.html">Xe đạp nữ</a>
-                            <a href="category.html">Xe đạp trẻ em</a>
-                          </div>
-                          <div class="link-row">
-                          </div>
-                          <div class="link-row">
-                            <a href="#"></a>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="featured-section">
-                        <div class="featured-image">
-                          <img src="assets/img/product/10.jpg" alt="Women's Heels Collection">
-                          <div class="featured-content">
-                            <h3>Bộ<br>sưu tập<br>xe đạp</h3>
-                            <a href="checkout.html" class="btn-shop">Mua ngay</a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Phụ kiện cho người Tab -->
-                  <div class="tab-pane fade" id="mens-content-1883" role="tabpanel" aria-labelledby="mens-tab">
-                    <div class="category-layout">
-                      <div class="categories-section">
-                        <div class="category-headers">
-                        </div>
-
-                        <div class="category-links">
-                          <div class="link-row">
-                            <a href="aoquan.html">Áo, Quần</a>
-                            <a href="balotui.html">Balo - túi</a>
-                            <a href="gangtay.html">Găng tay</a>
-                            <a href="#">Giày</a>
-                          </div>
-                          <div class="link-row">
-                            <a href="matkinh.html">Mắt kính</a>
-                            <a href="vo.html">Vớ</a>
-                          </div>
-                          <div class="link-row">
-                            <a href="#"></a>
-                          </div>
-                          <div class="link-row">
-                          </div>
-                          <div class="link-row">
-                            <a href="#"></a>
-                          </div>
-                          <div class="link-row">
-                            <a href="#"></a>
-                          </div>
-                          <div class="link-row">
-                            <a href="#"></a>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="featured-section">
-                        <div class="featured-image">
-                          <img src="assets/img/product/11.jpg" alt="Men's Footwear Collection">
-                          <div class="featured-content">
-                            <h3>Bộ sưu tập <br>xe đạp điện<br></h3>
-                            <a href="muahang.html" class="btn-shop">Mua ngay</a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Phụ kiện cho xe Tab -->
-                  <div class="tab-pane fade" id="kids-content-1883" role="tabpanel" aria-labelledby="kids-tab">
-                    <div class="category-layout">
-                      <div class="categories-section">
-                        <div class="category-headers">
-                        </div>
-
-                        <div class="category-links">
-                          <div class="link-row">
-                          </div>
-                          <div class="link-row">
-                          </div>
-                          <div class="link-row">
-                          </div>
-                          <div class="link-row">
-                          </div>
-                          <div class="link-row">
-                            <a href="#"></a>
-                          </div>
-                          <div class="link-row">
-                            <a href="#"></a>
-                          </div>
-                          <div class="link-row">
-                            <a href="#"></a>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="featured-section">
-                        <div class="featured-image">
-                          <img src="assets/img/product/12.jpg" alt="Kids' New Arrivals">
-                          <div class="featured-content">
-                            <h3>Phụ kiện<br> cho<br> xe</h3>
-                            <a href="#" class="btn-shop">Mua ngay</a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-
-              </div><!-- End Products Mega Menu 2 Desktop View -->
-
-            </li><!-- End Products Mega Menu 2 -->
+            </li><!-- End Products Menu -->
 
             <li><a href="contact.html">Liên hệ</a></li>
 
@@ -570,7 +375,7 @@
       <div class="container">
         <form class="search-form">
           <div class="input-group">
-            <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+            <input type="text" class="form-control" placeholder="Search for products">
             <button class="btn" type="submit">
               <i class="bi bi-search"></i>
             </button>
