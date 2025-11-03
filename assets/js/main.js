@@ -1017,5 +1017,61 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+// ==========================
+// 🧾 LƯU & TẢI THÔNG TIN KHÁCH HÀNG
+// ==========================
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.querySelector(".settings-form");
+  if (!form) return;
+
+  const firstName = document.getElementById("firstName");
+  const lastName = document.getElementById("lastName");
+  const email = document.getElementById("email");
+  const phone = document.getElementById("phone");
+
+  // --- Tải thông tin từ Local Storage ---
+  const savedUser = JSON.parse(localStorage.getItem("accountInfo")) || {};
+  if (savedUser.firstName) firstName.value = savedUser.firstName;
+  if (savedUser.lastName) lastName.value = savedUser.lastName;
+  if (savedUser.email) email.value = savedUser.email;
+  if (savedUser.phone) phone.value = savedUser.phone;
+
+  // --- Khi người dùng bấm Lưu thay đổi ---
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const userData = {
+      firstName: firstName.value.trim(),
+      lastName: lastName.value.trim(),
+      email: email.value.trim(),
+      phone: phone.value.trim()
+    };
+
+    // Lưu vào Local Storage
+    localStorage.setItem("accountInfo", JSON.stringify(userData));
+
+    // Cập nhật tên hiển thị ở sidebar (nếu có)
+    const nameDisplay = document.querySelector(".user-info h4");
+    if (nameDisplay)
+      nameDisplay.textContent = `${userData.lastName} ${userData.firstName}`;
+
+    // Hiển thị thông báo
+    if (typeof Swal !== "undefined") {
+      Swal.fire({
+        icon: "success",
+        title: "Đã lưu thông tin!",
+        text: "Thông tin tài khoản của bạn đã được cập nhật.",
+        confirmButtonColor: "#000"
+      });
+    } else {
+      const msg = document.querySelector(".sent-message");
+      if (msg) {
+        msg.style.display = "block";
+        setTimeout(() => (msg.style.display = "none"), 3000);
+      }
+    }
+  });
+});
+
 
 })();
