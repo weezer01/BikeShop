@@ -60,7 +60,7 @@
     <div class="login-card">
       <div style="text-align:center;margin-bottom:8px">
         <div class="brand">BikePro Store — Admin</div>
-        <div class="small">Giao diện quản trị (Dark). Dữ liệu lưu trên <code>localStorage</code>.</div>
+        <div class="small">Giao diện quản trị (Dark).</div>
       </div>
 
       <label>Tên đăng nhập hoặc email</label>
@@ -107,6 +107,8 @@
       </header>
 
       <div id="views">
+  </tbody>
+</table>
         <!-- Dashboard -->
         <section data-view="dashboard">
           <div class="card">
@@ -240,6 +242,8 @@
                   <input id="orderTo_sub" type="date" />
                   <select id="orderStatus_sub"><option value="">-- Trạng thái --</option><option value="new">Mới đặt</option><option value="processing">Đã xử lý</option><option value="shipped">Đã giao</option><option value="cancel">Huỷ</option></select>
                   <button class="btn" id="btnFilterOrders_sub">Tìm</button>
+                  <button class="btn primary" id="btnNewOrder">Thêm đơn hàng</button>
+
                 </div>
                 <div class="table-scroll" style="margin-top:8px">
                   <table id="tblOrders_sub"><thead><tr><th>STT</th><th>Mã đơn</th><th>Ngày</th><th>Tổng tiền</th><th>Trạng thái</th><th>Hành động</th></tr></thead><tbody></tbody></table>
@@ -272,6 +276,7 @@
 const DB = {
   key: 'bikepro_admin_db_v1',
   defaultData(){
+    
     return {
       users:[
         {id:1,name:'Khách A',email:'a@example.com',pass:'user',locked:false},
@@ -293,7 +298,9 @@ const DB = {
       orders:[
         {id:1,code:'O-2001',date:new Date().toISOString().slice(0,10),items:[{productId:1,qty:1,price:1380}],total:1380,status:'new'}
       ],
-      settings:{lowThreshold:3,defaultMargin:10},
+      stockHistory: [], // ✅ Lưu lịch sử tồn kho hằng ngày
+      settings:{lowThreshold:3,defaultMargin:20}  
+
     }
   },
   load(){
@@ -357,13 +364,27 @@ $$('.subtabs button').forEach(b => b.addEventListener('click', ()=>{
   $$('.subtabs button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); activateSub(b.dataset.sub);
 }));
 function activateSub(name){
-  $$('#subviews > div').forEach(d=>d.style.display = d.dataset.subview===name ? '' : 'none');
-  if(name==='list') renderProducts();
-  if(name==='imports') renderImports();
-  if(name==='pricing') renderPricing();
-  if(name==='stock') renderStock();
-  if(name==='orders') renderOrders_sub();
+  $$('#subviews > div').forEach(d => d.style.display = d.dataset.subview === name ? '' : 'none');
+  
+  if (name === 'list') renderProducts();
+
+  if (name === 'imports') {
+    renderImports();
+    recordDailyStock(); // ✅ Lưu lại tồn kho khi xem hoặc cập nhật phiếu nhập
+  }
+
+  if (name === 'pricing') renderPricing();
+
+  if (name === 'stock') renderStock();
+
+  if (name === 'orders') {
+    renderOrders_sub();
+    recordDailyStock(); // ✅ Lưu lại tồn kho khi xử lý đơn hàng
+  }
 }
+
+if (!db.types) db.types = [];
+if (!db.products) db.products = [];
 
 /* ---------- Renderers & Features ---------- */
 function renderAll(){ renderDashboard(); renderUsers(); renderTypes(); renderProducts(); renderImports(); renderPricing(); renderOrders_sub(); renderStock(); }
@@ -397,80 +418,229 @@ $('#btnAddUser')?.addEventListener('click', ()=> {
 
 /* Types */
 function renderTypes(){
-  const tbody=$('#tblTypes tbody'); tbody.innerHTML='';
-  db.types.forEach((t,i)=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${t.name}</td><td><button class="btn" data-id="${t.id}" data-act="edit">Sửa</button> <button class="btn danger" data-id="${t.id}" data-act="del">Xoá</button></td>`; tbody.appendChild(tr); });
-  tbody.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{
-    const id=Number(b.dataset.id), act=b.dataset.act;
-    if(act==='edit'){ const t=db.types.find(x=>x.id===id); showModal(`<h3>Sửa loại</h3><label>Tên</label><input id='typeEdit' value='${t.name}'/><div style='margin-top:8px'><button id='saveType' class='btn primary'>Lưu</button> <button id='cType' class='btn'>Huỷ</button></div>`); $('#saveType').addEventListener('click', ()=>{ t.name=$('#typeEdit').value; DB.save(db); closeModal(); renderTypes(); renderProducts(); }); $('#cType').addEventListener('click', closeModal); }
-    else if(act==='del'){ if(!confirm('Xác nhận xoá loại?')) return; db.types=db.types.filter(x=>x.id!==id); DB.save(db); renderTypes(); renderProducts(); }
-  }));
-}
-$('#btnAddType')?.addEventListener('click', ()=>{ const name = $('#typeName').value.trim(); if(!name){alert('Nhập tên loại');return} db.types.push({id:uid(),name}); DB.save(db); $('#typeName').value=''; renderTypes(); renderProducts(); });
-
-/* Products */
-function calcSell(p){ const margin = p.margin!=null ? p.margin : (db.settings.defaultMargin||0); return Math.round((p.cost||0)*(1 + (margin||0)/100)); }
-function renderProducts(){
-  const tbody=$('#tblProducts tbody'); tbody.innerHTML='';
-  const filterType=$('#filterType'); filterType.innerHTML='<option value="">-- Lọc theo loại --</option>'; db.types.forEach(t=>filterType.innerHTML += `<option value="${t.id}">${t.name}</option>`);
-  const list = db.products.slice();
-  list.forEach((p,i)=>{
-    const typeName = (db.types.find(t=>t.id===p.type)||{}).name || '—';
-    const tr=document.createElement('tr');
-    tr.innerHTML = `<td>${i+1}</td><td>${p.code}</td><td style="color:#dff7ff">${p.name}</td><td>${typeName}</td><td>${p.cost}</td><td>${calcSell(p)}</td><td>${p.stock}</td><td>${p.hidden? 'Yes' : 'No'}</td><td><button class='btn' data-id='${p.id}' data-act='edit'>Sửa</button> <button class='btn warn' data-id='${p.id}' data-act='hide'>Ẩn/Hiện</button> <button class='btn danger' data-id='${p.id}' data-act='del'>Xoá</button></td>`;
+  const tbody = $('#tblTypes tbody');
+  if(!tbody) return;
+  tbody.innerHTML = '';
+  (db.types || []).forEach((t,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${i+1}</td><td>${t.name}</td><td>
+      <button class="btn" data-id="${t.id}" data-act="edit">Sửa</button>
+      <button class="btn danger" data-id="${t.id}" data-act="delete">Xóa</button>
+    </td>`;
     tbody.appendChild(tr);
   });
-  tbody.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{
-    const id=Number(b.dataset.id), act=b.dataset.act, p=db.products.find(x=>x.id===id);
-    if(!p) return;
-    if(act==='edit') openProductModal(p);
-    if(act==='hide'){ p.hidden = !p.hidden; DB.save(db); renderProducts(); }
-    if(act==='del'){ if(!confirm('Xác nhận xoá sản phẩm?')) return; db.products=db.products.filter(x=>x.id!==id); DB.save(db); renderProducts(); }
-  }));
 
-  $('#filterType').onchange = ()=>{
-    const v = Number($('#filterType').value) || null;
-    if(!v){ renderProducts(); return; }
-    const tbody=$('#tblProducts tbody'); tbody.innerHTML='';
-    db.products.filter(p=>p.type===v).forEach((p,i)=>{
-      const tn=(db.types.find(t=>t.id===p.type)||{}).name||'—';
-      const tr=document.createElement('tr');
-      tr.innerHTML=`<td>${i+1}</td><td>${p.code}</td><td>${p.name}</td><td>${tn}</td><td>${p.stock}</td><td>${calcSell(p)}</td><td>${p.hidden? 'Yes' : 'No'}</td><td><button class='btn' data-id='${p.id}' data-act='edit'>Sửa</button></td>`;
-      tbody.appendChild(tr);
+  tbody.querySelectorAll('button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const id = Number(b.dataset.id), act = b.dataset.act;
+      const type = db.types.find(x=>x.id===id);
+      if(!type) return;
+      if(act==='edit'){
+        const newName = prompt('Nhập tên mới cho loại:', type.name);
+        if(!newName) return;
+        type.name = newName;
+        DB.save(db);
+        renderTypes();
+        renderProducts(); // cập nhật dropdown & hiển thị
+      } else if(act==='delete'){
+        if(!confirm(`Xóa loại "${type.name}"? Sản phẩm cùng loại sẽ bị bỏ loại.`)) return;
+        // bỏ liên kết type trên sản phẩm
+        db.products.forEach(p => { if(p.type === id) p.type = null; });
+        db.types = db.types.filter(x => x.id !== id);
+        DB.save(db);
+        renderTypes();
+        renderProducts();
+        alert('Đã xóa loại và cập nhật sản phẩm liên quan.');
+      }
     });
-  };
-  // search
-  $('#searchProd').oninput = (e)=>{
-    const q = e.target.value.toLowerCase();
-    const tbody=$('#tblProducts tbody'); tbody.innerHTML='';
-    db.products.filter(p=> (p.name+p.code).toLowerCase().includes(q) ).forEach((p,i)=>{
-      const tn=(db.types.find(t=>t.id===p.type)||{}).name||'—';
-      const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${p.code}</td><td>${p.name}</td><td>${tn}</td><td>${p.cost}</td><td>${calcSell(p)}</td><td>${p.stock}</td><td>${p.hidden? 'Yes' : 'No'}</td><td><button class='btn' data-id='${p.id}' data-act='edit'>Sửa</button></td>`; tbody.appendChild(tr);
-    });
-  };
-}
-$('#btnAddProd').addEventListener('click', ()=> openProductModal());
-
-function openProductModal(p=null){
-  const isNew = !p;
-  const typesOptions = db.types.map(t=>`<option value='${t.id}' ${p && p.type===t.id ? 'selected': ''}>${t.name}</option>`).join('');
-  showModal(`<h3>${isNew? 'Thêm' : 'Sửa'} xe đạp</h3>
-    <label>Mã</label><input id='mCode' value='${p?p.code:''}'/>
-    <label>Tên</label><input id='mName' value='${p?p.name:''}'/>
-    <label>Loại</label><select id='mType'>${typesOptions}</select>
-    <label>Giá vốn</label><input id='mCost' type='number' value='${p?p.cost:0}'/>
-    <label>Tồn</label><input id='mStock' type='number' value='${p?p.stock:0}'/>
-    <label>Mô tả</label><textarea id='mDesc'>${p?p.desc:''}</textarea>
-    <label>% lợi nhuận (để override, để trống dùng % loại)</label><input id='mMargin' type='number' value='${p && p.margin!=null? p.margin:''}'/>
-    <div style="margin-top:8px"><button id='mSave' class='btn primary'>Lưu</button> <button id='mCancel' class='btn'>Huỷ</button></div>`);
-  $('#mSave').addEventListener('click', ()=>{
-    const code=$('#mCode').value.trim(), name=$('#mName').value.trim(), type=Number($('#mType').value), cost=Number($('#mCost').value)||0, stock=Number($('#mStock').value)||0, desc=$('#mDesc').value, margin = $('#mMargin').value.trim();
-    if(!code||!name){ alert('Nhập mã và tên'); return; }
-    if(isNew){ db.products.push({id:uid(),code,name,type,cost,stock,desc,image:'',hidden:false,margin: margin===''? null: Number(margin)}); }
-    else { Object.assign(p,{code,name,type,cost,stock,desc,margin: margin===''? null: Number(margin)}); }
-    DB.save(db); closeModal(); renderProducts(); renderStock(); renderPricing();
   });
+}
+// ✅ Hàm định dạng giá tiền kiểu Việt Nam
+function formatVND(num) {
+  if (num == null || isNaN(num)) return '0 ₫';
+  return num.toLocaleString('vi-VN') + ' ₫';
+}
+
+/* Products */
+function calcSell(p) {
+  const margin = p.margin != null ? p.margin : (db.settings.defaultMargin || 0);
+  const sell = (p.cost || 0) * (1 + (margin || 0) / 100);
+  return Math.round(sell); // luôn làm tròn
+}
+function renderProducts() {
+  const tbody = $('#tblProducts tbody');
+  tbody.innerHTML = '';
+
+  // --- Dropdown loại sản phẩm ---
+  const filterType = $('#filterType');
+  filterType.innerHTML = '<option value="">-- Lọc theo loại --</option>';
+  db.types.forEach(t => {
+    filterType.innerHTML += `<option value="${t.id}">${t.name}</option>`;
+  });
+
+  // --- Danh sách sản phẩm ---
+  db.products.forEach((p, i) => {
+    const typeName = (db.types.find(t => t.id === p.type) || {}).name || '—';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${i + 1}</td>
+      <td>${p.code}</td>
+      <td>${p.name}</td>
+      <td>${typeName}</td>
+      <td>${formatVND(p.cost)}</td>
+      <td>${formatVND(calcSell(p))}</td>
+      <td>${p.stock}</td>
+      <td>${p.hidden ? 'Ẩn' : 'Hiện'}</td>
+      <td>
+        <button class="btn info" data-id="${p.id}" data-act="view">Xem</button>
+        <button class="btn" data-id="${p.id}" data-act="edit">Sửa</button>
+        <button class="btn warn" data-id="${p.id}" data-act="hide">Ẩn/Hiện</button>
+        <button class="btn danger" data-id="${p.id}" data-act="del">Xoá</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+
+  // --- Hành động các nút ---
+  tbody.querySelectorAll('button').forEach(b =>
+    b.addEventListener('click', () => {
+      const id = Number(b.dataset.id);
+      const act = b.dataset.act;
+      const p = db.products.find(x => x.id === id);
+      if (!p) return;
+
+      if (act === 'view') showProductDetail(p);
+      if (act === 'edit') openProductModal(p);
+      if (act === 'hide') {
+        p.hidden = !p.hidden;
+        DB.save(db);
+        renderProducts();
+      }
+      if (act === 'del') {
+        if (confirm('Xác nhận xoá sản phẩm?')) {
+          db.products = db.products.filter(x => x.id !== id);
+          DB.save(db);
+          renderProducts();
+        }
+      }
+    })
+  );
+}
+
+
+function openProductModal(p = null) {
+  const isNew = !p;
+  const typesOptions = (db.types || [])
+    .map(
+      t =>
+        `<option value='${t.id}' ${
+          p && p.type === t.id ? 'selected' : ''
+        }>${t.name}</option>`
+    )
+    .join('');
+
+  showModal(`
+    <h3>${isNew ? 'Thêm' : 'Sửa'} xe đạp</h3>
+    <label>Mã</label>
+    <input id='mCode' value='${p ? p.code : ''}'/>
+
+    <label>Tên</label>
+    <input id='mName' value='${p ? p.name : ''}'/>
+
+    <label>Loại</label>
+    <select id='mType'>${typesOptions}</select>
+
+    <label>Giá vốn</label>
+    <input id='mCost' type='number' value='${p ? p.cost : 0}'/>
+
+    <label>Tồn</label>
+    <input id='mStock' type='number' value='${p ? p.stock : 0}'/>
+
+    <label>Mô tả</label>
+    <textarea id='mDesc'>${p ? p.desc : ''}</textarea>
+
+    <label>Hình ảnh (URL hoặc chọn tệp)</label>
+    <input id='mImage' type='text' placeholder='Dán link ảnh hoặc chọn file bên dưới' value='${p && p.image ? p.image : ''}'/>
+    <input id='mFile' type='file' accept='image/*' style='margin-top:6px'/>
+
+    <div style='margin-top:10px;text-align:center'>
+      <img id='previewImg' src='${p && p.image ? p.image : 'https://via.placeholder.com/120x80?text=No+Img'}' 
+           style='max-width:120px;border-radius:8px;object-fit:cover;border:1px solid rgba(255,255,255,0.1)'/>
+    </div>
+
+    <label>% lợi nhuận (để trống dùng % loại)</label>
+    <input id='mMargin' type='number' value='${p && p.margin != null ? p.margin : ''}'/>
+
+    <div style="margin-top:12px">
+      <button id='mSave' class='btn primary'>Lưu</button>
+      <button id='mCancel' class='btn'>Huỷ</button>
+    </div>
+  `);
+
+  // --- Xử lý khi chọn file ---
+  $('#mFile').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        $('#previewImg').src = ev.target.result;
+        $('#mImage').value = ev.target.result; // lưu base64 vào input
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // --- Lưu sản phẩm ---
+  $('#mSave').addEventListener('click', () => {
+    const code = $('#mCode').value.trim();
+    const name = $('#mName').value.trim();
+    const type = Number($('#mType').value);
+    const cost = Number($('#mCost').value) || 0;
+    const stock = Number($('#mStock').value) || 0;
+    const desc = $('#mDesc').value;
+    const image = $('#mImage').value.trim();
+    const margin = $('#mMargin').value.trim();
+
+    if (!code || !name) {
+      alert('⚠️ Nhập đầy đủ mã và tên sản phẩm!');
+      return;
+    }
+
+    if (isNew) {
+      db.products.push({
+        id: uid(),
+        code,
+        name,
+        type,
+        cost,
+        stock,
+        desc,
+        image,
+        hidden: false,
+        margin: margin === '' ? null : Number(margin),
+      });
+    } else {
+      Object.assign(p, {
+        code,
+        name,
+        type,
+        cost,
+        stock,
+        desc,
+        image,
+        margin: margin === '' ? null : Number(margin),
+      });
+    }
+
+    DB.save(db);
+    closeModal();
+    renderProducts();
+    renderStock();
+    renderPricing();
+  });
+
   $('#mCancel').addEventListener('click', closeModal);
 }
+
 
 /* Imports (phiếu nhập) */
 function renderImports(){
@@ -504,59 +674,413 @@ function openImportModal(im=null){
     local.items.forEach(it=>{ const p=db.products.find(x=>x.id===it.productId); if(p){ p.stock = (p.stock||0) + it.qty; p.cost = it.cost; } });
     if(isNew) db.imports.push(local);
     DB.save(db); closeModal(); renderImports(); renderStock(); renderPricing();
+    recordDailyStock(); // Thêm dòng này để ghi lại tồn kho hàng ngày sau khi hoàn thành phiếu nhập
   });
   $('#impCancel').addEventListener('click', closeModal);
 }
-function showImportView(im){ showModal(`<h3>Phiếu nhập ${im.code||''}</h3><div>Ngày: ${im.date}</div><div>Trạng thái: ${im.completed? 'Hoàn thành':'Mới'}</div><div style='margin-top:8px'>${im.items.map(it=>{const p=db.products.find(x=>x.id===it.productId); return `<div>${p? p.name : '—'} — SL: ${it.qty} — Giá: ${it.cost}</div>`}).join('')}</div><div style='margin-top:8px'><button id='c' class='btn'>Đóng</button></div>`); $('#c').addEventListener('click', closeModal); }
+function showImportView(im){ showModal(`<h3>Phiếu nhập ${im.code||''}</h3><div>Ngày: ${im.date}</div><div>Trạng thái: ${im.completed? 'Hoàn thành':'Mới'}</div><div style='margin-top:8px'>${im.items.map(it=>{const p=db.products.find(x=>x.id===it.productId); return `<div>${p? p.name : '—'} — SL: ${it.qty} — Giá nhập: ${formatVND(it.cost)}</div>`
+}).join('')}</div><div style='margin-top:8px'><button id='c' class='btn'>Đóng</button></div>`); $('#c').addEventListener('click', closeModal); }
+
 
 /* Pricing: set margin by type or by product override */
 function renderPricing(){
   const tbody=$('#tblPricing tbody'); tbody.innerHTML='';
-  db.products.forEach((p,i)=>{ const margin = p.margin!=null ? p.margin : (db.settings.defaultMargin||0); const sell = calcSell(p); const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${p.name}</td><td>${p.cost}</td><td>${margin}</td><td>${sell}</td><td><button class="btn" data-id="${p.id}" data-act="edit">Sửa %</button></td>`; tbody.appendChild(tr); });
+  db.products.forEach((p,i)=>{ const margin = p.margin!=null ? p.margin : (db.settings.defaultMargin||0); const sell = calcSell(p); const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${p.name}</td><td>${formatVND(p.cost)}</td><td>${margin}%</td><td>${formatVND(sell)}</td>
+<td><button class="btn" data-id="${p.id}" data-act="edit">Sửa %</button></td>`; tbody.appendChild(tr); });
   tbody.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{ const id=Number(b.dataset.id), p=db.products.find(x=>x.id===id); showModal(`<h3>Chỉnh % lợi nhuận cho ${p.name}</h3><label>% LN</label><input id='pm' type='number' value='${p.margin!=null? p.margin: ''}'/><div style='margin-top:8px'><button id='savePM' class='btn primary'>Lưu</button> <button id='cpm' class='btn'>Huỷ</button></div>`); $('#savePM').addEventListener('click', ()=>{ const m = $('#pm').value.trim(); p.margin = m===''? null: Number(m); DB.save(db); closeModal(); renderPricing(); renderProducts(); }); $('#cpm').addEventListener('click', closeModal); }));
   const sel=$('#priceTypeFilter'); sel.innerHTML = '<option value="">-- Chọn loại để chỉnh % --</option>'; db.types.forEach(t=>sel.innerHTML += `<option value='${t.id}'>${t.name}</option>`);
   $('#btnSetMargin').onclick = ()=>{ const typeId = Number($('#priceTypeFilter').value); const margin = Number($('#priceMargin').value); if(!typeId || isNaN(margin)){ alert('Chọn loại & nhập %'); return } db.products.filter(p=>p.type===typeId).forEach(p=>p.margin = margin); DB.save(db); renderPricing(); renderProducts(); };
 }
 
 /* Orders (subview under products) */
-function renderOrders_sub(){
-  const tbody=$('#tblOrders_sub tbody'); tbody.innerHTML='';
-  db.orders.forEach((o,i)=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${o.code}</td><td>${o.date}</td><td>${o.total}</td><td>${o.status}</td><td><button class="btn" data-id="${o.id}" data-act="view">Xem</button> <button class="btn" data-id="${o.id}" data-act="update">Cập nhật</button></td>`; tbody.appendChild(tr); });
-  tbody.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{
-    const id=Number(b.dataset.id), act=b.dataset.act, o=db.orders.find(x=>x.id===id);
-    if(!o) return;
-    if(act==='view'){ showModal(`<h3>Đơn ${o.code}</h3><div>Ngày: ${o.date}</div><div>Trạng thái: ${o.status}</div><div style='margin-top:8px'>${o.items.map(it=>{const p=db.products.find(x=>x.id===it.productId); return `<div>${p? p.name: '—'} — SL:${it.qty} — Giá:${it.price}</div>`}).join('')}</div><div style='margin-top:8px'><button id='c' class='btn'>Đóng</button></div>`); $('#c').addEventListener('click', closeModal); }
-    else if(act==='update'){ showModal(`<h3>Cập nhật trạng thái</h3><select id='st'><option value='new'>Mới đặt</option><option value='processing'>Đã xử lý</option><option value='shipped'>Đã giao</option><option value='cancel'>Huỷ</option></select><div style='margin-top:8px'><button id='s' class='btn primary'>Lưu</button> <button id='x' class='btn'>Huỷ</button></div>`); $('#s').addEventListener('click', ()=>{ const prev=o.status; o.status = $('#st').value; // if move to processing or shipped -> reduce stock accordingly (simulate)
-        if(prev !== 'processing' && o.status === 'processing'){ // consume stock on processing
-          o.items.forEach(it=>{ const p=db.products.find(x=>x.id===it.productId); if(p){ p.stock = Math.max(0,(p.stock||0) - it.qty); } });
+/* Orders (subview under products) */
+function renderOrders_sub() {
+  // nút tạo đơn (nếu có)
+  $('#btnNewOrder')?.addEventListener('click', () => openOrderModal());
+
+  const tbody = $('#tblOrders_sub tbody');
+  tbody.innerHTML = '';
+
+  // render hàng trong bảng
+  (db.orders || []).forEach((o, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${i + 1}</td>
+      <td>${o.code}</td>
+      <td>${o.date}</td>
+      <td>${formatVND(o.total || 0)}</td>
+      <td>${o.status}</td>
+      <td>
+        <button class="btn" data-id="${o.id}" data-act="view">Xem</button>
+        <button class="btn" data-id="${o.id}" data-act="update">Cập nhật</button>
+        <button class="btn danger" data-id="${o.id}" data-act="delete">Xóa</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+
+  // --- Các hành động trên các nút trong bảng ---
+  tbody.querySelectorAll('button').forEach((b) =>
+    b.addEventListener('click', () => {
+      const id = Number(b.dataset.id);
+      const act = b.dataset.act;
+      const o = (db.orders || []).find((x) => x.id === id);
+      if (!o) return;
+
+      // XEM chi tiết
+      if (act === 'view') {
+        const details = (o.items || [])
+          .map((it) => {
+            const p = db.products.find((x) => x.id === it.productId);
+            return `<div>${p ? p.name : '—'} — SL: ${it.qty} — Giá: ${formatVND(it.price)}</div>`;
+          })
+          .join('');
+
+        showModal(`
+          <h3>Đơn ${o.code}</h3>
+          <div>Ngày: ${o.date}</div>
+          <div>Trạng thái: ${o.status}</div>
+          <div style='margin-top:8px'>${details}</div>
+          <div style='margin-top:8px;font-weight:bold'>Tổng tiền: ${formatVND(o.total || 0)}</div>
+          <div style='margin-top:8px'><button id='c' class='btn'>Đóng</button></div>
+        `);
+        $('#c').addEventListener('click', closeModal);
+        return;
+      }
+
+      // CẬP NHẬT trạng thái
+      if (act === 'update') {
+        showModal(`
+          <h3>Cập nhật trạng thái</h3>
+          <select id='st'>
+            <option value='new' ${o.status === 'new' ? 'selected' : ''}>Mới đặt</option>
+            <option value='processing' ${o.status === 'processing' ? 'selected' : ''}>Đã xử lý</option>
+            <option value='shipped' ${o.status === 'shipped' ? 'selected' : ''}>Đã giao</option>
+            <option value='cancel' ${o.status === 'cancel' ? 'selected' : ''}>Huỷ</option>
+          </select>
+          <div style='margin-top:8px'>
+            <button id='s' class='btn primary'>💾 Lưu</button>
+            <button id='x' class='btn'>Đóng</button>
+          </div>
+        `);
+
+        $('#s').addEventListener('click', () => {
+          const prev = o.status;
+          o.status = $('#st').value;
+
+          // Nếu chuyển sang "Đã xử lý" => trừ tồn kho
+          if (prev !== 'processing' && o.status === 'processing') {
+            (o.items || []).forEach((it) => {
+              const p = db.products.find((x) => x.id === it.productId);
+              if (p) p.stock = Math.max(0, (p.stock || 0) - it.qty);
+            });
+            alert(`📦 Đơn ${o.code} đã được xử lý — tồn kho cập nhật.`);
+          }
+
+          // Nếu từ "Đã xử lý" về "Huỷ" => hoàn lại tồn kho
+          if (prev === 'processing' && o.status === 'cancel') {
+            (o.items || []).forEach((it) => {
+              const p = db.products.find((x) => x.id === it.productId);
+              if (p) p.stock = (p.stock || 0) + it.qty;
+            });
+            alert(`🔁 Đơn ${o.code} đã bị huỷ — hàng được hoàn lại tồn kho.`);
+          }
+
+          DB.save(db);
+          closeModal();
+          renderOrders_sub();
+          renderProducts();
+          renderStock();
+          renderDashboard();
+        });
+
+        $('#x').addEventListener('click', closeModal);
+        return;
+      }
+
+      // XÓA đơn hàng
+      if (act === 'delete') {
+        if (!confirm(`Bạn có chắc muốn xóa đơn ${o.code}?`)) return;
+
+        // Nếu đơn đang "Đã xử lý" -> hoàn lại tồn kho trước khi xóa
+        if (o.status === 'processing') {
+          (o.items || []).forEach((it) => {
+            const p = db.products.find((x) => x.id === it.productId);
+            if (p) p.stock = (p.stock || 0) + it.qty;
+          });
         }
-        DB.save(db); closeModal(); renderOrders_sub(); renderStock(); renderProducts(); renderDashboard();
-    }); $('#x').addEventListener('click', closeModal); }
-  }));
-  $('#btnFilterOrders_sub').onclick = ()=>{ const from=$('#orderFrom_sub').value; const to=$('#orderTo_sub').value; const st=$('#orderStatus_sub').value; let list=db.orders.slice(); if(from) list=list.filter(o=>o.date>=from); if(to) list=list.filter(o=>o.date<=to); if(st) list=list.filter(o=>o.status===st); const tbody=$('#tblOrders_sub tbody'); tbody.innerHTML=''; list.forEach((o,i)=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${o.code}</td><td>${o.date}</td><td>${o.total}</td><td>${o.status}</td><td><button class="btn" data-id="${o.id}" data-act="view">Xem</button></td>`; tbody.appendChild(tr); }); tbody.querySelectorAll('button').forEach(btn=>btn.addEventListener('click', ()=>{ const id=Number(btn.dataset.id); const o = db.orders.find(x=>x.id===id); if(o) showModal(`<h3>Đơn ${o.code}</h3><div>Ngày: ${o.date}</div><div>Trạng thái: ${o.status}</div><div style='margin-top:8px'>${o.items.map(it=>{const p=db.products.find(x=>x.id===it.productId); return `<div>${p? p.name:'—'} — SL:${it.qty} — Giá:${it.price}</div>`}).join('')}</div><div style='margin-top:8px'><button id='c' class='btn'>Đóng</button></div>`); $('#c').addEventListener('click', closeModal); })); };
+
+        db.orders = (db.orders || []).filter((x) => x.id !== id);
+        DB.save(db);
+        renderOrders_sub();
+        renderProducts();
+        renderStock();
+        renderDashboard();
+        alert(`✅ Đã xóa đơn ${o.code} thành công!`);
+        return;
+      }
+    })
+  );
+
+  // --- (tùy chọn) bộ lọc: nếu bạn có các input #orderFrom_sub, #orderTo_sub, #orderStatus_sub và nút #btnFilterOrders_sub ---
+  const btnFilter = $('#btnFilterOrders_sub');
+  if (btnFilter) {
+    btnFilter.onclick = () => {
+      const from = $('#orderFrom_sub').value;
+      const to = $('#orderTo_sub').value;
+      const st = $('#orderStatus_sub').value;
+      let list = (db.orders || []).slice();
+      if (from) list = list.filter((o) => o.date >= from);
+      if (to) list = list.filter((o) => o.date <= to);
+      if (st) list = list.filter((o) => o.status === st);
+
+      tbody.innerHTML = '';
+      list.forEach((o, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${o.code}</td>
+          <td>${o.date}</td>
+          <td>${formatVND(o.total || 0)}</td>
+          <td>${o.status}</td>
+          <td><button class="btn" data-id="${o.id}" data-act="view">Xem</button></td>`;
+        tbody.appendChild(tr);
+      });
+
+      // cần bind lại listeners cho các nút mới
+      tbody.querySelectorAll('button').forEach((b) =>
+        b.addEventListener('click', () => {
+          const id = Number(b.dataset.id);
+          const o = (db.orders || []).find((x) => x.id === id);
+          if (!o) return;
+          showModal(`
+            <h3>Đơn ${o.code}</h3>
+            <div>Ngày: ${o.date}</div>
+            <div>Trạng thái: ${o.status}</div>
+            <div style='margin-top:8px'>${(o.items||[]).map(it => {
+              const p = db.products.find(x => x.id === it.productId);
+              return `<div>${p? p.name:'—'} — SL:${it.qty} — Giá: ${formatVND(it.price)}</div>`;
+            }).join('')}</div>
+            <div style='margin-top:8px;font-weight:bold'>Tổng tiền: ${formatVND(o.total||0)}</div>
+            <div style='margin-top:8px'><button id='c' class='btn'>Đóng</button></div>
+          `);
+          $('#c').addEventListener('click', closeModal);
+        })
+      );
+    };
+  }
 }
+
+
+
+
+// --- Modal tạo / sửa đơn ---
+function openOrderModal(order = null) {
+  const isNew = !order;
+  if (!db.orders) db.orders = [];
+
+  const prodOptions = db.products.map(p => `<option value="${p.id}">${p.code} - ${p.name}</option>`).join('');
+
+  const html = `
+    <div class="modal-content">
+      <h3>${isNew ? 'Tạo' : 'Sửa'} đơn hàng</h3>
+      <label>Ngày đặt</label>
+      <input id="ordDate" type="date" value="${order ? order.date : new Date().toISOString().slice(0, 10)}" />
+
+      <label>Danh sách sản phẩm</label>
+      <div id="ordList" style="max-height:200px;overflow-y:auto;border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:6px;margin-top:4px"></div>
+
+      <div style="margin-top:8px">
+        <select id="ordAddSel">${prodOptions}</select>
+        <input id="ordQty" type="number" placeholder="Số lượng" />
+        <button id="ordAdd" class="btn">Thêm sản phẩm</button>
+      </div>
+
+      <div style="margin-top:12px">
+        <button id="ordSave" class="btn primary">💾 Lưu đơn hàng</button>
+        <button id="ordCancel" class="btn">Đóng</button>
+      </div>
+    </div>
+  `;
+  showModal(html);
+  // Gắn sự kiện sau khi modal đã render xong
+const waitForModal = setInterval(() => {
+  if (document.querySelector('#ordAdd') && document.querySelector('#ordSave')) {
+    clearInterval(waitForModal);
+    attachOrderModalHandlers(order, isNew);
+  }
+}, 100);
+
+}
+
+function attachOrderModalHandlers(order, isNew) {
+  console.log('✅ Modal tạo đơn hàng đã sẵn sàng');
+
+  const local = order
+    ? JSON.parse(JSON.stringify(order))
+    : {
+        id: uid(),
+        code: 'O-' + Math.floor(Math.random() * 9000 + 1000),
+        date: new Date().toISOString().slice(0, 10),
+        items: [],
+        total: 0,
+        status: 'new',
+      };
+
+  function renderOrderItems() {
+    $('#ordList').innerHTML =
+      local.items.length === 0
+        ? '<i style="color:gray">Chưa có sản phẩm nào</i>'
+        : local.items.map((it, idx) => `
+            <div style="padding:6px;border:1px solid rgba(255,255,255,0.05);margin-top:4px;border-radius:8px">
+              ${idx + 1}. ${(db.products.find((p) => p.id === it.productId) || {}).name}
+              — SL: ${it.qty} — Giá: ${formatVND(it.price)}
+              <button data-idx="${idx}" class="btn danger delItem">Xoá</button>
+            </div>`).join('');
+    $$('.delItem').forEach((b) =>
+      b.addEventListener('click', () => {
+        local.items.splice(Number(b.dataset.idx), 1);
+        renderOrderItems();
+      })
+    );
+  }
+
+  renderOrderItems();
+
+  $('#ordAdd').onclick = () => {
+    const pid = Number($('#ordAddSel').value);
+    const q = Number($('#ordQty').value);
+    if (!pid || q <= 0) {
+      alert('⚠️ Chọn sản phẩm và nhập số lượng hợp lệ');
+      return;
+    }
+    const p = db.products.find((x) => x.id === pid);
+    if (!p) return alert('Sản phẩm không tồn tại');
+    const price = calcSell(p);
+    local.items.push({ productId: pid, qty: q, price });
+    renderOrderItems();
+    $('#ordQty').value = '';
+  };
+
+$('#ordSave').onclick = () => {
+  local.date = $('#ordDate').value;
+  local.total = local.items.reduce((sum, it) => sum + it.price * it.qty, 0);
+
+  if (local.items.length === 0) {
+    alert('❗ Chưa có sản phẩm nào trong đơn!');
+    return;
+  }
+
+  // 🔹 Trừ tồn kho ngay khi lưu
+  local.items.forEach(it => {
+    const p = db.products.find(x => x.id === it.productId);
+    if (p) p.stock = Math.max(0, (p.stock || 0) - it.qty);
+  });
+
+  if (isNew) db.orders.push(local);
+  else Object.assign(order, local);
+
+  DB.save(db);
+  alert(`✅ Đã lưu đơn hàng ${local.code} thành công!`);
+  closeModal();
+  renderOrders_sub();
+  renderDashboard();
+  renderStock();
+};
+
+
+$('#ordCancel').onclick = closeModal;
+}
+
+
+
 
 /* Stock */
-function renderStock(){
-  const tbody=$('#tblStock tbody'); tbody.innerHTML='';
-  db.products.forEach((p,i)=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${p.name}</td><td>${calcTotalIn(p.id)}</td><td>${calcTotalOut(p.id)}</td><td>${p.stock}</td>`; tbody.appendChild(tr); });
-  const sel=$('#stockProductFilter'); sel.innerHTML='<option value="">-- Chọn xe đạp --</option>'; db.products.forEach(p=>sel.innerHTML+=`<option value='${p.id}'>${p.name}</option>`);
-  $('#btnLowStock').onclick = ()=>{ const low = db.settings.lowThreshold || 3; const list = db.products.filter(p=>p.stock<=low); if(list.length===0){ alert('Không có xe sắp hết hàng'); return } alert('Xe sắp hết:\\n'+list.map(p=>p.name+' (tồn: '+p.stock+')').join('\\n')); };
-  $('#btnCheckStock').onclick = ()=>{ const pid = Number($('#stockProductFilter').value); const from=$('#stockFrom').value; const to=$('#stockTo').value; if(!pid){ alert('Chọn xe đạp'); return } const p=db.products.find(x=>x.id===pid); showModal(`<h3>Tồn kho: ${p.name}</h3><div>Nhập tổng (khoảng): ${calcTotalIn(pid,from,to)}</div><div>Xuất tổng (khoảng): ${calcTotalOut(pid,from,to)}</div><div>Tồn hiện tại: ${p.stock}</div><div style='margin-top:8px'><button id='c' class='btn'>Đóng</button></div>`); $('#c').addEventListener('click', closeModal); };
+function renderStock() {
+  const tbody = $('#tblStock tbody');
+  tbody.innerHTML = '';
+
+  // Đảm bảo db có mảng cần thiết
+  if (!db.products) db.products = [];
+  if (!db.stockHistory) db.stockHistory = [];
+
+  // Cập nhật dropdown danh sách xe
+  const sel = $('#stockProductFilter');
+  sel.innerHTML = '<option value="">-- Chọn xe đạp --</option>';
+  db.products.forEach(
+    (p) => (sel.innerHTML += `<option value='${p.id}'>${p.name}</option>`)
+  );
+
+  // Hiển thị danh sách tổng quát
+  db.products.forEach((p, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${i + 1}</td>
+      <td>${p.name}</td>
+      <td>${calcTotalIn(p.id)}</td>
+      <td>${calcTotalOut(p.id)}</td>
+      <td>${p.stock}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Cảnh báo sắp hết hàng
+  $('#btnLowStock').onclick = () => {
+    const low = db.settings?.lowThreshold || 3;
+    const list = db.products.filter((p) => p.stock <= low);
+    if (list.length === 0) {
+      alert('✅ Không có xe nào sắp hết hàng!');
+      return;
+    }
+    alert(
+      '⚠️ Xe sắp hết hàng:\n' +
+        list.map((p) => `${p.name} (tồn: ${p.stock})`).join('\n')
+    );
+  };
+
+  // Nút tra cứu
+  $('#btnCheckStock').onclick = () => {
+    const pid = Number($('#stockProductFilter').value);
+    const from = $('#stockFrom').value;
+    const to = $('#stockTo').value;
+
+    if (!pid) return alert('Vui lòng chọn sản phẩm');
+    if (!from || !to) return alert('Vui lòng chọn khoảng thời gian');
+
+    const p = db.products.find((x) => x.id === pid);
+    if (!p) return alert('Không tìm thấy sản phẩm');
+
+    if (!db.stockHistory.length)
+      return alert('Chưa có dữ liệu tồn kho nào được ghi!');
+
+    const records = db.stockHistory.filter(
+      (d) => d.date >= from && d.date <= to
+    );
+    if (!records.length)
+      return alert('Không có dữ liệu tồn trong khoảng thời gian này!');
+
+    const first = records[0];
+    const last = records[records.length - 1];
+
+    const startStock =
+      first.records.find((r) => r.productId === pid)?.stock ?? null;
+    const endStock =
+      last.records.find((r) => r.productId === pid)?.stock ?? null;
+
+    if (startStock == null || endStock == null)
+      return alert('Không đủ dữ liệu tồn cho khoảng thời gian này!');
+
+    const totalIn = calcTotalIn(pid, from, to);
+    const totalOut = calcTotalOut(pid, from, to);
+
+    alert(
+      `📊 Xe đạp: ${p.name}\nTừ ${from} → ${to}\n` +
+        `Nhập: ${totalIn}\nXuất: ${totalOut}\n` +
+        `Tồn đầu kỳ: ${startStock}\nTồn cuối kỳ: ${endStock}`
+    );
+  };
 }
 
-function calcTotalIn(pid,from,to){
-  // sum of imports for pid respecting range
-  let sum=0;
-  db.imports.forEach(im=>{ if(from && im.date < from) return; if(to && im.date > to) return; im.items.forEach(it=>{ if(it.productId===pid) sum += it.qty; }) });
-  return sum;
-}
-function calcTotalOut(pid,from,to){
-  // sum of orders (that were created) for pid respecting range
-  let sum=0;
-  db.orders.forEach(o=>{ if(from && o.date < from) return; if(to && o.date > to) return; o.items.forEach(it=>{ if(it.productId===pid) sum += it.qty; }) });
-  return sum;
-}
+
+
 
 /* Settings */
 $('#btnSaveSettings').onclick = ()=>{ db.settings.lowThreshold = Number($('#lowThreshold').value)||3; DB.save(db); alert('Lưu thành công'); };
@@ -567,7 +1091,21 @@ function closeModal(){ $('#modal').style.display='none'; $('#modalCard').innerHT
 
 /* Init */
 initAuth();
-renderAll();
+setTimeout(renderAll, 300);
+// --- Ghi lại tồn kho hằng ngày ---
+// --- Ghi lại tồn kho hằng ngày ---
+function recordDailyStock() {
+  const today = new Date().toISOString().slice(0, 10);
+  if (!db.stockHistory.find(d => d.date === today)) {
+    const records = db.products.map(p => ({ productId: p.id, stock: p.stock }));
+    db.stockHistory.push({ date: today, records });
+    DB.save(db);
+    console.log("Đã ghi lại tồn kho ngày " + today);
+  }
+}
+recordDailyStock(); // gọi hàm khi mở trang
+
+
 
 // If user already logged (useful in dev), auto show
 const logged = localStorage.getItem('loggedInUser');
@@ -575,6 +1113,167 @@ if(logged){
   const found = db.users.find(u=>u.name===logged || u.email===logged);
   if(found){ state.user = found; showApp(); }
 }
+// ... (phần mã trước đó giữ nguyên, bao gồm các hàm khác như openImportModal, showImportView, v.v.)
+
+// Thêm hai hàm này để tính tổng nhập và xuất
+function calcTotalIn(pid, from, to) {
+  let sum = 0;
+  db.imports.forEach(im => {
+    if (from && im.date < from) return;
+    if (to && im.date > to) return;
+    im.items.forEach(it => { if (it.productId === pid) sum += it.qty; });
+  });
+  return sum;
+}
+
+function calcTotalOut(pid, from, to) {
+  let sum = 0;
+  db.orders.forEach(o => {
+    if (from && o.date < from) return;
+    if (to && o.date > to) return;
+    o.items.forEach(it => { if (it.productId === pid) sum += it.qty; });
+  });
+  return sum;
+}
+
+// Hàm renderStock (đã sửa để sử dụng các hàm trên)
+function renderStock() {
+  const tbody = document.querySelector('#tblStock tbody');
+  if (!tbody) return;
+
+  const rows = db.products.map((p, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${p.name}</td>
+      <td>${calcTotalIn(p.id)}</td>     <!-- Tổng nhập -->
+      <td>${calcTotalOut(p.id)}</td>    <!-- Tổng xuất -->
+      <td>${p.stock || 0}</td>          <!-- Tồn hiện tại -->
+    </tr>
+  `).join('');
+
+  tbody.innerHTML = rows;
+}
+/* ==========================
+   🔗 LIÊN KẾT LOẠI XE & SẢN PHẨM
+   ========================== */
+
+// 🔹 Hàm hiển thị danh sách loại xe đạp
+function renderTypes() {
+  const tbody = $('#tblTypes tbody');
+  if (!tbody) return;
+
+  tbody.innerHTML = '';
+  db.types.forEach((t, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${i + 1}</td>
+      <td>${t.name}</td>
+      <td>
+        <button class="btn" data-id="${t.id}" data-act="edit">Sửa</button>
+        <button class="btn danger" data-id="${t.id}" data-act="delete">Xóa</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // --- Thao tác trên loại ---
+  tbody.querySelectorAll('button').forEach(btn => {
+    const id = Number(btn.dataset.id);
+    const act = btn.dataset.act;
+
+    btn.addEventListener('click', () => {
+      const type = db.types.find(t => t.id === id);
+      if (!type) return;
+
+      // Sửa tên loại
+      if (act === 'edit') {
+        const newName = prompt('Nhập tên mới cho loại:', type.name);
+        if (!newName) return;
+        type.name = newName;
+        DB.save(db);
+        renderTypes();
+        renderProducts(); // cập nhật dropdown sản phẩm
+      }
+
+      // Xóa loại
+      else if (act === 'delete') {
+        if (!confirm(`Xóa loại "${type.name}"?`)) return;
+        // Cập nhật sản phẩm thuộc loại đó
+        db.products.forEach(p => {
+          if (p.type === id) p.type = null;
+        });
+        db.types = db.types.filter(t => t.id !== id);
+        DB.save(db);
+        renderTypes();
+        renderProducts();
+        alert('🗑️ Đã xóa loại và cập nhật sản phẩm liên quan.');
+      }
+    });
+  });
+}
+
+// 🔹 Thêm loại xe mới
+$('#btnAddType')?.addEventListener('click', () => {
+  const name = prompt('Nhập tên loại xe mới:');
+  if (!name) return;
+  db.types.push({ id: uid(), name });
+  DB.save(db);
+  renderTypes();
+  renderProducts(); // cập nhật dropdown sản phẩm
+  alert('✅ Đã thêm loại xe mới!');
+});
+
+// 🔹 Đồng bộ loại và sản phẩm (đảm bảo dữ liệu hợp lệ)
+function syncProductTypes() {
+  db.products.forEach(p => {
+    const typeExists = db.types.some(t => t.id === p.type);
+    if (!typeExists) p.type = null;
+  });
+  DB.save(db);
+}
+
+// Gọi khi khởi động trang (nếu có)
+if (db && db.types && db.products) {
+  syncProductTypes();
+}
+function linkProductsByTypeName(){
+  // với mỗi product nếu p.type là null và có p.typeName, cố map sang id
+  db.products.forEach(p=>{
+    if((p.type === null || p.type === undefined) && p.typeName){
+      const t = db.types.find(x => x.name.toLowerCase() === (p.typeName||'').toLowerCase());
+      if(t) p.type = t.id;
+    }
+  });
+  DB.save(db);
+  renderProducts();
+}
+function showProductDetail(p) {
+  const typeName = (db.types.find(t => t.id === p.type) || {}).name || '—';
+  const sellPrice = formatVND(calcSell(p));
+
+  showModal(`
+    <div style="text-align:center; padding:10px">
+      <img src="${p.image || 'https://via.placeholder.com/300x200?text=No+Image'}"
+           style="max-width:300px;border-radius:10px;object-fit:cover;margin-bottom:12px;">
+      <h3 style="color:#4fc3f7">${p.name}</h3>
+      <p><b>Mã:</b> ${p.code}</p>
+      <p><b>Loại xe:</b> ${typeName}</p>
+      <p><b>Giá vốn:</b> ${formatVND(p.cost)}</p>
+      <p><b>Giá bán:</b> ${sellPrice}</p>
+      <p><b>Tồn kho:</b> ${p.stock}</p>
+      <p><b>Trạng thái:</b> ${p.hidden ? 'Ẩn' : 'Hiện'}</p>
+      <p><b>Mô tả:</b><br>${p.desc || '<i>Chưa có mô tả</i>'}</p>
+      <div style="margin-top:10px">
+        <button class="btn" id="closeDetail">Đóng</button>
+      </div>
+    </div>
+  `);
+
+  $('#closeDetail').addEventListener('click', closeModal);
+}
+
+
+
 </script>
 </body>
 </html>
