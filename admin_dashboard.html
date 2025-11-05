@@ -189,8 +189,14 @@
               <div data-subview="list">
                 <div class="toolbar" style="margin-top:8px">
                   <select id="filterType"><option value="">-- Lọc theo loại --</option></select>
-                  <input id="searchProd" placeholder="Tìm theo tên hoặc mã" />
-                  <button class="btn primary" id="btnAddProd">Thêm xe đạp</button>
+<div class="search-bar" style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+  <input id="searchProd" type="text" placeholder="Tìm theo tên hoặc mã" style="flex:1">
+  <button id="btnSearchProd" class="btn primary">🔍 Tìm</button>
+    <button id="btnShowAll" class="btn warn">Hiển thị tất cả</button>
+
+  <button id="btnAddProd" class="btn">➕ Thêm xe đạp</button>
+</div>
+
                 </div>
                 <div class="table-scroll" style="margin-top:8px">
                   <table id="tblProducts"><thead><tr><th>STT</th><th>Mã</th><th>Tên</th><th>Loại</th><th>Giá vốn</th><th>Giá bán</th><th>Tồn</th><th>Ẩn</th><th>Hành động</th></tr></thead><tbody></tbody></table>
@@ -521,10 +527,130 @@ function renderProducts() {
           DB.save(db);
           renderProducts();
         }
+        
       }
     })
   );
+    initProductActions();
+
 }
+// Gọi lại khi giao diện đã render xong
+function initProductActions() {
+  const btnAdd = document.querySelector('#btnAddProd');
+  const btnSearch = document.querySelector('#btnSearchProd');
+  const btnShowAll = document.querySelector('#btnShowAll');
+  const inputSearch = document.querySelector('#searchProd');
+  const tbody = document.querySelector('#tblProducts tbody');
+
+  // 🟢 Nút "Thêm xe đạp"
+  if (btnAdd) {
+    btnAdd.onclick = () => openProductModal();
+  }
+
+  // 🟢 Nút "Tìm"
+  if (btnSearch) {
+    btnSearch.onclick = () => {
+      const q = inputSearch.value.trim().toLowerCase();
+      tbody.innerHTML = '';
+
+      const results = db.products.filter(
+        (p) => (p.name + p.code).toLowerCase().includes(q)
+      );
+
+      if (results.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:gray">Không tìm thấy sản phẩm nào</td></tr>`;
+        return;
+      }
+
+      results.forEach((p, i) => {
+        const tn = (db.types.find((t) => t.id === p.type) || {}).name || '—';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${p.code}</td>
+          <td>${p.name}</td>
+          <td>${tn}</td>
+          <td>${formatVND(p.cost)}</td>
+          <td>${formatVND(calcSell(p))}</td>
+          <td>${p.stock}</td>
+          <td>${p.hidden ? 'Ẩn' : 'Hiện'}</td>
+          <td>
+            <button class='btn' data-id='${p.id}' data-act='edit'>Sửa</button>
+            <button class='btn warn' data-id='${p.id}' data-act='hide'>Ẩn/Hiện</button>
+            <button class='btn danger' data-id='${p.id}' data-act='del'>Xoá</button>
+          </td>`;
+        tbody.appendChild(tr);
+      });
+    };
+  }
+
+  // 🟢 Nút "Hiển thị tất cả"
+// 🟢 Nút "Hiển thị tất cả"
+if (btnShowAll) {
+  btnShowAll.onclick = () => {
+    inputSearch.value = '';
+    const tbody = document.querySelector('#tblProducts tbody');
+    tbody.innerHTML = '';
+
+    db.products.forEach((p, i) => {
+      const tn = (db.types.find((t) => t.id === p.type) || {}).name || '—';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${p.code}</td>
+        <td>${p.name}</td>
+        <td>${tn}</td>
+        <td>${formatVND(p.cost)}</td>
+        <td>${formatVND(calcSell(p))}</td>
+        <td>${p.stock}</td>
+        <td>${p.hidden ? 'Ẩn' : 'Hiện'}</td>
+        <td>
+          <button class='btn info' data-id='${p.id}' data-act='view'>Xem</button>
+          <button class='btn' data-id='${p.id}' data-act='edit'>Sửa</button>
+          <button class='btn warn' data-id='${p.id}' data-act='hide'>Ẩn/Hiện</button>
+          <button class='btn danger' data-id='${p.id}' data-act='del'>Xoá</button>
+        </td>`;
+      tbody.appendChild(tr);
+    });
+
+    // Gắn lại sự kiện nút cho từng dòng
+    tbody.querySelectorAll('button').forEach(b =>
+      b.addEventListener('click', () => {
+        const id = Number(b.dataset.id);
+        const act = b.dataset.act;
+        const p = db.products.find(x => x.id === id);
+        if (!p) return;
+
+        if (act === 'view') showProductDetail(p);
+        if (act === 'edit') openProductModal(p);
+        if (act === 'hide') {
+          p.hidden = !p.hidden;
+          DB.save(db);
+          renderProducts();
+        }
+        if (act === 'del') {
+          if (confirm('Xác nhận xoá sản phẩm?')) {
+            db.products = db.products.filter(x => x.id !== id);
+            DB.save(db);
+            renderProducts();
+          }
+        }
+      })
+    );
+  };
+}
+
+
+  // 🟢 Enter trong ô tìm kiếm
+  if (inputSearch) {
+    inputSearch.onkeypress = (e) => {
+      if (e.key === 'Enter') btnSearch.click();
+    };
+  }
+  renderProducts();
+
+}
+
 
 
 function openProductModal(p = null) {
@@ -1104,8 +1230,10 @@ function recordDailyStock() {
   }
 }
 recordDailyStock(); // gọi hàm khi mở trang
-
-
+// ✅ Hiển thị sản phẩm khi trang load
+document.addEventListener("DOMContentLoaded", () => {
+  renderProducts();
+});
 
 // If user already logged (useful in dev), auto show
 const logged = localStorage.getItem('loggedInUser');
@@ -1271,9 +1399,6 @@ function showProductDetail(p) {
 
   $('#closeDetail').addEventListener('click', closeModal);
 }
-
-
-
 </script>
 </body>
 </html>
