@@ -51,6 +51,117 @@
     /* responsive */
     @media(max-width:900px){.sidebar{display:none}.main{margin-left:0;padding:12px}}
     code{background:rgba(255,255,255,0.02);padding:2px 6px;border-radius:6px;color:var(--muted)}
+    /* --- Căn chỉnh bảng sản phẩm cho đẹp --- */
+#tblProducts {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#tblProducts th, 
+#tblProducts td {
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Giới hạn độ rộng và xử lý xuống dòng */
+#tblProducts td:nth-child(3) { /* Cột Tên sản phẩm */
+  max-width: 250px;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.4em;
+}
+
+/* Căn giữa các cột số */
+#tblProducts td:nth-child(1),
+#tblProducts td:nth-child(7),
+#tblProducts td:nth-child(8) {
+  text-align: center;
+}
+
+/* Căn giữa nút hành động */
+#tblProducts td:last-child {
+  text-align: center;
+}
+
+/* Giới hạn chiều rộng của bảng để không bị kéo dài */
+#tblProducts th:nth-child(3),
+#tblProducts td:nth-child(3) {
+  width: 25%;
+}
+
+/* Thêm hiệu ứng hover */
+#tblProducts tr:hover {
+  background-color: rgba(255,255,255,0.03);
+}
+
+/* Cải thiện nút */
+.btn {
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn:hover {
+  opacity: 0.85;
+}
+/* --- Tùy chỉnh ô dropdown (select) --- */
+select,
+#filterType {
+  appearance: none;                /* Ẩn giao diện mặc định */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-color: #1b1b1b;       /* Nền tối */
+  color: #f5f5f5;                  /* Chữ sáng */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  width: 220px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  outline: none;
+}
+
+/* Khi hover hoặc focus */
+select:hover,
+#filterType:hover {
+  border-color: #4fc3f7;
+}
+select:focus,
+#filterType:focus {
+  border-color: #03a9f4;
+  box-shadow: 0 0 6px #03a9f4;
+}
+
+/* --- Tùy chỉnh phần danh sách bên trong --- */
+select option,
+#filterType option {
+  background-color: #1e1e1e;   /* Nền danh sách */
+  color: #f0f0f0;              /* Chữ trắng */
+  padding: 8px;
+}
+
+/* Khi rê chuột vào 1 lựa chọn */
+select option:hover,
+#filterType option:hover {
+  background-color: #4fc3f7;
+  color: #000;
+}
+
+/* --- Tạo icon mũi tên đẹp --- */
+#filterType {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23f5f5f5' viewBox='0 0 16 16'><path d='M1.5 5l6.5 6 6.5-6z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+  padding-right: 30px; /* chừa khoảng cho mũi tên */
+}
+
+
   </style>
 </head>
 <body>
@@ -473,6 +584,7 @@ function calcSell(p) {
   const sell = (p.cost || 0) * (1 + (margin || 0) / 100);
   return Math.round(sell); // luôn làm tròn
 }
+// === HIỂN THỊ DANH SÁCH SẢN PHẨM ===
 function renderProducts() {
   const tbody = $('#tblProducts tbody');
   tbody.innerHTML = '';
@@ -487,24 +599,40 @@ function renderProducts() {
   // --- Danh sách sản phẩm ---
   db.products.forEach((p, i) => {
     const typeName = (db.types.find(t => t.id === p.type) || {}).name || '—';
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${i + 1}</td>
-      <td>${p.code}</td>
-      <td>${p.name}</td>
-      <td>${typeName}</td>
-      <td>${formatVND(p.cost)}</td>
-      <td>${formatVND(calcSell(p))}</td>
-      <td>${p.stock}</td>
-      <td>${p.hidden ? 'Ẩn' : 'Hiện'}</td>
-      <td>
-        <button class="btn info" data-id="${p.id}" data-act="view">Xem</button>
-        <button class="btn" data-id="${p.id}" data-act="edit">Sửa</button>
-        <button class="btn warn" data-id="${p.id}" data-act="hide">Ẩn/Hiện</button>
-        <button class="btn danger" data-id="${p.id}" data-act="del">Xoá</button>
-      </td>`;
+const warningThreshold = 3;
+const tr = document.createElement('tr');
+
+// Nếu tồn < 3 thì cảnh báo
+let stockDisplay = p.stock;
+if (p.stock < warningThreshold) {
+  stockDisplay = `<span style="color:#ff4d4d;font-weight:bold;">${p.stock} ⚠️</span>`;
+}
+
+tr.innerHTML = `
+  <td>${i + 1}</td>
+  <td>${p.code}</td>
+  <td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</td>
+  <td>${typeName}</td>
+  <td>${formatVND(p.cost)}</td>
+  <td>${formatVND(calcSell(p))}</td>
+  <td>${stockDisplay}</td>
+  <td>${p.hidden ? 'Ẩn' : 'Hiện'}</td>
+  <td>
+    <button class="btn info" data-id="${p.id}" data-act="view">Xem</button>
+    <button class="btn" data-id="${p.id}" data-act="edit">Sửa</button>
+    <button class="btn warn" data-id="${p.id}" data-act="hide">Ẩn/Hiện</button>
+    <button class="btn danger" data-id="${p.id}" data-act="del">Xoá</button>
+  </td>`;
+
     tbody.appendChild(tr);
   });
+    // 🔔 Cảnh báo sản phẩm sắp hết hàng
+  const warningThreshold = 3; // ngưỡng cảnh báo
+  const lowStock = db.products.filter(p => p.stock < warningThreshold);
+  if (lowStock.length > 0) {
+    alert(`⚠️ Có ${lowStock.length} sản phẩm sắp hết hàng!\n${lowStock.map(p => '- ' + p.name + ' (' + p.stock + ' cái)').join('\n')}`);
+  }
+
 
   // --- Hành động các nút ---
   tbody.querySelectorAll('button').forEach(b =>
@@ -527,129 +655,125 @@ function renderProducts() {
           DB.save(db);
           renderProducts();
         }
-        
       }
     })
   );
-    initProductActions();
 
-}
-// Gọi lại khi giao diện đã render xong
-function initProductActions() {
-  const btnAdd = document.querySelector('#btnAddProd');
-  const btnSearch = document.querySelector('#btnSearchProd');
-  const btnShowAll = document.querySelector('#btnShowAll');
-  const inputSearch = document.querySelector('#searchProd');
-  const tbody = document.querySelector('#tblProducts tbody');
+  initProductActions();
 
-  // 🟢 Nút "Thêm xe đạp"
-  if (btnAdd) {
-    btnAdd.onclick = () => openProductModal();
-  }
-
-  // 🟢 Nút "Tìm"
-  if (btnSearch) {
-    btnSearch.onclick = () => {
-      const q = inputSearch.value.trim().toLowerCase();
+  // ✅ Lọc sản phẩm theo loại
+  if (filterType) {
+    filterType.onchange = () => {
+      const selectedType = Number(filterType.value) || null;
+      const inputSearch = $('#searchProd');
+      const keyword = inputSearch ? inputSearch.value.trim().toLowerCase() : '';
+      const tbody = $('#tblProducts tbody');
       tbody.innerHTML = '';
 
-      const results = db.products.filter(
-        (p) => (p.name + p.code).toLowerCase().includes(q)
-      );
+      // lọc theo loại + tìm kiếm
+      const filteredList = db.products.filter(p => {
+        const matchType = selectedType ? p.type === selectedType : true;
+        const matchSearch = (p.name + p.code).toLowerCase().includes(keyword);
+        return matchType && matchSearch;
+      });
 
-      if (results.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:gray">Không tìm thấy sản phẩm nào</td></tr>`;
+      if (filteredList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:gray">Không có sản phẩm nào</td></tr>`;
         return;
       }
 
-      results.forEach((p, i) => {
-        const tn = (db.types.find((t) => t.id === p.type) || {}).name || '—';
+      filteredList.forEach((p, i) => {
+        const typeName = (db.types.find(t => t.id === p.type) || {}).name || '—';
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${i + 1}</td>
           <td>${p.code}</td>
-          <td>${p.name}</td>
-          <td>${tn}</td>
+          <td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</td>
+          <td>${typeName}</td>
           <td>${formatVND(p.cost)}</td>
           <td>${formatVND(calcSell(p))}</td>
           <td>${p.stock}</td>
           <td>${p.hidden ? 'Ẩn' : 'Hiện'}</td>
           <td>
-            <button class='btn' data-id='${p.id}' data-act='edit'>Sửa</button>
-            <button class='btn warn' data-id='${p.id}' data-act='hide'>Ẩn/Hiện</button>
-            <button class='btn danger' data-id='${p.id}' data-act='del'>Xoá</button>
+            <button class="btn info" data-id="${p.id}" data-act="view">Xem</button>
+            <button class="btn" data-id="${p.id}" data-act="edit">Sửa</button>
+            <button class="btn warn" data-id="${p.id}" data-act="hide">Ẩn/Hiện</button>
+            <button class="btn danger" data-id="${p.id}" data-act="del">Xoá</button>
+          </td>`;
+        tbody.appendChild(tr);
+      });
+    };
+  }
+}
+
+function initProductActions() {
+  const btnAdd = $('#btnAddProd');
+  const btnSearch = $('#btnSearchProd');
+  const btnShowAll = $('#btnShowAll');
+  const inputSearch = $('#searchProd');
+  const filterType = $('#filterType');
+
+  // 🟢 Nút Thêm sản phẩm
+  if (btnAdd) btnAdd.onclick = () => openProductModal();
+
+  // 🟢 Nút Tìm
+  if (btnSearch) {
+    btnSearch.onclick = () => {
+      const keyword = inputSearch.value.trim().toLowerCase();
+      const selectedType = Number(filterType.value) || null;
+      const tbody = $('#tblProducts tbody');
+      tbody.innerHTML = '';
+
+      const filteredList = db.products.filter(p => {
+        const matchType = selectedType ? p.type === selectedType : true;
+        const matchSearch = (p.name + p.code).toLowerCase().includes(keyword);
+        return matchType && matchSearch;
+      });
+
+      if (filteredList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:gray">Không có sản phẩm nào</td></tr>`;
+        return;
+      }
+
+      filteredList.forEach((p, i) => {
+        const typeName = (db.types.find(t => t.id === p.type) || {}).name || '—';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${p.code}</td>
+          <td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</td>
+          <td>${typeName}</td>
+          <td>${formatVND(p.cost)}</td>
+          <td>${formatVND(calcSell(p))}</td>
+          <td>${p.stock}</td>
+          <td>${p.hidden ? 'Ẩn' : 'Hiện'}</td>
+          <td>
+            <button class="btn info" data-id="${p.id}" data-act="view">Xem</button>
+            <button class="btn" data-id="${p.id}" data-act="edit">Sửa</button>
+            <button class="btn warn" data-id="${p.id}" data-act="hide">Ẩn/Hiện</button>
+            <button class="btn danger" data-id="${p.id}" data-act="del">Xoá</button>
           </td>`;
         tbody.appendChild(tr);
       });
     };
   }
 
-  // 🟢 Nút "Hiển thị tất cả"
-// 🟢 Nút "Hiển thị tất cả"
-if (btnShowAll) {
-  btnShowAll.onclick = () => {
-    inputSearch.value = '';
-    const tbody = document.querySelector('#tblProducts tbody');
-    tbody.innerHTML = '';
+  // 🟢 Enter để tìm
+  if (inputSearch) inputSearch.onkeypress = e => e.key === 'Enter' && btnSearch.click();
 
-    db.products.forEach((p, i) => {
-      const tn = (db.types.find((t) => t.id === p.type) || {}).name || '—';
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${i + 1}</td>
-        <td>${p.code}</td>
-        <td>${p.name}</td>
-        <td>${tn}</td>
-        <td>${formatVND(p.cost)}</td>
-        <td>${formatVND(calcSell(p))}</td>
-        <td>${p.stock}</td>
-        <td>${p.hidden ? 'Ẩn' : 'Hiện'}</td>
-        <td>
-          <button class='btn info' data-id='${p.id}' data-act='view'>Xem</button>
-          <button class='btn' data-id='${p.id}' data-act='edit'>Sửa</button>
-          <button class='btn warn' data-id='${p.id}' data-act='hide'>Ẩn/Hiện</button>
-          <button class='btn danger' data-id='${p.id}' data-act='del'>Xoá</button>
-        </td>`;
-      tbody.appendChild(tr);
-    });
-
-    // Gắn lại sự kiện nút cho từng dòng
-    tbody.querySelectorAll('button').forEach(b =>
-      b.addEventListener('click', () => {
-        const id = Number(b.dataset.id);
-        const act = b.dataset.act;
-        const p = db.products.find(x => x.id === id);
-        if (!p) return;
-
-        if (act === 'view') showProductDetail(p);
-        if (act === 'edit') openProductModal(p);
-        if (act === 'hide') {
-          p.hidden = !p.hidden;
-          DB.save(db);
-          renderProducts();
-        }
-        if (act === 'del') {
-          if (confirm('Xác nhận xoá sản phẩm?')) {
-            db.products = db.products.filter(x => x.id !== id);
-            DB.save(db);
-            renderProducts();
-          }
-        }
-      })
-    );
-  };
-}
-
-
-  // 🟢 Enter trong ô tìm kiếm
-  if (inputSearch) {
-    inputSearch.onkeypress = (e) => {
-      if (e.key === 'Enter') btnSearch.click();
+  // 🟢 Hiển thị tất cả
+  if (btnShowAll) {
+    btnShowAll.onclick = () => {
+      inputSearch.value = '';
+      filterType.value = '';
+      renderProducts();
     };
   }
-  renderProducts();
-
 }
+
+// Gọi khi load trang
+renderProducts();
+
 
 
 
@@ -782,28 +906,131 @@ function renderImports(){
 }
 $('#btnNewImport').addEventListener('click', ()=> openImportModal());
 
-function openImportModal(im=null){
+function openImportModal(im = null) {
   const isNew = !im;
-  const prodOptions = db.products.map(p=>`<option value='${p.id}'>${p.code} - ${p.name}</option>`).join('');
-  showModal(`<h3>${isNew? 'Thêm' : 'Sửa'} phiếu nhập</h3>
-    <label>Ngày</label><input id='impDate' type='date' value='${im?im.date:new Date().toISOString().slice(0,10)}' />
-    <label>Danh sách sản phẩm</label><div id='impList'></div>
-    <div style='margin-top:8px'><select id='impAddSel'>${prodOptions}</select> <input id='impQty' type='number' placeholder='Số lượng'/> <input id='impCost' type='number' placeholder='Giá nhập (từng xe)'/> <button id='impAdd' class='btn'>Thêm</button></div>
-    <div style='margin-top:12px'><button id='impSave' class='btn primary'>Lưu</button> <button id='impComplete' class='btn'>Hoàn thành</button> <button id='impCancel' class='btn'>Huỷ</button></div>`);
-  const local = im ? JSON.parse(JSON.stringify(im)) : {id:uid(),date:new Date().toISOString().slice(0,10),items:[],completed:false,code:'IM-'+Math.floor(Math.random()*9000+1000)};
-  function renderList(){ $('#impList').innerHTML = local.items.map((it,idx)=>`<div style='padding:6px;border:1px solid rgba(255,255,255,0.03);margin-top:6px;border-radius:8px'>${idx+1}. ${(db.products.find(p=>p.id===it.productId)||{}).name} — SL: ${it.qty} — Giá nhập: ${it.cost} <button data-idx='${idx}' class='btn danger delItem'>Xoá</button></div>`).join(''); $$('.delItem').forEach(b=>b.addEventListener('click',()=>{ local.items.splice(Number(b.dataset.idx),1); renderList(); })); }
+  const prodOptions = db.products
+    .map(p => `<option value='${p.id}'>${p.code} - ${p.name}</option>`)
+    .join('');
+
+  showModal(`
+    <h3>${isNew ? 'Thêm' : 'Sửa'} phiếu nhập</h3>
+    <label>Ngày</label>
+    <input id='impDate' type='date' value='${im ? im.date : new Date().toISOString().slice(0, 10)}' />
+    
+    <label>Danh sách sản phẩm</label>
+    <div id='impList'></div>
+    
+    <div style='margin-top:8px'>
+      <select id='impAddSel'>${prodOptions}</select>
+      <input id='impQty' type='number' placeholder='Số lượng'/>
+      <input id='impCost' type='number' placeholder='Giá nhập (từng xe)'/>
+      <button id='impAdd' class='btn'>Thêm</button>
+    </div>
+
+    <div style='margin-top:12px'>
+      <button id='impSave' class='btn primary'>Lưu</button>
+      <button id='impComplete' class='btn'>Hoàn thành</button>
+      <button id='impCancel' class='btn'>Huỷ</button>
+    </div>
+  `);
+
+  const local = im
+    ? JSON.parse(JSON.stringify(im))
+    : {
+        id: uid(),
+        date: new Date().toISOString().slice(0, 10),
+        items: [],
+        completed: false,
+        code: 'IM-' + Math.floor(Math.random() * 9000 + 1000),
+      };
+
+  // 🟢 TỰ ĐỘNG GÁN GIÁ VỐN KHI CHỌN SẢN PHẨM
+$('#impAddSel').addEventListener('change', () => {
+  const pid = $('#impAddSel').value; // KHÔNG ép kiểu Number
+  const prod = db.products.find(p => p.id == pid); // dùng so sánh ==
+  if (prod) {
+    $('#impCost').value = prod.cost || 0;
+  }
+});
+
+
+  // 🧩 Danh sách hiện tại trong phiếu
+  function renderList() {
+    $('#impList').innerHTML = local.items
+      .map(
+        (it, idx) => `
+        <div style='padding:6px;border:1px solid rgba(255,255,255,0.03);margin-top:6px;border-radius:8px'>
+          ${idx + 1}. ${(db.products.find(p => p.id === it.productId) || {}).name} 
+          — SL: ${it.qty} — Giá nhập: ${formatVND(it.cost)} 
+          <button data-idx='${idx}' class='btn danger delItem'>Xoá</button>
+        </div>`
+      )
+      .join('');
+
+    $$('.delItem').forEach(b =>
+      b.addEventListener('click', () => {
+        local.items.splice(Number(b.dataset.idx), 1);
+        renderList();
+      })
+    );
+  }
+
   renderList();
-  $('#impAdd').addEventListener('click', ()=>{ const pid=Number($('#impAddSel').value); const q=Number($('#impQty').value)||0; const c=Number($('#impCost').value)||0; if(!pid||q<=0){alert('Chọn sản phẩm & số lượng');return} local.items.push({productId:pid,qty:q,cost:c}); renderList(); });
-  $('#impSave').addEventListener('click', ()=>{ local.date = $('#impDate').value; if(isNew){ db.imports.push(local); } else { Object.assign(im,local); } DB.save(db); closeModal(); renderImports(); renderStock(); renderPricing(); });
-  $('#impComplete').addEventListener('click', ()=>{ if(local.items.length===0){alert('Phiếu rỗng');return} // apply stock and update cost
-    local.completed=true;
-    local.items.forEach(it=>{ const p=db.products.find(x=>x.id===it.productId); if(p){ p.stock = (p.stock||0) + it.qty; p.cost = it.cost; } });
-    if(isNew) db.imports.push(local);
-    DB.save(db); closeModal(); renderImports(); renderStock(); renderPricing();
-    recordDailyStock(); // Thêm dòng này để ghi lại tồn kho hàng ngày sau khi hoàn thành phiếu nhập
+
+  // 🟢 Nút thêm sản phẩm vào phiếu nhập
+  $('#impAdd').addEventListener('click', () => {
+    const pid = Number($('#impAddSel').value);
+    const q = Number($('#impQty').value) || 0;
+    const c = Number($('#impCost').value) || 0;
+    if (!pid || q <= 0) {
+      alert('Chọn sản phẩm & số lượng');
+      return;
+    }
+    local.items.push({ productId: pid, qty: q, cost: c });
+    renderList();
   });
+
+  // 🟢 Nút lưu phiếu
+  $('#impSave').addEventListener('click', () => {
+    local.date = $('#impDate').value;
+    if (isNew) {
+      db.imports.push(local);
+    } else {
+      Object.assign(im, local);
+    }
+    DB.save(db);
+    closeModal();
+    renderImports();
+    renderStock();
+    renderPricing();
+  });
+
+  // 🟢 Nút hoàn thành phiếu nhập
+  $('#impComplete').addEventListener('click', () => {
+    if (local.items.length === 0) {
+      alert('Phiếu rỗng');
+      return;
+    }
+    local.completed = true;
+    local.items.forEach(it => {
+      const p = db.products.find(x => x.id === it.productId);
+      if (p) {
+        p.stock = (p.stock || 0) + it.qty;
+        p.cost = it.cost;
+      }
+    });
+    if (isNew) db.imports.push(local);
+    DB.save(db);
+    closeModal();
+    renderImports();
+    renderStock();
+    renderPricing();
+    recordDailyStock();
+  });
+
   $('#impCancel').addEventListener('click', closeModal);
 }
+
 function showImportView(im){ showModal(`<h3>Phiếu nhập ${im.code||''}</h3><div>Ngày: ${im.date}</div><div>Trạng thái: ${im.completed? 'Hoàn thành':'Mới'}</div><div style='margin-top:8px'>${im.items.map(it=>{const p=db.products.find(x=>x.id===it.productId); return `<div>${p? p.name : '—'} — SL: ${it.qty} — Giá nhập: ${formatVND(it.cost)}</div>`
 }).join('')}</div><div style='margin-top:8px'><button id='c' class='btn'>Đóng</button></div>`); $('#c').addEventListener('click', closeModal); }
 
@@ -1399,6 +1626,8 @@ function showProductDetail(p) {
 
   $('#closeDetail').addEventListener('click', closeModal);
 }
+
+
 </script>
 </body>
 </html>
