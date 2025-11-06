@@ -389,6 +389,8 @@ select option:hover,
   </div>
 
 <script>
+  let hasShownLowStockAlert = false;
+
 /* ---------- Database (localStorage) ---------- */
 const DB = {
   key: 'bikepro_admin_db_v1',
@@ -442,21 +444,55 @@ function initAuth(){
     const u = $('#username').value.trim();
     const p = $('#password').value;
     const found = db.users.find(x => (x.name===u || x.email===u) && x.pass===p);
-    if(found && !found.locked){ state.user = found; showApp(); }
-    else { $('#loginMsg').textContent = found && found.locked ? 'Tài khoản bị khóa' : 'Sai thông tin'; }
+    if(found && !found.locked){ 
+      state.user = found; 
+      showApp();
+
+      // 🔔 Hiển thị cảnh báo tồn kho chỉ 1 lần sau khi đăng nhập
+      const warningThreshold = 3; // ví dụ: cảnh báo khi hàng < 3
+      const lowStock = db.products.filter(p => p.stock < warningThreshold);
+      if (lowStock.length > 0) {
+        alert(`⚠️ Có ${lowStock.length} sản phẩm sắp hết hàng!\n` + 
+              lowStock.map(p => `- ${p.name} (${p.stock} cái)`).join('\n'));
+      }
+    }
+    else { 
+      $('#loginMsg').textContent = found && found.locked ? 'Tài khoản bị khóa' : 'Sai thông tin'; 
+    }
   });
-  $('#demoLogin').addEventListener('click', ()=>{ $('#username').value='admin'; $('#password').value='admin'; $('#btnLogin').click(); });
+
+  $('#demoLogin').addEventListener('click', ()=>{ 
+    $('#username').value='admin'; 
+    $('#password').value='admin'; 
+    $('#btnLogin').click(); 
+  });
+
   $('#btnRestore').addEventListener('click', ()=> {
-    if(!confirm('Khôi phục tài khoản admin? (Mật khẩu sẽ đặt lại là \"admin\")')) return;
+    if(!confirm('Khôi phục tài khoản admin? (Mật khẩu sẽ đặt lại là "admin")')) return;
     const admin = db.users.find(u=>u.name==='admin' || u.email.includes('admin'));
-    if(admin){ admin.locked=false; admin.pass='admin'; DB.save(db); alert('Đã khôi phục admin. Đăng nhập bằng admin / admin'); }
-    else { db.users.push({id:uid(),name:'admin',email:'admin@bikepro.local',pass:'admin',locked:false,role:'admin'}); DB.save(db); alert('Đã tạo mới admin'); }
+    if(admin){ 
+      admin.locked=false; 
+      admin.pass='admin'; 
+      DB.save(db); 
+      alert('Đã khôi phục admin. Đăng nhập bằng admin / admin'); 
+    }
+    else { 
+      db.users.push({id:uid(),name:'admin',email:'admin@bikepro.local',pass:'admin',locked:false,role:'admin'}); 
+      DB.save(db); 
+      alert('Đã tạo mới admin'); 
+    }
   });
+
   $('#btnLogout').addEventListener('click', ()=> {
-    state.user = null; $('#app').style.display='none'; $('#loginWrap').style.display='flex'; $('#loginMsg').textContent='';
+    state.user = null; 
+    $('#app').style.display='none'; 
+    $('#loginWrap').style.display='flex'; 
+    $('#loginMsg').textContent='';
   });
+
   $('#password').addEventListener('keyup', e => { if(e.key==='Enter') $('#btnLogin').click(); });
 }
+
 
 /* ---------- Show App & navigation ---------- */
 function showApp(){
@@ -597,41 +633,47 @@ function renderProducts() {
   });
 
   // --- Danh sách sản phẩm ---
-  db.products.forEach((p, i) => {
-    const typeName = (db.types.find(t => t.id === p.type) || {}).name || '—';
-const warningThreshold = 3;
-const tr = document.createElement('tr');
+// ⚙️ Khai báo biến cảnh báo 1 lần duy nhất ở đầu file
 
-// Nếu tồn < 3 thì cảnh báo
-let stockDisplay = p.stock;
-if (p.stock < warningThreshold) {
-  stockDisplay = `<span style="color:#ff4d4d;font-weight:bold;">${p.stock} ⚠️</span>`;
+// ⚙️ Hiển thị danh sách sản phẩm
+const warningThreshold = 3;
+tbody.innerHTML = ''; // Xóa nội dung cũ trước khi render
+
+db.products.forEach((p, i) => {
+  const typeName = (db.types.find(t => t.id === p.type) || {}).name || '—';
+  const tr = document.createElement('tr');
+
+  let stockDisplay = p.stock;
+  if (p.stock < warningThreshold) {
+    stockDisplay = `<span style="color:#ff4d4d;font-weight:bold;">${p.stock} ⚠️</span>`;
+  }
+
+  tr.innerHTML = `
+    <td>${i + 1}</td>
+    <td>${p.code}</td>
+    <td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</td>
+    <td>${typeName}</td>
+    <td>${formatVND(p.cost)}</td>
+    <td>${formatVND(calcSell(p))}</td>
+    <td>${stockDisplay}</td>
+    <td>${p.hidden ? 'Ẩn' : 'Hiện'}</td>
+    <td>
+      <button class="btn info" data-id="${p.id}" data-act="view">Xem</button>
+      <button class="btn" data-id="${p.id}" data-act="edit">Sửa</button>
+      <button class="btn warn" data-id="${p.id}" data-act="hide">Ẩn/Hiện</button>
+      <button class="btn danger" data-id="${p.id}" data-act="del">Xoá</button>
+    </td>`;
+
+  tbody.appendChild(tr);
+});
+
+// 🔔 Cảnh báo sản phẩm sắp hết hàng — chỉ hiện 1 lần
+const lowStock = db.products.filter(p => p.stock < warningThreshold);
+if (!hasShownLowStockAlert && lowStock.length > 0) {
+  alert(`⚠️ Có ${lowStock.length} sản phẩm sắp hết hàng!\n${lowStock.map(p => '- ' + p.name + ' (' + p.stock + ' cái)').join('\n')}`);
+  hasShownLowStockAlert = true; // ✅ Đánh dấu đã hiển thị
 }
 
-tr.innerHTML = `
-  <td>${i + 1}</td>
-  <td>${p.code}</td>
-  <td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</td>
-  <td>${typeName}</td>
-  <td>${formatVND(p.cost)}</td>
-  <td>${formatVND(calcSell(p))}</td>
-  <td>${stockDisplay}</td>
-  <td>${p.hidden ? 'Ẩn' : 'Hiện'}</td>
-  <td>
-    <button class="btn info" data-id="${p.id}" data-act="view">Xem</button>
-    <button class="btn" data-id="${p.id}" data-act="edit">Sửa</button>
-    <button class="btn warn" data-id="${p.id}" data-act="hide">Ẩn/Hiện</button>
-    <button class="btn danger" data-id="${p.id}" data-act="del">Xoá</button>
-  </td>`;
-
-    tbody.appendChild(tr);
-  });
-    // 🔔 Cảnh báo sản phẩm sắp hết hàng
-  const warningThreshold = 3; // ngưỡng cảnh báo
-  const lowStock = db.products.filter(p => p.stock < warningThreshold);
-  if (lowStock.length > 0) {
-    alert(`⚠️ Có ${lowStock.length} sản phẩm sắp hết hàng!\n${lowStock.map(p => '- ' + p.name + ' (' + p.stock + ' cái)').join('\n')}`);
-  }
 
 
   // --- Hành động các nút ---
