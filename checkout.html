@@ -401,323 +401,160 @@
       </div>
     </div><!-- End Page Title -->
 
-    <!-- Checkout Section -->
-    <section id="checkout" class="checkout section">
+<section id="checkout" class="checkout section">
 
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
 
-        <div class="row">
-          <div class="col-lg-7">
-            <!-- Checkout Form -->
-            <div class="checkout-container" data-aos="fade-up">
-              <form class="checkout-form">
-                <!-- Customer Information -->
-                <div class="checkout-section" id="customer-info">
-                  <div class="section-header">
-                    <div class="section-number">1</div>
-                    <h3>Thông tin khách hàng</h3>
-                  </div>
-                  <div class="section-content">
-                    <div class="row">
-                      <div class="col-md-6 form-group">
-                        <label for="first-name">Tên của bạn</label>
-                        <input type="text" name="first-name" class="form-control" id="first-name" placeholder="Nhập tên của bạn" required="">
-                      </div>
-                      <div class="col-md-6 form-group">
-                        <label for="last-name">Họ của bạn</label>
-                        <input type="text" name="last-name" class="form-control" id="last-name" placeholder="Nhập họ của bạn" required="">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="email">Email</label>
-                      <input type="email" class="form-control" name="email" id="email" placeholder="Nhập email của bạn" required="">
-                    </div>
-                    <div class="form-group">
-                      <label for="phone">Số điện thoại</label>
-                      <input type="tel" class="form-control" name="phone" id="phone" placeholder="Nhập số điện thoại của bạn" required="">
-                    </div>
-                  </div>
-                </div>
-                <!-- Shipping Address -->
-<div class="checkout-section" id="shipping-address">
-  <div class="section-header">
-    <div class="section-number">2</div>
-    <h3>Địa chỉ giao hàng</h3>
-  </div>
-  <div class="section-content">
-    <div class="form-group">
-      <label for="address">Địa chỉ nhận hàng</label>
-      <input type="text" class="form-control" id="address" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành" required>
-    </div>
-  </div>
-</div>
-
-<!-- Payment Method -->
-<div class="checkout-section" id="payment-method">
-  <div class="section-header">
-    <div class="section-number">3</div>
-    <h3>Phương thức thanh toán</h3>
-  </div>
-  <div class="section-content">
-    <div class="form-check">
-      <input type="radio" class="form-check-input" name="payment" id="cod" value="cod" checked>
-      <label class="form-check-label" for="cod">Tiền mặt khi nhận hàng (COD)</label>
-    </div>
-    <div class="form-check">
-      <input type="radio" class="form-check-input" name="payment" id="bank" value="bank">
-      <label class="form-check-label" for="bank">Chuyển khoản ngân hàng</label>
-    </div>
-    <div class="form-check">
-      <input type="radio" class="form-check-input" name="payment" id="online" value="online">
-      <label class="form-check-label" for="online">Thanh toán trực tuyến</label>
-    </div>
-  </div>
-</div>
-
-<!-- Submit Button -->
-<div class="text-end mt-4">
-  <button type="submit" class="btn btn-success">Hoàn tất đặt hàng</button>
-</div>
-
-
-                <!-- Shipping Address -->
-                <div class="checkout-section" id="shipping-address">
-                  <div class="section-header">
-                    <div class="section-number">2</div>
-                    <h3>Thông tin giao hàng</h3>
-                  </div>
-                  <div class="section-content">
-                    <div class="form-group">
-                      <label for="address">Địa chỉ đường</label>
-                      <input type="text" class="form-control" name="address" id="address" placeholder="Nhập địa chỉ đường của bạn" required="">
-                    </div>
-                    <div class="form-group">
-                      <label for="apartment">Căn hộ, phòng, etc.</label>
-                      <input type="text" class="form-control" name="apartment" id="apartment" placeholder="Nhập số căn hộ, phòng, etc của bạn">
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4 form-group">
-                        <label for="city">Thành phố</label>
-                        <input type="text" name="city" class="form-control" id="city" placeholder="Nhập thành phố của bạn" required="">
-                      </div>
-                      <div class="col-md-4 form-group">
-                        <label for="state">Bang/Tỉnh</label>
-                        <input type="text" name="state" class="form-control" id="state" placeholder="Nhập bang/tỉnh của bạn" required="">
-                      </div>
-                      <div class="col-md-4 form-group">
-                        <label for="zip">Mã bưu chính</label>
-                        <input type="text" name="zip" class="form-control" id="zip" placeholder="Nhập mã bưu chính của bạn" required="">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="country">Quốc gia</label>
-                      <select class="form-select" id="country" name="country" required="">
+        <div class="row" id="checkout-main">
+            
+            <div class="col-lg-7">
+                <div class="checkout-container" data-aos="fade-up">
+                    
+                    <form class="checkout-form" id="checkout-form">
                         
-                        <option value="">Select Country</option>
-                        <option value="VN">Việt Nam</option>
-                        <option value="US">United States</option>
-                        <option value="CA">Canada</option>
-                        <option value="UK">United Kingdom</option>
-                        <option value="AU">Australia</option>
-                        <option value="DE">Germany</option>
-                        <option value="FR">France</option>
-                      </select>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="save-address" name="save-address">
-                      <label class="form-check-label" for="save-address">
-                        Lưu địa chỉ này cho những lần đặt hàng sau
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="billing-same" name="billing-same" checked="">
-                      <label class="form-check-label" for="billing-same">
-                        Địa chỉ thanh toán giống với địa chỉ giao hàng
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Payment Method -->
-                <div class="checkout-section" id="payment-method">
-                  <div class="section-header">
-                    <div class="section-number">3</div>
-                    <h3>Phương thức thanh toán</h3>
-                  </div>
-                  <div class="section-content">
-                    <div class="payment-options">
-                      <div class="payment-option active">
-                        <input type="radio" name="payment-method" id="credit-card" checked="">
-                        <label for="credit-card">
-                          <span class="payment-icon"><i class="bi bi-credit-card-2-front"></i></span>
-                          <span class="payment-label">Thẻ tính dụng / Thẻ ghi nợ</span>
-                        </label>
-                      </div>
-                      <div class="payment-option">
-                        <input type="radio" name="payment-method" id="paypal">
-                        <label for="paypal">
-                          <span class="payment-icon"><i class="bi bi-paypal"></i></span>
-                          <span class="payment-label">PayPal</span>
-                        </label>
-                      </div>
-                      <div class="payment-option">
-                        <input type="radio" name="payment-method" id="apple-pay">
-                        <label for="apple-pay">
-                          <span class="payment-icon"><i class="bi bi-apple"></i></span>
-                          <span class="payment-label">Apple Pay</span>
-                        </label>
-                      </div>
-                    </div>
-
-                    <div class="payment-details" id="credit-card-details">
-                      <div class="form-group">
-                        <label for="card-number">Số thẻ</label>
-                        <div class="card-number-wrapper">
-                          <input type="text" class="form-control" name="card-number" id="card-number" placeholder="1234 5678 9012 3456" required="">
-                          <div class="card-icons">
-                            <i class="bi bi-credit-card-2-front"></i>
-                            <i class="bi bi-credit-card"></i>
-                          </div>
+                        <div class="checkout-section" id="customer-info">
+                            <div class="section-header">
+                                <div class="section-number">1</div>
+                                <h3>Thông tin khách hàng</h3>
+                            </div>
+                            <div class="section-content">
+                                <div class="form-group">
+                                    <label for="full-name">Họ và Tên</label>
+                                    <input type="text" class="form-control" id="full-name" placeholder="Nhập họ và tên" required="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" placeholder="Nhập email của bạn" required="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Số điện thoại</label>
+                                    <input type="tel" class="form-control" id="phone" placeholder="Nhập số điện thoại của bạn" required="">
+                                </div>
+                            </div>
                         </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-6 form-group">
-                          <label for="expiry">Ngày hết hạn ( Tháng/Năm )</label>
-                          <input type="text" class="form-control" name="expiry" id="expiry" placeholder="MM/YY" required="">
+                        
+                        <div class="checkout-section" id="shipping-address">
+                            <div class="section-header">
+                                <div class="section-number">2</div>
+                                <h3>Địa chỉ giao hàng</h3>
+                            </div>
+                            <div class="section-content">
+                                <div class="form-group">
+                                    <label for="address">Địa chỉ nhận hàng</label>
+                                    <textarea class="form-control" id="address" rows="3" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành" required></textarea>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6 form-group">
-                          <label for="cvv">Mã bảo mật (CVV)</label>
-                          <div class="cvv-wrapper">
-                            <input type="text" class="form-control" name="cvv" id="cvv" placeholder="123" required="">
-                            <span class="cvv-hint" data-bs-toggle="tooltip" data-bs-placement="top" title="3-digit code on the back of your card">
-                              <i class="bi bi-question-circle"></i>
-                            </span>
-                          </div>
+
+                        <div class="checkout-section" id="payment-method">
+                            <div class="section-header">
+                                <div class="section-number">3</div>
+                                <h3>Phương thức thanh toán</h3>
+                            </div>
+                            <div class="section-content">
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="payment-method" id="cod" value="Tiền mặt khi nhận hàng (COD)" checked>
+                                    <label class="form-check-label" for="cod">Tiền mặt khi nhận hàng (COD)</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="payment-method" id="bank" value="Chuyển khoản ngân hàng">
+                                    <label class="form-check-label" for="bank">Chuyển khoản ngân hàng</label>
+                                </div>
+                            </div>
                         </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="card-name">Tên trên thẻ</label>
-                        <input type="text" class="form-control" name="card-name" id="card-name" placeholder="Nguyễn Văn A" required="">
-                      </div>
-                    </div>
 
-                    <div class="payment-details d-none" id="paypal-details">
-                      <p class="payment-info">Bạn sẽ được chuyển hướng đến PayPal để hoàn tất giao dịch mua hàng một cách bảo mật.</p>
-                    </div>
-
-                    <div class="payment-details d-none" id="apple-pay-details">
-                      <p class="payment-info">Bạn sẽ được yêu cầu xác nhận thanh toán bằng Apple Pay.</p>
-                    </div>
-                  </div>
+                        <div class="checkout-section" id="order-review">
+                            <div class="section-header">
+                                <div class="section-number">4</div>
+                                <h3>Xem lại &amp; Đặt hàng</h3>
+                            </div>
+                            <div class="section-content">
+                                <div class="form-check terms-check">
+                                    <input class="form-check-input" type="checkbox" id="terms" name="terms" required="">
+                                    <label class="form-check-label" for="terms">
+                                        Tôi đồng ý với các <a href="#">Điều khoản và Điều kiện</a>
+                                    </label>
+                                </div>
+                                <div class="place-order-container">
+                                    <button type="submit" class="btn btn-primary place-order-btn" id="place-order-btn">
+                                        <span class="btn-text">Đặt hàng</span>
+                                        <span class="btn-price" id="final-total-display">5.000.000 VND</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-
-                <!-- Order Review -->
-                <div class="checkout-section" id="order-review">
-                  <div class="section-header">
-                    <div class="section-number">4</div>
-                    <h3>Xem lại &amp; Đặt hàng</h3>
-                  </div>
-                  <div class="section-content">
-                    <div class="form-check terms-check">
-                      <input class="form-check-input" type="checkbox" id="terms" name="terms" required="">
-                      <label class="form-check-label" for="terms">
-                        Tôi đồng ý với các <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Điều khoản và Điều kiện</a> và <a href="#" data-bs-toggle="modal" data-bs-target="#privacyModal">Chính sách bảo mật</a>
-                      </label>
-                    </div>
-                    <div class="success-message d-none">Đơn hàng của quý khách đã được đặt thành công! Cảm ơn quý khách đã mua hàng.</div>
-                    <div class="place-order-container">
-                      <button type="submit" class="btn btn-primary place-order-btn">
-                        <span class="btn-text">Đặt hàng</span>
-                        <span class="btn-price">5.000.000 VND</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </form>
             </div>
-          </div>
 
-          <div class="col-lg-5">
-            <!-- Order Summary -->
-            <div class="order-summary" data-aos="fade-left" data-aos-delay="200">
-              <div class="order-summary-header">
-                <h3>Tóm tắt đơn hàng</h3>
-                <span class="item-count">2 sản phẩm</span>
-              </div>
-
-              <div class="order-summary-content">
-                <div class="order-items">
-                  <div class="order-item">
-                    <div class="order-item-image">
-                      <img src="assets/img/product/image.png" alt="Product" class="img-fluid">
+            <div class="col-lg-5">
+                <div class="order-summary" data-aos="fade-left" data-aos-delay="200">
+                    <div class="order-summary-header">
+                        <h3>Đơn hàng của bạn</h3>
+                        <span class="item-count" id="summary-item-count">0 sản phẩm</span>
                     </div>
-                    <div class="order-item-details">
-                      <h4>Xe Đạp Điện Gấp E-BIKE ADO A20 LITE - PHANH ĐĨA, BÁNH 20 INCHES</h4>
-                      <p class="order-item-variant">Màu: Đen</p>
-                      <div class="order-item-price">
-                        <span class="quantity">1 ×</span>
-                        <span class="price">17.990.000 VND</span>
-                      </div>
-                    </div>
-                  </div>
 
-                  <div class="order-item">
-                    <div class="order-item-image">
-                      <img src="assets/img/product/1.jpg" alt="Product" class="img-fluid">
-                    </div>
-                    <div class="order-item-details">
-                      <h4>Nón Bảo Hiểm Xe Đạp Thể Thao (55-61cm) RAPTOR A3 Bicycle Helmet</h4>
-                      <p class="order-item-variant">Màu: Trắng</p>
-                      <div class="order-item-price">
-                        <span class="quantity">1 ×</span>
-                        <span class="price">659.000 VND</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                    <div class="order-summary-content">
+                        <div class="order-items" id="summary-product-list">
+                            <p class="text-center text-muted p-3">Không có sản phẩm nào trong giỏ hàng.</p>
+                        </div>
 
-                <div class="promo-code">
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Mã giảm giá" aria-label="Promo Code">
-                    <button class="btn btn-outline-primary" type="button">Áp dụng</button>
-                  </div>
-                </div>
+                        <div class="promo-code"></div>
 
-                <div class="order-totals">
-                  <div class="order-subtotal d-flex justify-content-between">
-                    <span>Tổng tiền hàng</span>
-                    <span>18.649.000 VND</span>
-                  </div>
-                  <div class="order-shipping d-flex justify-content-between">
-                    <span>Phí vận chuyển</span>
-                    <span>0 VND</span>
-                  </div>
-                  <div class="order-tax d-flex justify-content-between">
-                    <span>Thuế</span>
-                    <span>0 VND</span>
-                  </div>
-                  <div class="order-total d-flex justify-content-between">
-                    <span>Tổng đơn hàng</span>
-                    <span>18.690.000 VND</span>
-                  </div>
+                        <div class="order-totals">
+                            <div class="order-subtotal d-flex justify-content-between">
+                                <span>Tổng tiền hàng</span>
+                                <span id="summary-subtotal">0 VND</span>
+                            </div>
+                            <div class="order-shipping d-flex justify-content-between">
+                                <span>Phí vận chuyển</span>
+                                <span id="summary-shipping-fee">0 VND</span>
+                            </div>
+                            <div class="order-tax d-flex justify-content-between">
+                                <span>Thuế</span>
+                                <span id="summary-tax">0 VND</span>
+                            </div>
+                            <div class="order-total d-flex justify-content-between">
+                                <span>Tổng đơn hàng</span>
+                                <span id="summary-total">0 VND</span>
+                            </div>
+                        </div>
+                        </div>
                 </div>
-
-                <div class="secure-checkout">
-                  <div class="secure-checkout-header">
-                    <i class="bi bi-shield-lock"></i>
-                    <span>Thanh toán an toàn</span>
-                  </div>
-                  <div class="payment-icons">
-                    <i class="bi bi-credit-card-2-front"></i>
-                    <i class="bi bi-credit-card"></i>
-                    <i class="bi bi-paypal"></i>
-                    <i class="bi bi-apple"></i>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
         </div>
+        
+        <div id="bill-container" style="display: none;">
+            </div>
+
+        </div>
+</section>
+          <div class="order-summary" data-aos="fade-left" data-aos-delay="200">
+    <div class="order-summary-header">
+    </div>
+
+    <div class="order-summary-content">
+        <div class="order-items" id="summary-product-list">
+            </div>
+
+        <div class="promo-code">
+            </div>
+
+        <div class="order-totals">
+            <div class="order-subtotal d-flex justify-content-between">
+            </div>
+            <div class="order-shipping d-flex justify-content-between">
+            </div>
+            <div class="order-tax d-flex justify-content-between">
+            </div>
+            <div class="order-total d-flex justify-content-between">
+            </div>
+        </div>
+
+        <div class="secure-checkout">
+            </div>
+    </div>
+</div>
 
         <!-- Terms and Privacy Modals -->
         <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
@@ -913,45 +750,241 @@
   <script src="assets/js/main.js"></script>
 
 <script>
-  // Kiểm tra trạng thái đăng nhập khi tải trang
-  document.addEventListener("DOMContentLoaded", function() {
-    const isLoggedIn = localStorage.getItem('loggedIn');
-    const authButtons = document.getElementById('auth-buttons');
-    const logoutSection = document.getElementById('logout-section');
+    // --- Hằng số và Hàm tiện ích (CẦN PHẢI ĐƯỢC ĐỊNH NGHĨA) ---
+    const SHIPPING_STANDARD = 50000;
+    const FREE_SHIPPING_THRESHOLD = 10000000;
 
-    if (isLoggedIn) {
-      authButtons.classList.add('d-none'); // ẩn nút đăng nhập/đăng ký
-      logoutSection.classList.remove('d-none'); // hiện nút đăng xuất
-    } else {
-      authButtons.classList.remove('d-none');
-      logoutSection.classList.add('d-none');
+    function formatVND(n) {
+        // Đảm bảo số là hợp lệ trước khi định dạng
+        if (typeof n !== 'number' || isNaN(n)) return '0 VND';
+        return n.toLocaleString('vi-VN') + ' VND';
     }
-  });
 
-  // Hàm đăng xuất
-  function logout() {
-    localStorage.removeItem('loggedIn'); // xóa trạng thái đăng nhập
-    window.location.href = 'login.html'; // chuyển về trang đăng nhập
-  }
-</script>
-<script>
-  document.getElementById('btnFilter').addEventListener('click', function() {
-    const name = document.getElementById('searchName').value.toLowerCase();
-    const cat = document.getElementById('categoryFilter').value;
-    const min = parseFloat(document.getElementById('minPrice').value) || 0;
-    const max = parseFloat(document.getElementById('maxPrice').value) || Infinity;
+    // --- 1. Load Tóm tắt Đơn hàng từ Cart (ĐÃ SỬA LỖI VÀ TĂNG TÍNH ỔN ĐỊNH) ---
+    // --- 1. Load Tóm tắt Đơn hàng từ Cart (ĐÃ SỬA LỖI KÍCH THƯỚC) ---
+function loadOrderSummary() {
+    const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    
+    // Tính toán phí vận chuyển
+    const SHIPPING_STANDARD = 50000;
+    const FREE_SHIPPING_THRESHOLD = 10000000;
+    
+    let shippingFee = SHIPPING_STANDARD;
+    if (subtotal === 0) {
+        shippingFee = 0;
+    } else if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+        shippingFee = 0;
+    }
 
-    const products = document.querySelectorAll('.product-card');
-    products.forEach(p => {
-      const pname = p.querySelector('h5').innerText.toLowerCase();
-      const priceText = p.querySelector('.price').innerText.replace(/[^\d]/g, '');
-      const price = parseFloat(priceText);
-      const matchName = pname.includes(name);
-      const matchCat = !cat || pname.includes(cat);
-      const matchPrice = price >= min && price <= max;
-      p.style.display = (matchName && matchCat && matchPrice) ? '' : 'none';
+    const total = subtotal + shippingFee;
+    
+    // --- LẤY CÁC PHẦN TỬ ĐỂ CẬP NHẬT ---
+    const productListContainer = document.getElementById('summary-product-list');
+    const itemCountSpan = document.getElementById('summary-item-count');
+    const subtotalSpan = document.getElementById('summary-subtotal');
+    const shippingSpan = document.getElementById('summary-shipping-fee');
+    const taxSpan = document.getElementById('summary-tax');
+    const totalSpan = document.getElementById('summary-total');
+    const finalTotalDisplay = document.getElementById('final-total-display');
+
+    if (cart.length === 0) {
+        if (productListContainer) productListContainer.innerHTML = '<p class="text-danger">Giỏ hàng trống.</p>';
+        const placeOrderBtn = document.getElementById('place-order-btn');
+        if (placeOrderBtn) {
+            placeOrderBtn.disabled = true;
+            placeOrderBtn.querySelector('.btn-text').textContent = 'Giỏ hàng trống';
+        }
+        // Cập nhật tất cả tổng tiền về 0
+        [subtotalSpan, shippingSpan, taxSpan, totalSpan, finalTotalDisplay].forEach(el => {
+            if (el) el.textContent = formatVND(0);
+        });
+        if (itemCountSpan) itemCountSpan.textContent = '0 sản phẩm';
+        return;
+    }
+
+    // --- 1. Render Danh sách Sản phẩm (vào order-items) ---
+    const productHtml = cart.map(item => `
+        <div class="order-item">
+            <div class="order-item-image">
+                <img src="${item.image || 'assets/img/default-product.png'}" alt="${item.title}" class="img-fluid">
+            </div>
+            <div class="order-item-details">
+                <h4>${item.title}</h4>
+                <p class="order-item-variant">SL: ${item.quantity}</p>
+                <div class="order-item-price">
+                    <span class="price">${formatVND(item.price * item.quantity)}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    if (productListContainer) {
+        productListContainer.innerHTML = productHtml;
+    }
+
+    // --- 2. Cập nhật các Tổng số (vào order-totals) ---
+    if (itemCountSpan) itemCountSpan.textContent = `${cart.length} sản phẩm`;
+    
+    if (subtotalSpan) subtotalSpan.textContent = formatVND(subtotal);
+    if (shippingSpan) shippingSpan.textContent = shippingFee === 0 ? 'Miễn phí' : formatVND(shippingFee);
+    if (taxSpan) taxSpan.textContent = formatVND(0); 
+    if (totalSpan) totalSpan.textContent = formatVND(total);
+    
+    // Cập nhật giá trên nút Đặt hàng
+    if (finalTotalDisplay) {
+        finalTotalDisplay.textContent = formatVND(total);
+    }
+}    
+    // --- 2. HIỂN THỊ BILL CHI TIẾT ---
+    // --- 2. HIỂN THỊ BILL CHI TIẾT (ĐÃ SỬA LỖI) ---
+function displayBill(order) {
+    // Ẩn khu vực thanh toán chính
+    document.getElementById('checkout-main').style.display = 'none';
+
+    const container = document.getElementById('bill-container');
+    
+    // !!! QUAN TRỌNG: Đảm bảo bill-container tồn tại !!!
+    if (!container) {
+        console.error("LỖI: Không tìm thấy DIV chứa Bill (id='bill-container').");
+        return;
+    }
+    
+    container.style.display = 'block';
+
+    // Lấy phương thức thanh toán đã chọn
+    const paymentMethodElement = document.querySelector('input[name="payment-method"]:checked');
+    const paymentMethod = paymentMethodElement ? paymentMethodElement.value : 'Tiền mặt (COD)';
+
+    // --- Xây dựng HTML Bill chi tiết ---
+    const productListHtml = order.items.map(item => `
+        <tr>
+            <td>${item.title.substring(0, 30)}...</td>
+            <td class="text-end">${item.quantity}</td>
+            <td class="text-end">${formatVND(item.price * item.quantity)}</td>
+        </tr>
+    `).join('');
+
+    const billHtml = `
+        <div class="alert alert-success text-center py-4">
+            <i class="bi bi-check-circle-fill fs-3"></i>
+            <h3 class="mt-2">ĐẶT HÀNG THÀNH CÔNG!</h3>
+            <p>Mã đơn hàng của bạn là: <strong>#${order.id}</strong>.</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="p-4 border rounded">
+                    <h5 class="mb-3">Thông tin Khách hàng</h5>
+                    <p><strong>Ngày đặt:</strong> ${order.date}</p>
+                    <p><strong>Trạng thái:</strong> <span class="badge bg-warning text-dark">${order.status}</span></p>
+                    <hr>
+                    <p><strong>Họ tên:</strong> ${order.customer.name}</p>
+                    <p><strong>Điện thoại:</strong> ${order.customer.phone}</p>
+                    <p><strong>Địa chỉ:</strong> ${order.customer.address}</p>
+                    <p><strong>PT Thanh toán:</strong> ${paymentMethod}</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 mb-4">
+                <div class="p-4 border rounded">
+                    <h5 class="mb-3">Chi tiết Đơn hàng & Thanh toán</h5>
+                    <table class="table table-sm">
+                        <thead><tr><th>Sản phẩm</th><th class="text-end">SL</th><th class="text-end">Giá</th></tr></thead>
+                        <tbody>
+                            ${productListHtml}
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <span>Tổng phụ:</span>
+                        <span class="fw-bold">${formatVND(order.subtotal)}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Phí vận chuyển:</span>
+                        <span class="fw-bold">${order.shippingFee === 0 ? 'Miễn phí' : formatVND(order.shippingFee)}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2 fs-5 text-danger">
+                        <span>**TỔNG THANH TOÁN:**</span>
+                        <span class="fw-bolder">${formatVND(order.total)}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="account.html" class="btn btn-primary me-3">Xem Lịch sử Đơn hàng</a>
+            <a href="category.html" class="btn btn-outline-secondary">Tiếp tục mua sắm</a>
+        </div>
+    `;
+    
+    container.innerHTML = billHtml;
+}
+
+    // --- 3. Xử lý Đặt hàng (Place Order) ---
+    function handlePlaceOrder(event) {
+        event.preventDefault(); 
+        
+        const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+        const termsChecked = document.getElementById('terms') ? document.getElementById('terms').checked : true;
+        
+        if (cart.length === 0) {
+            alert("Giỏ hàng của bạn đang trống. Vui lòng thêm sản phẩm.");
+            return;
+        }
+
+        if (!termsChecked) {
+            alert("Bạn phải đồng ý với Điều khoản và Điều kiện để tiếp tục.");
+            return;
+        }
+
+        // --- LẤY DỮ LIỆU ĐẶT HÀNG ---
+        const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        const shippingFee = (subtotal >= FREE_SHIPPING_THRESHOLD) ? 0 : SHIPPING_STANDARD;
+        const total = subtotal + shippingFee;
+        const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+
+        // Lấy thông tin người dùng từ form
+        const customerInfo = {
+            name: document.getElementById('full-name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            address: document.getElementById('address').value,
+            payment: paymentMethod
+        };
+
+        // Tạo đối tượng Đơn hàng mới
+        const newOrder = {
+            id: Date.now(), 
+            date: new Date().toLocaleDateString('vi-VN'),
+            customer: customerInfo,
+            items: cart,
+            subtotal: subtotal,
+            shippingFee: shippingFee,
+            total: total,
+            status: "Đang xử lý",
+        };
+
+        // LƯU ĐƠN HÀNG VÀO LOCAL STORAGE
+        let orders = JSON.parse(localStorage.getItem('orderHistory')) || [];
+        orders.push(newOrder);
+        localStorage.setItem('orderHistory', JSON.stringify(orders));
+
+        // XÓA GIỎ HÀNG sau khi đặt hàng
+        localStorage.removeItem('shoppingCart');
+
+        // HIỂN THỊ BILL
+        displayBill(newOrder); 
+    }
+
+    // --- 4. Gắn Listener ---
+    document.addEventListener('DOMContentLoaded', () => {
+        loadOrderSummary(); 
+        const form = document.getElementById('checkout-form');
+        if (form) {
+            form.addEventListener('submit', handlePlaceOrder); 
+        }
     });
-  });
 </script>
 
 </body>

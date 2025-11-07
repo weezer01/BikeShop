@@ -1561,6 +1561,130 @@ function logout() {
   localStorage.removeItem("loggedIn");
   window.location.href = "login.html";
 }
+    // Hàm định dạng tiền (cần thiết cho account.html)
+    function formatVND(n) {
+        if (typeof n !== 'number' || isNaN(n)) return '0 VND';
+        return n.toLocaleString('vi-VN') + ' VND';
+    }
+
+    // --- HÀM TẠO HTML CHO ẢNH SẢN PHẨM TRONG THẺ ĐƠN HÀNG ---
+    function generateProductImagesHtml(items) {
+        // Chỉ hiển thị tối đa 3 ảnh
+        return items.slice(0, 3).map(item => `
+            <img src="${item.image || 'assets/img/default-product.png'}" alt="${item.title}" loading="lazy">
+        `).join('');
+    }
+    
+    // --- HÀM TẠO HTML CHO MỘT THẺ ĐƠN HÀNG (Dựa trên HTML bạn cung cấp) ---
+    function createOrderCardHtml(order) {
+        const orderIdDisplay = `#ORD-${new Date(order.id).getFullYear()}-${String(order.id).slice(-4)}`;
+        const orderDate = order.date;
+        const totalItems = order.items.reduce((sum, item) => sum + item.quantity, 0);
+        const statusClass = order.status === 'Đang xử lý' ? 'processing' : (order.status === 'Đã giao' ? 'delivered' : 'pending');
+        
+        return `
+            <div class="order-card" data-aos="fade-up" data-aos-delay="100" data-order-id="${order.id}">
+                <div class="order-header">
+                    <div class="order-id">
+                        <span class="label">Mã đơn hàng:</span>
+                        <span class="value">${orderIdDisplay}</span>
+                    </div>
+                    <div class="order-date">Ngày đặt: ${orderDate}</div>
+                </div>
+                <div class="order-content">
+                    <div class="product-grid">
+                        ${generateProductImagesHtml(order.items)}
+                        ${order.items.length > 3 ? `<span class="more-items">+${order.items.length - 3}</span>` : ''}
+                    </div>
+                    <div class="order-info">
+                        <div class="info-row">
+                            <span>Trạng thái</span>
+                            <span class="status ${statusClass}">${order.status}</span>
+                        </div>
+                        <div class="info-row">
+                            <span>Số lượng</span>
+                            <span>${totalItems} sản phẩm</span>
+                        </div>
+                        <div class="info-row">
+                            <span>Tổng cộng</span>
+                            <span class="price">${formatVND(order.total)}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-footer">
+                    <button type="button" class="btn-track" data-bs-toggle="collapse" data-bs-target="#tracking-${order.id}" aria-expanded="false">Theo dõi đơn hàng</button>
+                    <button type="button" class="btn-details" data-bs-toggle="collapse" data-bs-target="#details-${order.id}" aria-expanded="false">Xem chi tiết</button>
+                </div>
+
+                <div class="collapse tracking-info" id="tracking-${order.id}">
+                    <div class="tracking-timeline">
+                        <div class="timeline-item completed">
+                            <div class="timeline-icon"><i class="bi bi-check-circle-fill"></i></div>
+                            <div class="timeline-content"><h5>Đơn hàng đã được xác nhận</h5><p>Đã nhận đơn hàng.</p></div>
+                        </div>
+                        <div class="timeline-item active">
+                            <div class="timeline-icon"><i class="bi bi-box-seam"></i></div>
+                            <div class="timeline-content"><h5>Đang xử lý</h5><p>Đơn hàng đang được chuẩn bị.</p></div>
+                        </div>
+                        </div>
+                </div>
+                
+                <div class="collapse details-info" id="details-${order.id}">
+                    <div class="p-3 border mt-2">
+                        <h6>Chi tiết giao hàng:</h6>
+                        <p class="mb-1 small">Người nhận: <strong>${order.customer.name}</strong></p>
+                        <p class="mb-1 small">Địa chỉ: ${order.customer.address}</p>
+                        <p class="mb-1 small">PTTT: ${order.customer.payment}</p>
+                        <p class="mb-1 small">Phí vận chuyển: ${order.shippingFee === 0 ? 'Miễn phí' : formatVND(order.shippingFee)}</p>
+                        <hr class="my-2">
+                        <h6>Sản phẩm:</h6>
+                        <ul class="list-unstyled small">
+                            ${order.items.map(item => `
+                                <li>${item.title.substring(0, 40)}... - ${item.quantity} x ${formatVND(item.price)}</li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        `;
+    }
+
+    // --- HÀM TẢI LỊCH SỬ ĐƠN HÀNG CHÍNH ---
+    function loadOrderHistory() {
+        const orders = JSON.parse(localStorage.getItem('orderHistory')) || [];
+        // Giả định bạn có một DIV có class/id để chứa toàn bộ lưới đơn hàng:
+        const container = document.querySelector('.orders-grid'); 
+
+        if (!container) {
+            // Nếu không tìm thấy orders-grid, tìm container tổng thể
+            const fallbackContainer = document.getElementById('orders');
+            if (fallbackContainer) {
+                 fallbackContainer.innerHTML = '<div class="alert alert-danger">Không tìm thấy khu vực hiển thị đơn hàng (class: orders-grid).</div>';
+            }
+            return;
+        }
+
+        if (orders.length === 0) {
+            container.innerHTML = "<div class='alert alert-info text-center'>Bạn chưa có đơn hàng nào.</div>";
+            return;
+        }
+
+        // Sắp xếp đơn hàng mới nhất lên đầu
+        orders.sort((a, b) => b.id - a.id); 
+
+        // Tạo HTML cho toàn bộ lưới đơn hàng
+        const historyHtml = orders.map(order => createOrderCardHtml(order)).join('');
+
+        // Chèn vào container
+        container.innerHTML = historyHtml;
+    }
+
+    // --- GẮN LISTENER KHI TẢI TRANG ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // Chờ tất cả nội dung tải xong (bao gồm các tab)
+        loadOrderHistory();
+    });
 </script>
 
 <!-- Bootstrap 5 JS -->
