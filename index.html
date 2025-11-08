@@ -1208,6 +1208,53 @@
   });
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  // === HÀM CẬP NHẬT SỐ LƯỢNG HIỂN THỊ TRÊN HEADER ===
+  function updateHeaderCounts() {
+    const cartBadge = document.querySelector('.header-action-btn[href="cart.html"] .badge');
+    const wishlistBadge = document.querySelector('.header-action-btn[href="account.html"] .bi-heart + .badge, .wishlist-badge');
+    const orderBadge = document.querySelector('.header-action-btn[href="account.html"] .bi-bag-check + .badge, .order-badge');
+
+    const cart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
+    const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+    const orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+    if (cartBadge) cartBadge.textContent = cart.length;
+    if (wishlistBadge) wishlistBadge.textContent = wishlist.length;
+    if (orderBadge) orderBadge.textContent = orders.length;
+  }
+
+  // === HÀM RESET TOÀN BỘ KHI ĐẶT ĐƠN HÀNG ===
+  function resetAfterCheckout() {
+    // Giả sử khi người dùng bấm "Đặt hàng thành công"
+    localStorage.removeItem("shoppingCart"); // Xóa giỏ hàng
+    // Có thể thêm sản phẩm đã mua vào orders
+    const orders = JSON.parse(localStorage.getItem("orders")) || [];
+    const cart = JSON.parse(localStorage.getItem("shoppingCartBackup")) || []; // nếu có backup
+    if (cart.length > 0) {
+      orders.push(...cart);
+      localStorage.setItem("orders", JSON.stringify(orders));
+    }
+
+    updateHeaderCounts();
+  }
+
+  // === GẮN HÀM VÀO BIẾN TOÀN CỤC (để gọi từ các trang khác) ===
+  window.updateHeaderCounts = updateHeaderCounts;
+  window.resetAfterCheckout = resetAfterCheckout;
+
+  // === CẬP NHẬT NGAY KHI TRANG LOAD ===
+  updateHeaderCounts();
+
+  // === LẮNG NGHE KHI localStorage THAY ĐỔI (giữa các tab) ===
+  window.addEventListener("storage", updateHeaderCounts);
+
+});
+</script>
+
+
 </body>
 
 </html>

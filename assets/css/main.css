@@ -12340,4 +12340,28 @@ section,
   box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--accent-color), transparent 75%);
 }
 
+.filter-tag {
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+}
+.filter-tag .btn-close {
+  margin-left: 6px;
+  font-size: 10px;
+  opacity: 0.8;
+}
+.filter-tag .btn-close:hover {
+  opacity: 1;
+}
+.clear-all-btn {
+  font-size: 13px;
+  padding: 4px 10px;
+}
+
+
+
+
+
 

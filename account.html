@@ -221,7 +221,7 @@ header a:active {
             <!-- Wishlist -->
             <a href="account.html" class="header-action-btn d-none d-md-block">
               <i class="bi bi-heart"></i>
-              <span class="badge">3</span>
+              <span class="wishlist-count badge">3</span>
             </a>
 
             <!-- Cart -->
@@ -488,14 +488,13 @@ header a:active {
                     <a class="nav-link active" data-bs-toggle="tab" href="#orders">
                       <i class="bi bi-box-seam"></i>
                       <span>Đơn hàng của tôi</span>
-                      <span class="badge">3</span>
                     </a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="tab" href="#wishlist">
                       <i class="bi bi-heart"></i>
                       <span>Yêu thích</span>
-                      <span class="badge">3</span>
+                      
                     </a>
                   </li>
                   <li class="nav-item">
@@ -1691,5 +1690,122 @@ function logout() {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Bootstrap 5 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  // === HÀM CẬP NHẬT SỐ LƯỢNG HIỂN THỊ TRÊN HEADER ===
+  function updateHeaderCounts() {
+    const cartBadge = document.querySelector('.header-action-btn[href="cart.html"] .badge');
+    const wishlistBadge = document.querySelector('.header-action-btn[href="account.html"] .bi-heart + .badge, .wishlist-badge');
+    const orderBadge = document.querySelector('.header-action-btn[href="account.html"] .bi-bag-check + .badge, .order-badge');
+
+    const cart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
+    const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+    const orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+    if (cartBadge) cartBadge.textContent = cart.length;
+    if (wishlistBadge) wishlistBadge.textContent = wishlist.length;
+    if (orderBadge) orderBadge.textContent = orders.length;
+  }
+
+  // === HÀM RESET TOÀN BỘ KHI ĐẶT ĐƠN HÀNG ===
+  function resetAfterCheckout() {
+    // Giả sử khi người dùng bấm "Đặt hàng thành công"
+    localStorage.removeItem("shoppingCart"); // Xóa giỏ hàng
+    // Có thể thêm sản phẩm đã mua vào orders
+    const orders = JSON.parse(localStorage.getItem("orders")) || [];
+    const cart = JSON.parse(localStorage.getItem("shoppingCartBackup")) || []; // nếu có backup
+    if (cart.length > 0) {
+      orders.push(...cart);
+      localStorage.setItem("orders", JSON.stringify(orders));
+    }
+
+    updateHeaderCounts();
+  }
+
+  // === GẮN HÀM VÀO BIẾN TOÀN CỤC (để gọi từ các trang khác) ===
+  window.updateHeaderCounts = updateHeaderCounts;
+  window.resetAfterCheckout = resetAfterCheckout;
+
+  // === CẬP NHẬT NGAY KHI TRANG LOAD ===
+  updateHeaderCounts();
+
+  // === LẮNG NGHE KHI localStorage THAY ĐỔI (giữa các tab) ===
+  window.addEventListener("storage", updateHeaderCounts);
+
+});
+</script>
+
+<!-- SweetAlert2 cho thông báo đẹp -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Lắng nghe tất cả các nút "Thêm vào giỏ"
+  document.querySelectorAll(".wishlist-card .btn-add-cart").forEach((btn, index) => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".wishlist-card");
+      if (!card) return;
+
+      // --- Lấy thông tin sản phẩm ---
+      const title = card.querySelector("h4").textContent.trim();
+      const priceText = card.querySelector(".price .current")?.textContent.replace(/[^\d]/g, "") || "0";
+      const price = parseInt(priceText) || 0;
+      const image = card.querySelector("img").src;
+
+      const product = {
+        id: Date.now() + "-" + index,
+        title,
+        price,
+        image,
+        quantity: 1
+      };
+
+      // --- Lưu vào localStorage.shoppingCart ---
+      let cart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
+      const existing = cart.find(item => item.title === product.title);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push(product);
+      }
+      localStorage.setItem("shoppingCart", JSON.stringify(cart));
+
+      // --- Hiển thị thông báo và chuyển sang trang giỏ hàng ---
+      Swal.fire({
+        title: "🛒 Đã thêm vào giỏ hàng!",
+        text: product.title,
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1000
+      });
+
+      setTimeout(() => {
+        window.location.href = "cart.html";
+      }, 1000);
+    });
+  });
+});
+</script>
+
+<script>
+// ===== CẬP NHẬT SỐ LƯỢNG YÊU THÍCH TRÊN HEADER =====
+document.addEventListener("DOMContentLoaded", () => {
+  const wishlistBadge = document.querySelector(".wishlist-count");
+
+  // Nếu không có badge, bỏ qua
+  if (!wishlistBadge) return;
+
+  // Lấy danh sách yêu thích (có thể bạn đang lưu trong localStorage.wishlist)
+  const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+  // Cập nhật số
+  wishlistBadge.textContent = wishlist.length || 3; // fallback = 3 nếu chưa có dữ liệu
+});
+</script>
+
+
+
 </body>
 </html>
