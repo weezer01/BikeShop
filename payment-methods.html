@@ -171,7 +171,7 @@
             <!-- Wishlist -->
             <a href="account.html" class="header-action-btn d-none d-md-block">
               <i class="bi bi-heart"></i>
-              <span class="badge">3</span>
+              <span class="wishlist-count badge">0</span>
             </a>
 
             <!-- Cart -->
@@ -821,6 +821,21 @@ document.addEventListener("DOMContentLoaded", function () {
   // === LẮNG NGHE KHI localStorage THAY ĐỔI (giữa các tab) ===
   window.addEventListener("storage", updateHeaderCounts);
 
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const wishlistBadge = document.querySelector(".wishlist-count");
+
+  // Kiểm tra người dùng đã đăng nhập hay chưa
+  const isLoggedIn = localStorage.getItem("loggedIn") === "true";
+
+  if (isLoggedIn) {
+    // Nếu đã đăng nhập: mặc định hiển thị 3
+    wishlistBadge.textContent = "3";
+  } else {
+    // Nếu chưa đăng nhập: hiển thị 1
+    wishlistBadge.textContent = "1";
+  }
 });
 </script>
 
