@@ -342,7 +342,6 @@ select option:hover,
               <div data-subview="stock" style="display:none">
                 <div class="toolbar" style="margin-top:8px">
                   <select id="stockProductFilter"><option value="">-- Chọn xe đạp --</option></select>
-                  <input id="stockFrom" type="date" />
                   <input id="stockTo" type="date" />
                   <button class="btn" id="btnCheckStock">Tra cứu</button>
                   <button class="btn" id="btnLowStock">Cảnh báo sắp hết</button>
@@ -1503,7 +1502,6 @@ function renderStock() {
   // Nút tra cứu
   $('#btnCheckStock').onclick = () => {
     const pid = Number($('#stockProductFilter').value);
-    const from = $('#stockFrom').value;
     const to = $('#stockTo').value;
 
     if (!pid) return alert('Vui lòng chọn sản phẩm');
