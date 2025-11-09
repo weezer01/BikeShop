@@ -178,7 +178,7 @@
             <!-- Cart -->
             <a href="cart.html" class="header-action-btn">
               <i class="bi bi-cart3"></i>
-              <span class="badge">3</span>
+              <span class="badge">0</span>
             </a>
 
             <!-- Mobile Navigation Toggle -->
@@ -451,18 +451,9 @@
                 <!-- Price Category -->
                 <li class="category-item">
                   <div class="d-flex justify-content-between align-items-center category-header collapsed" data-bs-toggle="collapse" data-bs-target="#categories-1-price-subcategories" aria-expanded="false" aria-controls="categories-1-home-subcategories">
-                    <a href="javascript:void(0)" class="category-link">Khoảng giá</a>
                     <span class="category-toggle">
-                      <i class="bi bi-chevron-down"></i>
-                      <i class="bi bi-chevron-up"></i>
                     </span>
                   </div>
-                  <ul id="categories-1-price-subcategories" class="subcategory-list list-unstyled collapse ps-3 mt-2">
-                    <li><a href="#" class="subcategory-link">Tất cả</a></li>
-                    <li><a href="#" class="subcategory-link">Dưới 5,000,000<u>đ</u></a></li>
-                    <li><a href="#" class="subcategory-link">Từ 5,000,000<u>đ</u> - 10,000,000<u>đ</u></a></li>
-                    <li><a href="#" class="subcategory-link">Từ 10,000,000<u>đ</u> - 20,000,000<u>đ</u></a></li>
-                    <li><a href="#" class="subcategory-link">Trên 20,000,000<u>đ</u></a></li>
                   </ul>
                 </li>
 
@@ -1076,8 +1067,7 @@
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
   <script>
-    // --- 1. Định nghĩa Dữ liệu Sản phẩm (Cần thêm ID và Image) ---
-    // Cập nhật ProductData để có ID và dữ liệu chi tiết hơn cho việc lọc và giỏ hàng.
+    // --- 0. KHAI BÁO DỮ LIỆU SẢN PHẨM ---
     const productData = [
         { id: 1, title: "Xe Đạp Đường Phố Touring TRINX Free 2.2 – Phanh Đĩa, Bánh 700C", price: 6490000, originalPrice: 7490000, image: "assets/img/product/13.jpg", badge: "-13%", category: "Bộ sưu tập xe xịn", rating: 4.8, reviews: 42, aosDelay: 0 },
         { id: 2, title: "Xe Đạp Đường Trường Road JAVA Auriga R5 - Phanh Đĩa, Bánh 700C", price: 7890000, originalPrice: 12890000, image: "assets/img/product/37.jpg", badge: "-35%", category: "Bộ sưu tập xe xịn", rating: 4.6, reviews: 28, aosDelay: 100 },
@@ -1106,6 +1096,8 @@
     // Elements của Thanh trượt giá
     const minRange = document.querySelector('.min-range');
     const maxRange = document.querySelector('.max-range');
+    const clearAllBtn = document.querySelector('.active-filters .clear-all-btn'); 
+// Dùng selector class vì nút này không có ID
     const minPriceDisplay = document.querySelector('.min-price');
     const maxPriceDisplay = document.querySelector('.max-price');
     const minPriceInput = document.querySelector('.min-price-input');
@@ -1114,13 +1106,14 @@
     const sliderProgress = document.querySelector('.slider-progress');
 
     // Trạng thái Lọc
-    let activeFilters = {
-        search: '',
-        priceRangeSliderMin: 0, 
-        priceRangeSliderMax: minRange ? parseInt(maxRange.max) : 30000000, // Sử dụng giá trị max của thanh trượt
-        sortBy: 'Featured',
-        sidebarBrand: '',
-    };
+let activeFilters = {
+    search: '',
+    priceRangeDropdown: 'All Prices', // Giá trị từ Dropdown
+    priceRangeSliderMin: 0, // Giá trị Min từ Thanh trượt
+    priceRangeSliderMax: minRange ? parseInt(maxRange.max) : 30000000, // Giá trị Max từ Thanh trượt
+    sortBy: 'Featured',
+    sidebarBrand: '',
+};;
     
     // Khởi tạo giá trị ban đầu cho maxRangeSliderMax nếu minRange tồn tại
     if (minRange && maxRange) {
@@ -1203,71 +1196,103 @@
     }
 
     // --- 6. Hàm Lọc Chính ---
-    function applyFilters() {
-        let filteredProducts = [...productData];
+    // Thay thế TOÀN BỘ hàm applyFilters() hiện có trong script của bạn bằng hàm này
 
-// 1. Lọc theo TÌM KIẾM (Đã thêm logic không dấu)
+// BẮT ĐẦU THAY THẾ HÀM applyFilters()
+
+function applyFilters() {
+    let filteredProducts = [...productData];
+
+    // 1. Lọc theo TÌM KIẾM
     if (activeFilters.search) {
         const normalizedSearchTerm = removeDiacritritics(activeFilters.search).toLowerCase();
         
         filteredProducts = filteredProducts.filter(p => {
             const normalizedProductTitle = removeDiacritritics(p.title).toLowerCase();
-            
-            // So sánh chuỗi đã được loại bỏ dấu
             return normalizedProductTitle.includes(normalizedSearchTerm);
         });
     }
 
-        // 6.2. Lọc theo KHOẢNG GIÁ (Thanh trượt)
+    // --- BẮT ĐẦU LOGIC LỌC GIÁ ĐÃ SỬA LỖI DỨT KHOÁT ---
+    
+    let minPrice = 0;
+    let maxPrice = Infinity;
+    let isPriceFilterActive = false;
+    const maxLimit = minRange ? parseInt(maxRange.max) : 30000000;
+
+    // 2. Lọc theo KHOẢNG GIÁ (Ưu tiên Dropdown/Sidebar Price)
+    const priceFilterDropdown = activeFilters.priceRangeDropdown;
+    
+    if (priceFilterDropdown && priceFilterDropdown !== 'Tất cả' && priceFilterDropdown !== 'All Prices') {
+        
+        // --- XÁC ĐỊNH PHẠM VI GIÁ TỪ DROPDOWN ---
+        if (priceFilterDropdown.includes('Dưới 5,000,000')) {
+            maxPrice = 5000000;
+        } else if (priceFilterDropdown.includes('5,000,000đ - 10,000,000đ')) {
+            minPrice = 5000000;
+            maxPrice = 10000000;
+        } else if (priceFilterDropdown.includes('10,000,000đ - 20,000,000đ')) {
+            minPrice = 10000000;
+            maxPrice = 20000000;
+        } else if (priceFilterDropdown.includes('Trên 20,000,000đ')) {
+            minPrice = 20000000;
+            maxPrice = Infinity;
+        }
+        isPriceFilterActive = true;
+    }
+
+    // 6.2. Áp dụng Thanh trượt (Chỉ áp dụng khi Dropdown không được chọn)
+    if (!isPriceFilterActive) {
         const minPriceFilter = activeFilters.priceRangeSliderMin;
         const maxPriceFilter = activeFilters.priceRangeSliderMax;
-        
-        // Chỉ lọc nếu có giá trị min/max đã thiết lập khác 0/max
-        if (minPriceFilter > 0 || maxPriceFilter < (minRange ? parseInt(maxRange.max) : 30000000)) {
-             filteredProducts = filteredProducts.filter(p => p.price >= minPriceFilter && p.price <= maxPriceFilter);
-        }
-        
-        // 6.3. Lọc theo SIDEBAR (Thương hiệu, Loại)
-        if (activeFilters.sidebarBrand && activeFilters.sidebarBrand !== 'Tất cả') {
-            const brandTerm = activeFilters.sidebarBrand.toLowerCase();
-            // Lọc theo tên sản phẩm có chứa từ khóa của sidebar
-            filteredProducts = filteredProducts.filter(p => p.title.toLowerCase().includes(brandTerm) || p.category.toLowerCase().includes(brandTerm));
-        }
 
-        // 6.4. Sắp xếp
-        const sortType = activeFilters.sortBy;
-        if (sortType.includes('Giá: Thấp đến cao')) {
-            filteredProducts.sort((a, b) => a.price - b.price);
-        } else if (sortType.includes('Giá: Cao đến thấp')) {
-            filteredProducts.sort((a, b) => b.price - a.price);
+        if (minPriceFilter > 0 || maxPriceFilter < maxLimit) {
+            minPrice = minPriceFilter;
+            maxPrice = maxPriceFilter;
+            isPriceFilterActive = true;
         }
-
-        // --- Cập nhật Giao diện Người dùng (UI) ---
-        productListContainer.innerHTML = '';
-        
-        if (filteredProducts.length === 0) {
-            productListContainer.innerHTML = '<div class="col-12 text-center py-5">Không tìm thấy sản phẩm nào phù hợp với các tiêu chí lọc.</div>';
-        } else {
-    // Tạo một chuỗi HTML duy nhất từ tất cả sản phẩm
-    let productsHtml = filteredProducts.map(product => renderProductCard(product)).join('');
-    
-    // Chèn chuỗi HTML đó vào container. Thao tác này nhanh hơn và ổn định hơn về mặt DOM.
-    productListContainer.innerHTML = productsHtml; 
-
-    // Gắn lại Listener cho Giỏ hàng sau khi render
-    attachCartListeners(); 
-    
-    if (typeof AOS !== 'undefined') {
-        AOS.refresh();
     }
-}
-            
-            if (typeof AOS !== 'undefined') {
-                AOS.refresh();
-            }
-        }
-        updateActiveFiltersTags();
+    
+    // THỰC HIỆN LỌC GIÁ CUỐI CÙNG
+    if (isPriceFilterActive) {
+        filteredProducts = filteredProducts.filter(p => {
+            const productPrice = parseFloat(p.price); // Đảm bảo giá trị là số
+            return productPrice >= minPrice && productPrice <= maxPrice;
+        });
+    }
+    // --- KẾT THÚC LOGIC LỌC GIÁ ---
 
+
+    // 6.3. Lọc theo SIDEBAR (Thương hiệu, Loại)
+    if (activeFilters.sidebarBrand && activeFilters.sidebarBrand !== 'Tất cả') {
+        const brandTerm = activeFilters.sidebarBrand.toLowerCase();
+        filteredProducts = filteredProducts.filter(p => p.title.toLowerCase().includes(brandTerm) || p.category.toLowerCase().includes(brandTerm));
+    }
+
+    // 6.4. Sắp xếp
+    const sortType = activeFilters.sortBy;
+    if (sortType.includes('Giá: Thấp đến cao')) {
+        filteredProducts.sort((a, b) => a.price - b.price);
+    } else if (sortType.includes('Giá: Cao đến thấp')) {
+        filteredProducts.sort((a, b) => b.price - a.price);
+    }
+
+    // --- Cập nhật Giao diện Người dùng (UI) ---
+    productListContainer.innerHTML = '';
+    
+    if (filteredProducts.length === 0) {
+        productListContainer.innerHTML = '<div class="col-12 text-center py-5">Không tìm thấy sản phẩm nào phù hợp với các tiêu chí lọc.</div>';
+    } else {
+        let productsHtml = filteredProducts.map(product => renderProductCard(product)).join('');
+        productListContainer.innerHTML = productsHtml; 
+        attachCartListeners(); 
+        if (typeof AOS !== 'undefined') {
+            AOS.refresh();
+        }
+    }
+    updateActiveFiltersTags();
+}
+// KẾT THÚC THAY THẾ HÀM applyFilters()
     // --- 7. Hàm Cập nhật Thẻ Lọc Đang hoạt động ---
     function updateActiveFiltersTags() {
         activeFiltersDiv.innerHTML = '';
@@ -1308,6 +1333,7 @@
     // --- 8. Hàm Xóa tất cả bộ lọc ---
     function clearAllFilters() {
         // Reset Filter State
+        activeFilters.priceRangeDropdown = 'All Prices';
         const maxPriceMax = minRange ? parseInt(maxRange.max) : 30000000;
         activeFilters = {
             search: '',
@@ -1377,54 +1403,69 @@
     // --- 10. Thiết lập Listeners cho Controls (Thanh trượt, Lọc, Sắp xếp) ---
     
     // Thanh trượt Giá
-    if (minRange && maxRange) {
-        minRange.addEventListener('input', updatePriceRangeUI);
-        maxRange.addEventListener('input', updatePriceRangeUI);
+// Thay thế TOÀN BỘ Listener hiện tại bằng đoạn code này (từ 'if (minRange && maxRange) {')
 
-        minPriceInput.addEventListener('change', (e) => {
-            minRange.value = Math.min(e.target.value, maxRange.value - 500000);
-            updatePriceRangeUI();
-        });
-        maxPriceInput.addEventListener('change', (e) => {
-            maxRange.value = Math.max(e.target.value, minRange.value + 500000);
-            updatePriceRangeUI();
-        });
+if (minRange && maxRange) {
+    minRange.addEventListener('input', updatePriceRangeUI);
+    maxRange.addEventListener('input', updatePriceRangeUI);
 
-        // Nút Áp dụng giá
-        applyPriceFilterBtn.addEventListener('click', () => {
-            activeFilters.priceRangeSliderMin = parseInt(minRange.value);
-            activeFilters.priceRangeSliderMax = parseInt(maxRange.value);
-            applyFilters();
-        });
-        
-        // Khởi tạo UI trượt giá
+    minPriceInput.addEventListener('change', (e) => {
+        minRange.value = Math.min(e.target.value, maxRange.value - 500000);
         updatePriceRangeUI();
-    }
+    });
+    maxPriceInput.addEventListener('change', (e) => {
+        maxRange.value = Math.max(e.target.value, minRange.value + 500000);
+        updatePriceRangeUI();
+    });
+    // Gán Listener cho nút "Clear All"
+if (clearAllBtn) {
+    clearAllBtn.addEventListener('click', clearAllFilters);
+}
 
-    // Tìm kiếm
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            activeFilters.search = e.target.value;
-            applyFilters();
-        });
-    }
+    // Nút Áp dụng giá (Thanh trượt)
+    applyPriceFilterBtn.addEventListener('click', () => {
+        activeFilters.priceRangeSliderMin = parseInt(minRange.value);
+        activeFilters.priceRangeSliderMax = parseInt(maxRange.value);
+        
+        // QUAN TRỌNG: Vô hiệu hóa Dropdown khi Thanh trượt được sử dụng
+        document.querySelectorAll('#categories-1-price-subcategories .subcategory-link').forEach(l => l.classList.remove('active'));
+        activeFilters.priceRangeDropdown = 'All Prices';
 
-    // Sắp xếp
-    if (sortBySelect) {
-        sortBySelect.addEventListener('change', (e) => {
-            activeFilters.sortBy = e.target.value;
-            applyFilters();
-        });
-    }
+        applyFilters();
+    });
+    
+    // Khởi tạo UI trượt giá
+    updatePriceRangeUI();
+}
 
-    // Lọc theo Sidebar
-    sidebarLinks.forEach(link => {
+// Tìm kiếm
+if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+        activeFilters.search = e.target.value;
+        applyFilters();
+    });
+}
+
+// Sắp xếp
+if (sortBySelect) {
+    sortBySelect.addEventListener('change', (e) => {
+        activeFilters.sortBy = e.target.value;
+        applyFilters();
+    });
+}
+
+// Lọc theo Sidebar (Thương hiệu, Loại, v.v. - KHÔNG PHẢI KHOẢNG GIÁ)
+sidebarLinks.forEach(link => {
+    // Chỉ xử lý các link KHÔNG thuộc mục Khoảng giá (đã có listener riêng)
+    if (!link.closest('#categories-1-price-subcategories')) {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const selectedValue = e.target.textContent.trim();
 
             const isActive = e.target.classList.contains('active');
-            sidebarLinks.forEach(l => l.classList.remove('active'));
+            
+            // Xóa active cho tất cả các link Sidebar khác
+            sidebarLinks.forEach(l => l.classList.remove('active')); 
 
             if (!isActive) {
                 e.target.classList.add('active');
@@ -1435,26 +1476,71 @@
             
             applyFilters();
         });
-    });
-
-    // Xử lý xóa thẻ lọc (Active Filters Tags)
-    if (activeFiltersDiv) {
-        activeFiltersDiv.addEventListener('click', (e) => {
-            if (e.target.closest('.filter-remove')) {
-                const button = e.target.closest('.filter-remove');
-                const type = button.dataset.filterType;
-                
-                if (type === 'sidebar') {
-                    activeFilters.sidebarBrand = '';
-                    sidebarLinks.forEach(link => link.classList.remove('active'));
-                } else if (type === 'priceSlider') {
-                    clearAllFilters(); // Dùng hàm clear All để reset Slider về Max
-                }
-                
-                applyFilters();
-            }
-        });
     }
+});
+
+// !!! LISTENER QUAN TRỌNG CHO KHOẢNG GIÁ DROPDOWN SIDEBAR !!!
+// !!! LISTENER CHO KHOẢNG GIÁ DROPDOWN SIDEBAR !!!
+document.querySelectorAll('#categories-1-price-subcategories .subcategory-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const selectedValue = e.target.textContent.trim();
+
+        // 1. Xử lý active/deactive trên sidebar
+        const isActive = e.target.classList.contains('active');
+        document.querySelectorAll('#categories-1-price-subcategories .subcategory-link').forEach(l => l.classList.remove('active'));
+
+        if (!isActive && selectedValue !== 'Tất cả') {
+            e.target.classList.add('active');
+            activeFilters.priceRangeDropdown = selectedValue;
+            
+            // 2. QUAN TRỌNG: Reset Thanh trượt (vô hiệu hóa nó)
+            activeFilters.priceRangeSliderMin = 0; 
+            activeFilters.priceRangeSliderMax = minRange ? parseInt(maxRange.max) : 30000000;
+            
+            // 3. Cập nhật giao diện thanh trượt
+            if (minRange) {
+                minRange.value = 0;
+                maxRange.value = activeFilters.priceRangeSliderMax;
+                // Gọi hàm cập nhật UI (Đảm bảo hàm này được định nghĩa)
+                if (typeof updatePriceRangeUI !== 'undefined') updatePriceRangeUI(); 
+            }
+            
+        } else {
+            // Nếu nhấp vào "Tất cả" hoặc nhấp lại để bỏ chọn
+            activeFilters.priceRangeDropdown = 'All Prices';
+        }
+        
+        // 4. Gọi hàm lọc
+        applyFilters();
+    });
+});
+// ----------------------------------------------------------------------
+
+
+// Xử lý xóa thẻ lọc (Active Filters Tags)
+if (activeFiltersDiv) {
+    activeFiltersDiv.addEventListener('click', (e) => {
+        if (e.target.closest('.filter-remove')) {
+            const button = e.target.closest('.filter-remove');
+            const type = button.dataset.filterType;
+            
+            if (type === 'sidebar') {
+                activeFilters.sidebarBrand = '';
+                sidebarLinks.forEach(l => l.classList.remove('active'));
+            } else if (type === 'priceSlider') {
+                // Đã được xử lý trong clearAllFilters, nhưng đảm bảo reset các biến
+                activeFilters.priceRangeSliderMin = 0;
+                activeFilters.priceRangeSliderMax = maxLimit;
+            }
+            
+            // Nếu xóa bất kỳ thẻ lọc nào, reset Dropdown giá
+            activeFilters.priceRangeDropdown = 'All Prices'; 
+            
+            applyFilters();
+        }
+    });
+}
     function removeDiacritritics(str) {
     return str.normalize('NFD') // Tách ký tự có dấu thành ký tự cơ bản và dấu phụ
               .replace(/[\u0300-\u036f]/g, "") // Loại bỏ các dấu phụ (diacritics)
@@ -1463,54 +1549,71 @@
     
     // Khởi chạy Lọc và Render sản phẩm lần đầu
     applyFilters(); 
-</script>
+// Thay thế Listener hiện tại của bạn cho khoảng giá Dropdown trong Sidebar bằng đoạn này:
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
+document.querySelectorAll('#categories-1-price-subcategories .subcategory-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const selectedValue = e.target.textContent.trim();
 
-  // === HÀM CẬP NHẬT SỐ LƯỢNG HIỂN THỊ TRÊN HEADER ===
-  function updateHeaderCounts() {
-    const cartBadge = document.querySelector('.header-action-btn[href="cart.html"] .badge');
-    const wishlistBadge = document.querySelector('.header-action-btn[href="account.html"] .bi-heart + .badge, .wishlist-badge');
-    const orderBadge = document.querySelector('.header-action-btn[href="account.html"] .bi-bag-check + .badge, .order-badge');
+        // Xử lý active/deactive trên sidebar
+        const isActive = e.target.classList.contains('active');
+        document.querySelectorAll('#categories-1-price-subcategories .subcategory-link').forEach(l => l.classList.remove('active'));
 
-    const cart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
-    const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-    const orders = JSON.parse(localStorage.getItem("orders")) || [];
-
-    if (cartBadge) cartBadge.textContent = cart.length;
-    if (wishlistBadge) wishlistBadge.textContent = wishlist.length;
-    if (orderBadge) orderBadge.textContent = orders.length;
-  }
-
-  // === HÀM RESET TOÀN BỘ KHI ĐẶT ĐƠN HÀNG ===
-  function resetAfterCheckout() {
-    // Giả sử khi người dùng bấm "Đặt hàng thành công"
-    localStorage.removeItem("shoppingCart"); // Xóa giỏ hàng
-    // Có thể thêm sản phẩm đã mua vào orders
-    const orders = JSON.parse(localStorage.getItem("orders")) || [];
-    const cart = JSON.parse(localStorage.getItem("shoppingCartBackup")) || []; // nếu có backup
-    if (cart.length > 0) {
-      orders.push(...cart);
-      localStorage.setItem("orders", JSON.stringify(orders));
+        if (!isActive && selectedValue !== 'Tất cả') {
+            e.target.classList.add('active');
+            activeFilters.priceRangeDropdown = selectedValue;
+            
+            // QUAN TRỌNG: Reset Thanh trượt về mặc định (min=0, max=maxLimit)
+            activeFilters.priceRangeSliderMin = 0; 
+            activeFilters.priceRangeSliderMax = minRange ? parseInt(maxRange.max) : 30000000;
+            
+            // Cập nhật giao diện thanh trượt về mặc định (chỉ khi minRange tồn tại)
+            if (minRange) {
+                minRange.value = 0;
+                maxRange.value = activeFilters.priceRangeSliderMax;
+                updatePriceRangeUI(); // Gọi hàm cập nhật UI để hiển thị 0đ - 15.000.000đ
+            }
+            
+        } else {
+            // Nếu nhấp vào "Tất cả" hoặc nhấp lại để bỏ chọn
+            activeFilters.priceRangeDropdown = 'All Prices';
+        }
+        
+        // Luôn gọi applyFilters()
+        applyFilters();
+    });
+});
+// Hàm Xóa tất cả bộ lọc
+function clearAllFilters() {
+    // 1. Reset Trạng thái Lọc về mặc định
+    const maxPriceMax = minRange ? parseInt(maxRange.max) : 30000000;
+    activeFilters = {
+        search: '',
+        priceRangeDropdown: 'All Prices', // Rất quan trọng: Reset Dropdown giá
+        priceRangeSliderMin: 0,
+        priceRangeSliderMax: maxPriceMax,
+        sortBy: 'Featured',
+        sidebarBrand: '',
+    };
+    
+    // 2. Reset UI controls
+    if (searchInput) searchInput.value = '';
+    if (sortBySelect) sortBySelect.value = 'Featured'; // Reset Sắp xếp về Featured
+    sidebarLinks.forEach(link => link.classList.remove('active')); // Xóa trạng thái active trên sidebar
+    
+    // 3. Reset Slider UI về mặc định (0 - Max)
+    if (minRange && maxRange) {
+        minRange.value = 0;
+        maxRange.value = maxPriceMax;
+        // Cần đảm bảo hàm updatePriceRangeUI() được định nghĩa và gọi ở đây
+        if (typeof updatePriceRangeUI !== 'undefined') updatePriceRangeUI(); 
     }
 
-    updateHeaderCounts();
-  }
-
-  // === GẮN HÀM VÀO BIẾN TOÀN CỤC (để gọi từ các trang khác) ===
-  window.updateHeaderCounts = updateHeaderCounts;
-  window.resetAfterCheckout = resetAfterCheckout;
-
-  // === CẬP NHẬT NGAY KHI TRANG LOAD ===
-  updateHeaderCounts();
-
-  // === LẮNG NGHE KHI localStorage THAY ĐỔI (giữa các tab) ===
-  window.addEventListener("storage", updateHeaderCounts);
-
-});
+    // 4. Gọi hàm lọc chính để hiển thị tất cả sản phẩm
+    applyFilters();
+}
 </script>
-
 </body>
 
 </html>
