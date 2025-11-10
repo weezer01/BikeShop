@@ -342,6 +342,7 @@ select option:hover,
               <div data-subview="stock" style="display:none">
                 <div class="toolbar" style="margin-top:8px">
                   <select id="stockProductFilter"><option value="">-- Chọn xe đạp --</option></select>
+                  <input id="stockFrom" type="date" />
                   <input id="stockTo" type="date" />
                   <button class="btn" id="btnCheckStock">Tra cứu</button>
                   <button class="btn" id="btnLowStock">Cảnh báo sắp hết</button>
@@ -431,6 +432,7 @@ const DB = {
 
 let db = DB.load();
 let state = {user:null};
+let warningThreshold = db.settings.lowThreshold || 3; // Lấy từ setting hoặc mặc định là 3
 
 /* ---------- Helpers ---------- */
 const $ = (s,el=document) => el.querySelector(s);
@@ -614,68 +616,84 @@ function formatVND(num) {
 }
 
 /* Products */
+/* Products */
 function calcSell(p) {
+  // Lấy % lợi nhuận sản phẩm (p.margin) hoặc sử dụng giá trị mặc định của CÀI ĐẶT
   const margin = p.margin != null ? p.margin : (db.settings.defaultMargin || 0);
+  
   const sell = (p.cost || 0) * (1 + (margin || 0) / 100);
   return Math.round(sell); // luôn làm tròn
 }
 // === HIỂN THỊ DANH SÁCH SẢN PHẨM ===
+// BẮT ĐẦU thay thế hàm renderProducts hiện tại của bạn
+
+// === HIỂN THỊ DANH SÁCH SẢN PHẨM & LỌC CHUNG ===
+// === HIỂN THỊ DANH SÁCH SẢN PHẨM & LỌC CHUNG ===
+// === HIỂN THỊ DANH SÁCH SẢN PHẨM & LỌC CHUNG ===
 function renderProducts() {
   const tbody = $('#tblProducts tbody');
   tbody.innerHTML = '';
-
-  // --- Dropdown loại sản phẩm ---
+  
+  // Lấy giá trị lọc hiện tại
   const filterType = $('#filterType');
+  const inputSearch = $('#searchProd');
+  const selectedType = Number(filterType?.value) || null;
+  const keyword = inputSearch?.value.trim().toLowerCase() || '';
+
+  // --- 1. Cập nhật Dropdown loại sản phẩm ---
   filterType.innerHTML = '<option value="">-- Lọc theo loại --</option>';
   db.types.forEach(t => {
-    filterType.innerHTML += `<option value="${t.id}">${t.name}</option>`;
+    const isSelected = selectedType === t.id; 
+    filterType.innerHTML += `<option value="${t.id}" ${isSelected ? 'selected' : ''}>${t.name}</option>`;
+  });
+  
+  // --- 2. Lọc danh sách sản phẩm ---
+  const warningThreshold = db.settings.lowThreshold || 3;
+  
+  const filteredList = db.products.filter(p => {
+    const matchType = selectedType ? p.type === selectedType : true;
+    const matchSearch = (p.name + p.code).toLowerCase().includes(keyword);
+    // Chỉ hiện sản phẩm không ẩn (logic frontend)
+    // Nếu đây là trang admin, ta hiện tất cả:
+    return matchType && matchSearch; 
   });
 
-  // --- Danh sách sản phẩm ---
-// ⚙️ Khai báo biến cảnh báo 1 lần duy nhất ở đầu file
-
-// ⚙️ Hiển thị danh sách sản phẩm
-const warningThreshold = 3;
-tbody.innerHTML = ''; // Xóa nội dung cũ trước khi render
-
-db.products.forEach((p, i) => {
-  const typeName = (db.types.find(t => t.id === p.type) || {}).name || '—';
-  const tr = document.createElement('tr');
-
-  let stockDisplay = p.stock;
-  if (p.stock < warningThreshold) {
-    stockDisplay = `<span style="color:#ff4d4d;font-weight:bold;">${p.stock} ⚠️</span>`;
+  if (filteredList.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:gray">Không có sản phẩm nào phù hợp.</td></tr>`;
+    initProductActions(); // Cần gán lại listener ngay cả khi không có sản phẩm
+    return;
   }
+  
+  // --- 3. Render các hàng sản phẩm ---
+  filteredList.forEach((p, i) => {
+    const typeName = (db.types.find(t => t.id === p.type) || {}).name || '—';
+    const tr = document.createElement('tr');
 
-  tr.innerHTML = `
-    <td>${i + 1}</td>
-    <td>${p.code}</td>
-    <td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</td>
-    <td>${typeName}</td>
-    <td>${formatVND(p.cost)}</td>
-    <td>${formatVND(calcSell(p))}</td>
-    <td>${stockDisplay}</td>
-    <td>${p.hidden ? 'Ẩn' : 'Hiện'}</td>
-    <td>
-      <button class="btn info" data-id="${p.id}" data-act="view">Xem</button>
-      <button class="btn" data-id="${p.id}" data-act="edit">Sửa</button>
-      <button class="btn warn" data-id="${p.id}" data-act="hide">Ẩn/Hiện</button>
-      <button class="btn danger" data-id="${p.id}" data-act="del">Xoá</button>
-    </td>`;
+    let stockDisplay = p.stock;
+    if (p.stock < warningThreshold) {
+      stockDisplay = `<span style="color:#ff4d4d;font-weight:bold;">${p.stock} ⚠️</span>`;
+    }
 
-  tbody.appendChild(tr);
-});
+    tr.innerHTML = `
+      <td>${i + 1}</td>
+      <td>${p.code}</td>
+      <td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</td>
+      <td>${typeName}</td>
+      <td>${formatVND(p.cost)}</td>
+      <td>${formatVND(calcSell(p))}</td>
+      <td>${stockDisplay}</td>
+      <td>${p.hidden ? 'Ẩn' : 'Hiện'}</td>
+      <td>
+        <button class="btn info" data-id="${p.id}" data-act="view">Xem</button>
+        <button class="btn" data-id="${p.id}" data-act="edit">Sửa</button>
+        <button class="btn warn" data-id="${p.id}" data-act="hide">Ẩn/Hiện</button>
+        <button class="btn danger" data-id="${p.id}" data-act="del">Xoá</button>
+      </td>`;
 
-// 🔔 Cảnh báo sản phẩm sắp hết hàng — chỉ hiện 1 lần
-const lowStock = db.products.filter(p => p.stock < warningThreshold);
-if (!hasShownLowStockAlert && lowStock.length > 0) {
-  alert(`⚠️ Có ${lowStock.length} sản phẩm sắp hết hàng!\n${lowStock.map(p => '- ' + p.name + ' (' + p.stock + ' cái)').join('\n')}`);
-  hasShownLowStockAlert = true; // ✅ Đánh dấu đã hiển thị
-}
-
-
-
-  // --- Hành động các nút ---
+    tbody.appendChild(tr);
+  });
+  
+  // --- 4. GÁN LISTENER CHO NÚT HÀNH ĐỘNG (QUAN TRỌNG) ---
   tbody.querySelectorAll('button').forEach(b =>
     b.addEventListener('click', () => {
       const id = Number(b.dataset.id);
@@ -699,72 +717,9 @@ if (!hasShownLowStockAlert && lowStock.length > 0) {
       }
     })
   );
-
-  initProductActions();
-
-  // ✅ Lọc sản phẩm theo loại
-  if (filterType) {
-    filterType.onchange = () => {
-      const selectedType = Number(filterType.value) || null;
-      const inputSearch = $('#searchProd');
-      const keyword = inputSearch ? inputSearch.value.trim().toLowerCase() : '';
-      const tbody = $('#tblProducts tbody');
-      tbody.innerHTML = '';
-
-      // lọc theo loại + tìm kiếm
-      const filteredList = db.products.filter(p => {
-        const matchType = selectedType ? p.type === selectedType : true;
-        const matchSearch = (p.name + p.code).toLowerCase().includes(keyword);
-        return matchType && matchSearch;
-      });
-
-      if (filteredList.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:gray">Không có sản phẩm nào</td></tr>`;
-        return;
-      }
-
-      filteredList.forEach((p, i) => {
-        const typeName = (db.types.find(t => t.id === p.type) || {}).name || '—';
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${i + 1}</td>
-          <td>${p.code}</td>
-          <td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</td>
-          <td>${typeName}</td>
-          <td>${formatVND(p.cost)}</td>
-          <td>${formatVND(calcSell(p))}</td>
-          <td>${p.stock}</td>
-          <td>${p.hidden ? 'Ẩn' : 'Hiện'}</td>
-          <td>
-            <button class="btn info" data-id="${p.id}" data-act="view">Xem</button>
-            <button class="btn" data-id="${p.id}" data-act="edit">Sửa</button>
-            <button class="btn warn" data-id="${p.id}" data-act="hide">Ẩn/Hiện</button>
-            <button class="btn danger" data-id="${p.id}" data-act="del">Xoá</button>
-          </td>`;
-        tbody.appendChild(tr);
-      });
-    };
-  }
+  
+  initProductActions(); // Cần gọi để gán các listener cho input/button tìm kiếm
 }
-
-function showProductDetail(p) {
-  const imgs = p.images && p.images.length
-    ? p.images.map(src => `<img src="${src}" style="width:120px;height:80px;object-fit:cover;border-radius:8px;margin:4px;border:1px solid rgba(255,255,255,0.1)">`).join('')
-    : '<i style="color:gray">Chưa có ảnh</i>';
-
-  showModal(`
-    <h3>${p.name}</h3>
-    <div><b>Mã:</b> ${p.code}</div>
-    <div><b>Loại:</b> ${(db.types.find(t => t.id === p.type) || {}).name || '—'}</div>
-    <div><b>Giá vốn:</b> ${formatVND(p.cost)}</div>
-    <div><b>Tồn:</b> ${p.stock}</div>
-    <div style="margin-top:8px"><b>Mô tả:</b><br>${p.desc || '—'}</div>
-    <div style="margin-top:12px;display:flex;flex-wrap:wrap">${imgs}</div>
-    <div style="margin-top:10px"><button id="c" class="btn">Đóng</button></div>
-  `);
-  $('#c').addEventListener('click', closeModal);
-}
-
 
 function initProductActions() {
   const btnAdd = $('#btnAddProd');
@@ -773,74 +728,60 @@ function initProductActions() {
   const inputSearch = $('#searchProd');
   const filterType = $('#filterType');
 
+  // --- HÀM CHUNG KÍCH HOẠT LỌC ---
+  const applyFilterAndSearch = () => {
+    // Gọi hàm renderProducts để nó thực hiện lọc với keyword và type mới
+    renderProducts();
+  };
+
   // 🟢 Nút Thêm sản phẩm
   if (btnAdd) btnAdd.onclick = () => openProductModal();
 
-  // 🟢 Nút Tìm
-  if (btnSearch) {
-    btnSearch.onclick = () => {
-      const keyword = inputSearch.value.trim().toLowerCase();
-      const selectedType = Number(filterType.value) || null;
-      const tbody = $('#tblProducts tbody');
-      tbody.innerHTML = '';
-
-      const filteredList = db.products.filter(p => {
-        const matchType = selectedType ? p.type === selectedType : true;
-        const matchSearch = (p.name + p.code).toLowerCase().includes(keyword);
-        return matchType && matchSearch;
-      });
-
-      if (filteredList.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:gray">Không có sản phẩm nào</td></tr>`;
-        return;
-      }
-
-      filteredList.forEach((p, i) => {
-        const typeName = (db.types.find(t => t.id === p.type) || {}).name || '—';
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${i + 1}</td>
-          <td>${p.code}</td>
-          <td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</td>
-          <td>${typeName}</td>
-          <td>${formatVND(p.cost)}</td>
-          <td>${formatVND(calcSell(p))}</td>
-          <td>${p.stock}</td>
-          <td>${p.hidden ? 'Ẩn' : 'Hiện'}</td>
-          <td>
-            <button class="btn info" data-id="${p.id}" data-act="view">Xem</button>
-            <button class="btn" data-id="${p.id}" data-act="edit">Sửa</button>
-            <button class="btn warn" data-id="${p.id}" data-act="hide">Ẩn/Hiện</button>
-            <button class="btn danger" data-id="${p.id}" data-act="del">Xoá</button>
-          </td>`;
-        tbody.appendChild(tr);
-      });
-    };
+  // 🟢 Lọc theo Loại (Dropdown)
+  if (filterType) {
+    filterType.onchange = applyFilterAndSearch;
   }
 
-  // 🟢 Enter để tìm
-  if (inputSearch) inputSearch.onkeypress = e => e.key === 'Enter' && btnSearch.click();
-
+  // 🟢 Nút Tìm
+  if (btnSearch) {
+    btnSearch.onclick = applyFilterAndSearch;
+  }
+  
+  // 🟢 Khắc phục lỗi KHÔNG GÕ ĐƯỢC CHỮ VÀ ENTER để tìm
+  if (inputSearch) {
+    // 1. Gán Listener cho sự kiện gõ chữ (INPUT)
+    // (Đây là FIX LỖI Ố TÌM KIẾM CỦA BẠN - Nó kích hoạt tìm kiếm khi bạn gõ)
+    inputSearch.oninput = applyFilterAndSearch; 
+    
+    // 2. Bắt sự kiện Enter (onkeypress)
+    inputSearch.onkeypress = e => {
+      if (e.key === 'Enter') {
+        e.preventDefault(); // Ngăn submit form mặc định
+        applyFilterAndSearch();
+      }
+    };
+  }
+  
   // 🟢 Hiển thị tất cả
   if (btnShowAll) {
     btnShowAll.onclick = () => {
-      inputSearch.value = '';
-      filterType.value = '';
-      renderProducts();
+      if (inputSearch) inputSearch.value = '';
+      if (filterType) filterType.value = '';
+      renderProducts(); // Render lại tất cả
     };
   }
 }
-
-// Gọi khi load trang
-renderProducts();
-
-
 
 
 function openProductModal(p = null) {
   const isNew = !p;
   const typesOptions = (db.types || [])
-    .map(t => `<option value='${t.id}' ${p && p.type === t.id ? 'selected' : ''}>${t.name}</option>`)
+    .map(
+      t =>
+        `<option value='${t.id}' ${
+          p && p.type === t.id ? 'selected' : ''
+        }>${t.name}</option>`
+    )
     .join('');
 
   showModal(`
@@ -863,51 +804,36 @@ function openProductModal(p = null) {
     <label>Mô tả</label>
     <textarea id='mDesc'>${p ? p.desc : ''}</textarea>
 
-    <label>Hình ảnh (có thể chọn nhiều)</label>
-    <input id="mFiles" type="file" accept="image/*" multiple>
-    <div id="previewImgs" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"></div>
+    <label>Hình ảnh (URL hoặc chọn tệp)</label>
+    <input id='mImage' type='text' placeholder='Dán link ảnh hoặc chọn file bên dưới' value='${p && p.image ? p.image : ''}'/>
+    <input id='mFile' type='file' accept='image/*' style='margin-top:6px'/>
 
+    <div style='margin-top:10px;text-align:center'>
+      <img id='previewImg' src='${p && p.image ? p.image : 'https://via.placeholder.com/120x80?text=No+Img'}' 
+           style='max-width:120px;border-radius:8px;object-fit:cover;border:1px solid rgba(255,255,255,0.1)'/>
+    </div>
 
     <label>% lợi nhuận (để trống dùng: ${db.settings.defaultMargin || 0}% chung)</label>
-    <input id='mMargin' type='number' value='${p && p.margin != null ? p.margin : ''}'/>
+    <input id='mMargin' type='number' 
+           value='${p && p.margin != null ? p.margin : ''}'/>
 
-    <div style='margin-top:12px'>
-      <button id='mSave' class='btn primary'>Lưu</button>
-      <button id='mCancel' class='btn'>Huỷ</button>
-    </div>
+    <div style="margin-top:12px">
   `);
 
-  // --- Hiển thị ảnh cũ nếu có ---
-  const preview = $('#previewImgs');
-  const oldImgs = p?.images || [];
-  oldImgs.forEach(src => {
-    const img = document.createElement('img');
-    img.src = src;
-    img.style = 'width:100px;height:70px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,0.1)';
-    preview.appendChild(img);
-  });
-
-  // --- Xử lý chọn nhiều ảnh ---
-  $('#mFiles').addEventListener('change', e => {
-    const files = Array.from(e.target.files);
-    preview.innerHTML = '';
-    const images = [];
-
-    files.forEach(file => {
+  // --- Xử lý khi chọn file ---
+  $('#mFile').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (file) {
       const reader = new FileReader();
       reader.onload = ev => {
-        images.push(ev.target.result);
-        const img = document.createElement('img');
-        img.src = ev.target.result;
-        img.style = 'width:100px;height:70px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,0.1)';
-        preview.appendChild(img);
+        $('#previewImg').src = ev.target.result;
+        $('#mImage').value = ev.target.result; // lưu base64 vào input
       };
       reader.readAsDataURL(file);
-    });
-    preview.dataset.images = JSON.stringify(images);
+    }
   });
 
-  // --- Nút lưu ---
+  // --- Lưu sản phẩm ---
   $('#mSave').addEventListener('click', () => {
     const code = $('#mCode').value.trim();
     const name = $('#mName').value.trim();
@@ -915,10 +841,8 @@ function openProductModal(p = null) {
     const cost = Number($('#mCost').value) || 0;
     const stock = Number($('#mStock').value) || 0;
     const desc = $('#mDesc').value;
+    const image = $('#mImage').value.trim();
     const margin = $('#mMargin').value.trim();
-    const preview = $('#previewImgs');
-    const images = preview.dataset.images ? JSON.parse(preview.dataset.images) : (p?.images || []);
-
 
     if (!code || !name) {
       alert('⚠️ Nhập đầy đủ mã và tên sản phẩm!');
@@ -927,17 +851,35 @@ function openProductModal(p = null) {
 
     if (isNew) {
       db.products.push({
-        id: uid(), code, name, type, cost, stock, desc,
-        images, hidden: false,
+        id: uid(),
+        code,
+        name,
+        type,
+        cost,
+        stock,
+        desc,
+        image,
+        hidden: false,
         margin: margin === '' ? null : Number(margin),
       });
     } else {
-      Object.assign(p, { code, name, type, cost, stock, desc, images, margin: margin === '' ? null : Number(margin) });
+      Object.assign(p, {
+        code,
+        name,
+        type,
+        cost,
+        stock,
+        desc,
+        image,
+        margin: margin === '' ? null : Number(margin),
+      });
     }
 
     DB.save(db);
     closeModal();
     renderProducts();
+    renderStock();
+    renderPricing();
   });
 
   $('#mCancel').addEventListener('click', closeModal);
@@ -996,95 +938,73 @@ function openImportModal(im = null) {
         code: 'IM-' + Math.floor(Math.random() * 9000 + 1000),
       };
 
-  // 🟢 Gán giá vốn tự động khi chọn sản phẩm
-  $('#impAddSel').addEventListener('change', () => {
-    const pid = $('#impAddSel').value;
-    const prod = db.products.find(p => p.id == pid);
-    if (prod) $('#impCost').value = prod.cost || 0;
-  });
+  // 🟢 TỰ ĐỘNG GÁN GIÁ VỐN KHI CHỌN SẢN PHẨM
+$('#impAddSel').addEventListener('change', () => {
+  const pid = $('#impAddSel').value; // KHÔNG ép kiểu Number
+  const prod = db.products.find(p => p.id == pid); // dùng so sánh ==
+  if (prod) {
+    $('#impCost').value = prod.cost || 0;
+  }
+});
 
-  // 🧩 Render danh sách sản phẩm trong phiếu nhập
+
+  // 🧩 Danh sách hiện tại trong phiếu
   function renderList() {
     $('#impList').innerHTML = local.items
       .map(
         (it, idx) => `
-        <div style='padding:6px;border:1px solid rgba(255,255,255,0.05);margin-top:6px;border-radius:8px'>
+        <div style='padding:6px;border:1px solid rgba(255,255,255,0.03);margin-top:6px;border-radius:8px'>
           ${idx + 1}. ${(db.products.find(p => p.id === it.productId) || {}).name} 
-          — SL: ${it.qty} — Giá nhập: ${formatVND(it.cost)}
+          — SL: ${it.qty} — Giá nhập: ${formatVND(it.cost)} 
           <button data-idx='${idx}' class='btn danger delItem'>Xoá</button>
-
-          <div style="margin-top:4px">
-            <label style="font-size:13px;color:#9aa4b2">Ảnh minh chứng (nhiều ảnh):</label>
-            <input type="file" multiple accept="image/*" data-idx="${idx}" class="impImgUpload" />
-            <div class="impImgPreview" id="impImgPreview-${idx}" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
-              ${
-                it.images && it.images.length
-                  ? it.images
-                      .map(
-                        img =>
-                          `<img src="${img}" style="width:60px;height:60px;border-radius:6px;object-fit:cover;border:1px solid rgba(255,255,255,0.1)" />`
-                      )
-                      .join('')
-                  : ''
-              }
-            </div>
-          </div>
         </div>`
       )
       .join('');
 
-    // ❌ Xoá sản phẩm
     $$('.delItem').forEach(b =>
       b.addEventListener('click', () => {
         local.items.splice(Number(b.dataset.idx), 1);
         renderList();
       })
     );
-
-    // 🖼 Xử lý upload nhiều ảnh
-    $$('.impImgUpload').forEach(input => {
-      input.addEventListener('change', e => {
-        const idx = Number(input.dataset.idx);
-        const files = Array.from(e.target.files);
-        if (!local.items[idx].images) local.items[idx].images = [];
-
-        files.forEach(file => {
-          const reader = new FileReader();
-          reader.onload = ev => {
-            local.items[idx].images.push(ev.target.result);
-            renderList();
-          };
-          reader.readAsDataURL(file);
-        });
-      });
-    });
   }
 
   renderList();
 
-  // ➕ Thêm sản phẩm vào phiếu
+  // 🟢 Nút thêm sản phẩm vào phiếu nhập
   $('#impAdd').addEventListener('click', () => {
     const pid = Number($('#impAddSel').value);
     const q = Number($('#impQty').value) || 0;
     const c = Number($('#impCost').value) || 0;
-    if (!pid || q <= 0) return alert('Chọn sản phẩm & số lượng hợp lệ');
-    local.items.push({ productId: pid, qty: q, cost: c, images: [] });
+    if (!pid || q <= 0) {
+      alert('Chọn sản phẩm & số lượng');
+      return;
+    }
+    local.items.push({ productId: pid, qty: q, cost: c });
     renderList();
   });
 
-  // 💾 Lưu phiếu
+  // 🟢 Nút lưu phiếu
   $('#impSave').addEventListener('click', () => {
     local.date = $('#impDate').value;
-    if (isNew) db.imports.push(local);
-    else Object.assign(im, local);
+    if (isNew) {
+      db.imports.push(local);
+    } else {
+      Object.assign(im, local);
+    }
     DB.save(db);
     closeModal();
     renderImports();
+    renderStock();
+    renderPricing();
   });
 
-  // ✅ Hoàn thành phiếu nhập (cập nhật tồn kho)
+  // 🟢 Nút hoàn thành phiếu nhập
   $('#impComplete').addEventListener('click', () => {
-    if (local.items.length === 0) return alert('Phiếu rỗng');
+    if (local.items.length === 0) {
+      alert('Phiếu rỗng');
+      return;
+    }
     local.completed = true;
     local.items.forEach(it => {
       const p = db.products.find(x => x.id === it.productId);
@@ -1105,54 +1025,75 @@ function openImportModal(im = null) {
   $('#impCancel').addEventListener('click', closeModal);
 }
 
-
-function showImportView(im) {
-  const htmlItems = im.items.map(it => {
-    const p = db.products.find(x => x.id === it.productId);
-    const name = p ? p.name : '—';
-    const imgList = it.images && it.images.length
-      ? it.images
-          .map(
-            img => `<img src="${img}" 
-                     style="width:70px;height:70px;
-                            border-radius:6px;object-fit:cover;
-                            border:1px solid rgba(255,255,255,0.1);
-                            margin-right:6px;margin-top:4px" />`
-          )
-          .join('')
-      : '<i style="color:gray">Không có ảnh</i>';
-
-    return `
-      <div style="padding:6px;border:1px solid rgba(255,255,255,0.05);
-                  margin-top:6px;border-radius:8px">
-        <strong>${name}</strong> — SL: ${it.qty} — Giá nhập: ${formatVND(it.cost)}
-        <div style="margin-top:6px;display:flex;flex-wrap:wrap">${imgList}</div>
-      </div>`;
-  }).join('');
-
-  showModal(`
-    <h3>📦 Phiếu nhập ${im.code || ''}</h3>
-    <div><b>Ngày:</b> ${im.date}</div>
-    <div><b>Trạng thái:</b> ${im.completed ? 'Hoàn thành' : 'Mới'}</div>
-    <div style="margin-top:8px">${htmlItems}</div>
-    <div style="margin-top:12px;text-align:center">
-      <button id="c" class="btn">Đóng</button>
-    </div>
-  `);
-
-  $('#c').addEventListener('click', closeModal);
-}
-
+function showImportView(im){ showModal(`<h3>Phiếu nhập ${im.code||''}</h3><div>Ngày: ${im.date}</div><div>Trạng thái: ${im.completed? 'Hoàn thành':'Mới'}</div><div style='margin-top:8px'>${im.items.map(it=>{const p=db.products.find(x=>x.id===it.productId); return `<div>${p? p.name : '—'} — SL: ${it.qty} — Giá nhập: ${formatVND(it.cost)}</div>`
+}).join('')}</div><div style='margin-top:8px'><button id='c' class='btn'>Đóng</button></div>`); $('#c').addEventListener('click', closeModal); }
 
 
 /* Pricing: set margin by type or by product override */
+/* Pricing: set margin by type or by product override */
 function renderPricing(){
   const tbody=$('#tblPricing tbody'); tbody.innerHTML='';
-  db.products.forEach((p,i)=>{ const margin = p.margin!=null ? p.margin : (db.settings.defaultMargin||0); const sell = calcSell(p); const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${p.name}</td><td>${formatVND(p.cost)}</td><td>${margin}%</td><td>${formatVND(sell)}</td>
-<td><button class="btn" data-id="${p.id}" data-act="edit">Sửa %</button></td>`; tbody.appendChild(tr); });
-  tbody.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{ const id=Number(b.dataset.id), p=db.products.find(x=>x.id===id); showModal(`<h3>Chỉnh % lợi nhuận cho ${p.name}</h3><label>% LN</label><input id='pm' type='number' value='${p.margin!=null? p.margin: ''}'/><div style='margin-top:8px'><button id='savePM' class='btn primary'>Lưu</button> <button id='cpm' class='btn'>Huỷ</button></div>`); $('#savePM').addEventListener('click', ()=>{ const m = $('#pm').value.trim(); p.margin = m===''? null: Number(m); DB.save(db); closeModal(); renderPricing(); renderProducts(); }); $('#cpm').addEventListener('click', closeModal); }));
+  
+  db.products.forEach((p,i)=>{ 
+    // 1. TÍNH LỢI NHUẬN ĐANG ÁP DỤNG
+    const appliedMargin = p.margin != null ? p.margin : (db.settings.defaultMargin || 0);
+    
+    // 2. TÍNH GIÁ BÁN (sử dụng hàm calcSell đã có)
+    const sell = calcSell(p); 
+    
+    const tr=document.createElement('tr'); 
+    tr.innerHTML=`
+      <td>${i+1}</td>
+      <td>${p.name}</td>
+      <td>${formatVND(p.cost)}</td>
+      
+      <td>${appliedMargin}%</td> 
+      
+      <td>${formatVND(sell)}</td>
+      <td><button class="btn" data-id="${p.id}" data-act="edit">Sửa %</button></td>
+    `; 
+    tbody.appendChild(tr); 
+  });
+  
+  // --- Gắn Listener cho nút Sửa % trong bảng Giá bán ---
+  tbody.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{ 
+    const id=Number(b.dataset.id), p=db.products.find(x=>x.id===id); 
+    
+    // Đảm bảo hiển thị giá trị Margin đang ghi đè, nếu không có thì để trống
+    const currentMargin = p.margin!=null? p.margin: '';
+    
+    showModal(`
+      <h3>Chỉnh % lợi nhuận cho ${p.name}</h3>
+      <label>% LN (Áp dụng: ${db.settings.defaultMargin || 0}% nếu để trống)</label>
+      <input id='pm' type='number' value='${currentMargin}'/>
+      <div style='margin-top:8px'>
+        <button id='savePM' class='btn primary'>Lưu</button> 
+        <button id='cpm' class='btn'>Huỷ</button>
+      </div>
+    `); 
+    
+    $('#savePM').addEventListener('click', ()=>{ 
+      const m = $('#pm').value.trim(); 
+      p.margin = m===''? null: Number(m); // Lưu null nếu người dùng để trống
+      DB.save(db); 
+      closeModal(); 
+      renderPricing(); 
+      renderProducts(); 
+    }); 
+    $('#cpm').addEventListener('click', closeModal); 
+  }));
+  
+  // --- Logic chỉnh Margin theo Loại (Giữ nguyên) ---
   const sel=$('#priceTypeFilter'); sel.innerHTML = '<option value="">-- Chọn loại để chỉnh % --</option>'; db.types.forEach(t=>sel.innerHTML += `<option value='${t.id}'>${t.name}</option>`);
-  $('#btnSetMargin').onclick = ()=>{ const typeId = Number($('#priceTypeFilter').value); const margin = Number($('#priceMargin').value); if(!typeId || isNaN(margin)){ alert('Chọn loại & nhập %'); return } db.products.filter(p=>p.type===typeId).forEach(p=>p.margin = margin); DB.save(db); renderPricing(); renderProducts(); };
+  $('#btnSetMargin').onclick = ()=>{ 
+    const typeId = Number($('#priceTypeFilter').value); 
+    const margin = Number($('#priceMargin').value); 
+    if(!typeId || isNaN(margin)){ alert('Chọn loại & nhập %'); return } 
+    db.products.filter(p=>p.type===typeId).forEach(p=>p.margin = margin); 
+    DB.save(db); 
+    renderPricing(); 
+    renderProducts(); 
+  };
 }
 
 /* Orders (subview under products) */
@@ -1502,6 +1443,7 @@ function renderStock() {
   // Nút tra cứu
   $('#btnCheckStock').onclick = () => {
     const pid = Number($('#stockProductFilter').value);
+    const from = $('#stockFrom').value;
     const to = $('#stockTo').value;
 
     if (!pid) return alert('Vui lòng chọn sản phẩm');
@@ -1712,23 +1654,29 @@ function linkProductsByTypeName(){
   renderProducts();
 }
 function showProductDetail(p) {
-  const imgs = p.images && p.images.length 
-    ? p.images.map(src => `<img src="${src}" style="width:120px;height:80px;object-fit:cover;border-radius:8px;margin:4px;border:1px solid rgba(255,255,255,0.1)">`).join('')
-    : '<i style="color:gray">Chưa có ảnh</i>';
+  const typeName = (db.types.find(t => t.id === p.type) || {}).name || '—';
+  const sellPrice = formatVND(calcSell(p));
 
   showModal(`
-    <h3>${p.name}</h3>
-    <div><b>Mã:</b> ${p.code}</div>
-    <div><b>Loại:</b> ${(db.types.find(t=>t.id===p.type)||{}).name||'—'}</div>
-    <div><b>Giá vốn:</b> ${formatVND(p.cost)}</div>
-    <div><b>Tồn:</b> ${p.stock}</div>
-    <div style="margin-top:8px"><b>Mô tả:</b><br>${p.desc||'—'}</div>
-    <div style="margin-top:12px;display:flex;flex-wrap:wrap">${imgs}</div>
-    <div style="margin-top:10px"><button id="c" class="btn">Đóng</button></div>
+    <div style="text-align:center; padding:10px">
+      <img src="${p.image || 'https://via.placeholder.com/300x200?text=No+Image'}"
+           style="max-width:300px;border-radius:10px;object-fit:cover;margin-bottom:12px;">
+      <h3 style="color:#4fc3f7">${p.name}</h3>
+      <p><b>Mã:</b> ${p.code}</p>
+      <p><b>Loại xe:</b> ${typeName}</p>
+      <p><b>Giá vốn:</b> ${formatVND(p.cost)}</p>
+      <p><b>Giá bán:</b> ${sellPrice}</p>
+      <p><b>Tồn kho:</b> ${p.stock}</p>
+      <p><b>Trạng thái:</b> ${p.hidden ? 'Ẩn' : 'Hiện'}</p>
+      <p><b>Mô tả:</b><br>${p.desc || '<i>Chưa có mô tả</i>'}</p>
+      <div style="margin-top:10px">
+        <button class="btn" id="closeDetail">Đóng</button>
+      </div>
+    </div>
   `);
-  $('#c').addEventListener('click', closeModal);
-}
 
+  $('#closeDetail').addEventListener('click', closeModal);
+}
 
 
 </script>
