@@ -1920,7 +1920,81 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+document.addEventListener("DOMContentLoaded", function() {
+    // Hàm lưu địa chỉ mặc định vào localStorage
+    function saveDefaultAddress(cardElement) {
+        // Lấy thông tin từ thẻ địa chỉ (Address Card)
+        const nameElement = cardElement.querySelector('.contact-info > div:nth-child(1)');
+        const phoneElement = cardElement.querySelector('.contact-info > div:nth-child(2)');
+        const addressTextElement = cardElement.querySelector('.card-body .address-text');
+        
+        if (!nameElement || !phoneElement || !addressTextElement) {
+            console.error('Không tìm thấy đủ thông tin để lưu địa chỉ.');
+            return;
+        }
 
+        // Loại bỏ icon và lấy nội dung text
+        const fullName = nameElement.textContent.trim();
+        const phone = phoneElement.textContent.trim();
+        // Thay thế <br> bằng dấu phẩy và xóa khoảng trắng thừa
+        const addressTextRaw = addressTextElement.innerHTML.trim().replace(/<br>/g, ', ').replace(/\s{2,}/g, ' ');
+
+        // Tách các phần của địa chỉ (Giả định dựa trên ví dụ: 123 Đường Lê Lợi, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh, Việt Nam)
+        const addressParts = addressTextRaw.split(',').map(part => part.trim()).filter(Boolean);
+
+        const defaultAddress = {
+            fullName: fullName.replace('Nguyễn Văn Tú', 'Trần Trung Hậu').replace('Trần Văn Ngọc', 'Trần Trung Hậu'), // Giả định tên người dùng đăng nhập
+            phone: phone.replace('0901 234 567', '0908 765 432'), // Giả định SĐT người dùng đăng nhập
+            
+            // Các trường được tách dựa trên giả định cấu trúc 
+            addressLine1: addressParts[0] || '', 
+            districtWard: addressParts[1] || '',
+            cityState: addressParts[2] || '',
+            country: addressParts[3] || 'Việt Nam'
+        };
+
+        // Lưu vào Local Storage
+        localStorage.setItem('defaultShippingAddress', JSON.stringify(defaultAddress));
+        console.log('Địa chỉ mặc định đã được lưu:', defaultAddress);
+
+        // Cập nhật UI (xóa badge cũ và thêm badge mới)
+        document.querySelectorAll('.address-card').forEach(card => card.classList.remove('default'));
+        document.querySelectorAll('.address-card .default-badge').forEach(badge => badge.remove());
+        
+        cardElement.classList.add('default');
+        
+        // Thêm badge Mặc định nếu chưa có
+        if (!cardElement.querySelector('.default-badge')) {
+            cardElement.querySelector('.card-header').innerHTML += '<span class="default-badge">Mặc định</span>';
+        }
+        
+        if (typeof window.updateHeaderCounts === 'function') {
+            window.updateHeaderCounts();
+        }
+    }
+
+    // 1. Gắn sự kiện cho nút "Đặt làm mặc định"
+    document.querySelectorAll('.btn-make-default').forEach(button => {
+        button.addEventListener('click', function() {
+            const card = this.closest('.address-card');
+            saveDefaultAddress(card);
+            // Thêm hiệu ứng thông báo
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công',
+                text: 'Địa chỉ đã được đặt làm mặc định!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        });
+    });
+
+    // 2. Lưu địa chỉ mặc định hiện tại khi tải trang
+    const currentDefaultCard = document.querySelector('.address-card.default');
+    if (currentDefaultCard) {
+        saveDefaultAddress(currentDefaultCard);
+    }
+});
 
 
 </script>
