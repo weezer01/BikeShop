@@ -784,6 +784,7 @@ function openProductModal(p = null) {
     )
     .join('');
 
+  // Sửa lỗi: Thêm nút LƯU và HUỶ vào cuối chuỗi HTML
   showModal(`
     <h3>${isNew ? 'Thêm' : 'Sửa'} xe đạp</h3>
     <label>Mã</label>
@@ -818,8 +819,10 @@ function openProductModal(p = null) {
            value='${p && p.margin != null ? p.margin : ''}'/>
 
     <div style="margin-top:12px">
-  `);
-
+      <button id="mSave" class="btn primary">💾 Lưu</button>
+      <button id="mCancel" class="btn">Huỷ</button>
+    </div>
+  `); // <-- Dấu đóng đã được đưa xuống cuối cùng, bao gồm cả nút
   // --- Xử lý khi chọn file ---
   $('#mFile').addEventListener('change', e => {
     const file = e.target.files[0];
@@ -884,7 +887,6 @@ function openProductModal(p = null) {
 
   $('#mCancel').addEventListener('click', closeModal);
 }
-
 
 /* Imports (phiếu nhập) */
 function renderImports(){
