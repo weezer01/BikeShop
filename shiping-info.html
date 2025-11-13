@@ -31,7 +31,7 @@
   <!-- =======================================================
   * Template Name: Tra đẹp bán xe đẹp
   * Template URL: https://bootstrapmade.com/niceshop-bootstrap-ecommerce-template/
-  * Updated: Aug 26 2025 with Bootstrap v5.3.7
+  * Updated: Nov 13 2025 with Bootstrap v5.3.7
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
@@ -196,7 +196,6 @@
             <li><a href="index.html">Trang chủ</a></li>
             <li><a href="about.html">Giới thiệu</a></li>
             <li><a href="category.html" class="active">Bộ sưu tập</a></li>
-      
             <li><a href="cart.html">Giỏ hàng</a></li>
             <li><a href="checkout.html">Kiểm tra đơn hàng</a></li>
             <li class="dropdown"><a href="#"><span>Sản phẩm</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
@@ -536,6 +535,17 @@
               <div class="faq-item">
                 <h3>
                   <i class="bi bi-question-circle"></i>
+                  Làm thế nào để theo dõi đơn hàng của tôi?
+                  <i class="bi bi-chevron-down faq-toggle"></i>
+                </h3>
+                <div class="faq-answer">
+                  <p>Bạn có thể theo dõi đơn hàng bằng số theo dõi được cung cấp trong email xác nhận vận chuyển.</p>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <h3>
+                  <i class="bi bi-question-circle"></i>
                   Nếu tôi không ở nhà khi giao hàng thì sao?
                   <i class="bi bi-chevron-down faq-toggle"></i>
                 </h3>
@@ -563,7 +573,15 @@
 
     </section><!-- /Shipping Info Section -->
 
- </main>
+    <!-- Search Results Section -->
+    <section id="search-results" class="section" style="display: none;">
+      <div class="container">
+        <h2>Kết quả tìm kiếm</h2>
+        <div class="row g-5" id="search-results-grid"></div>
+      </div>
+    </section>
+
+  </main>
 
   <footer id="footer" class="footer dark-background">
     <div class="footer-main">
@@ -815,6 +833,324 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 </script>
+
+<script>
+  // Danh sách sản phẩm từ category.html
+  var productData = [
+    {
+      id: 1,
+      title: "Xe Đạp Đường Phố Touring TRINX Free 2.2 – Phanh Đĩa, Bánh 700C",
+      price: 6490000,
+      originalPrice: 7490000,
+      image: "assets/img/product/13.jpg",
+      badge: "-13%",
+      category: "Bộ sưu tập xe xịn",
+      description: "Xe Đạp Đường Phố Touring TRINX Free 2.2 là sự kết hợp hoàn hảo giữa thiết kế đẹp mắt, chất lượng vượt trội và hiệu suất vận hành ấn tượng. Với khung nhôm TRINX cực kỳ nhẹ nhàng và bền bỉ, chiếc xe này mang lại sự ổn định và linh hoạt trên mọi loại địa hình.",
+      rating: 4.8,
+      reviews: 42,
+      aosDelay: 0
+    },
+    {
+      id: 2,
+      title: "Xe Đạp Đường Trường Road JAVA Auriga R5 - Phanh Đĩa, Bánh 700C",
+      price: 7890000,
+      originalPrice: 12890000,
+      image: "assets/img/product/37.jpg",
+      badge: "-35%",
+      category: "Bộ sưu tập xe xịn",
+      description: "Chinh phục mọi cung đường với JAVA Auriga R5.Nếu bạn là một người yêu tốc độ và muốn có những chuyến đạp xe thật 'phê', thì chiếc JAVA Auriga R5 này chính là người bạn đồng hành lý tưởng đó. Cảm giác lướt đi trên đường trường sẽ mượt mà và đầy phấn khích, đảm bảo bạn sẽ có những trải nghiệm khó quên.",
+      rating: 4.6,
+      reviews: 28,
+      aosDelay: 100
+    },
+    {
+      id: 3,
+      title: "Xe Đạp Đường Phố Touring LIV Alight 4 Disc - Phanh Đĩa, Bánh 700C - 2025",
+      price: 7000000,
+      originalPrice: 9000000,
+      image: "assets/img/product/6.jpg",
+      badge: "-35%",
+      category: "Bộ sưu tập xe xịn",
+      description: "LIV Alight 4 Disc 2025 không chỉ là một chiếc xe đạp đường phố thông thường, mà còn là tuyên ngôn cá tính dành cho những ai yêu thích sự năng động và hiện đại. Với thiết kế khung nhẹ, hệ thống truyền động linh hoạt và phanh đĩa an toàn, mẫu xe này là lựa chọn lý tưởng cho những chuyến đi trong thành phố, dạo chơi cuối tuần hay thậm chí là tập luyện thể dục hàng ngày.",
+      rating: 4.9,
+      reviews: 56,
+      aosDelay: 200
+    },
+    {
+      id: 4,
+      title: "Xe Đạp Đường Phố Fixed Gear VINBIKE Megatron – Bánh 700C",
+      price: 3990000,
+      originalPrice: null,
+      image: "assets/img/product/21.jpg",
+      badge: "Hàng hiếm",
+      category: "Bộ sưu tập xe xịn",
+      description: "Xe Đạp Đường Phố Touring VINBIKE Megatron là một tác phẩm FIXED GEAR nghệ thuật đầy cá tính, được chăm chút tỉ mỉ từng chi tiết. Đây là mẫu xe fixed gear đầu tiên của Trai đẹp bán xe đẹp, mang đậm tính đổi mới và sáng tạo.",
+      rating: 4.7,
+      reviews: 35,
+      aosDelay: 300
+    },
+    {
+      id: 5,
+      title: "Xe Đạp Đường Phố Touring JAVA Wahoo City - Phanh Đĩa, Bánh 700C",
+      price: 5990000,
+      originalPrice: 6990000,
+      image: "assets/img/product/22.jpg",
+      badge: null,
+      category: "Mua nhiều nhất",
+      description: "JAVA Wahoo City là mẫu xe đạp đường phố được thiết kế dành riêng cho nhu cầu di chuyển hằng ngày trong thành phố – từ đi làm, đi học cho đến luyện tập thể dục. Xe mang kiểu dáng tối giản, hiện đại với ba màu sắc thời thượng: Cát (Sand), Xám (Grey) và Trắng (White) – phù hợp với nhiều phong cách cá nhân.",
+      rating: 4.5,
+      reviews: 23,
+      aosDelay: 400
+    },
+    {
+      id: 6,
+      title: "Xe Đạp Đường Phố Touring LIV Alight 2 Disc - Phanh Đĩa, Bánh 700C - 2023",
+      price: 7000000,
+      originalPrice: 9000000,
+      image: "assets/img/product/36.jpg",
+      badge: "-35%",
+      category: "Những mẫu thiết kế đẹp",
+      description: "LIV Alight 2 – Bánh 700C – 2023 là mẫu xe đạp touring đường phố hiện đại, được thiết kế riêng dành cho phái nữ. Với kiểu dáng nhẹ nhàng, hiệu suất vượt trội và sự thoải mái trong từng chi tiết, mẫu xe này mang lại trải nghiệm tuyệt vời cho các hành trình ngắn hay dài ngày trong môi trường đô thị.",
+      rating: 4.8,
+      reviews: 47,
+      aosDelay: 500
+    },
+    {
+      id: 7,
+      title: "Xe Đạp Đường Trường Road JAVA Siluro6-TOP-RX - Phanh Đĩa, Bánh 700C",
+      price: 15990000,
+      originalPrice: null,
+      image: "assets/img/product/24.jpg",
+      badge: "Hot Trend",
+      category: "Những mẫu thiết kế đẹp",
+      description: "JAVA Siluro6-TOP-RX là dòng xe đạp đường trường cao cấp, được thiết kế cho những ai yêu thích tốc độ và trải nghiệm đạp xe hiệu quả. Với thiết kế thể thao mạnh mẽ, hệ truyền động 24 tốc độ và cấu hình tối ưu, chiếc xe này không chỉ phù hợp để luyện tập hàng ngày mà còn sẵn sàng cùng bạn chinh phục những cung đường dài đầy thử thách.",
+      rating: 4.6,
+      reviews: 31,
+      aosDelay: 600
+    },
+    {
+      id: 8,
+      title: "Xe Đạp Đường Phố Touring GIANT Escape 2 Disc - Phanh Đĩa, Bánh 700C - 2025",
+      price: 5000000,
+      originalPrice: 12000000,
+      image: "assets/img/product/35.jpg",
+      badge: "-60%",
+      category: "Bán chạy",
+      description: "Dòng xe đạp đường phố GIANT Escape 2 Disc - Phanh Đĩa, Bánh 700C - 2025 là một sự lựa chọn hoàn hảo cho người “phố” yêu xe. Với thiết kế thanh lịch, khung nhôm ALUXX cao cấp và hệ thống phanh đĩa mạnh mẽ, chiếc xe này mang lại sự ổn định và linh hoạt trên mọi loại địa hình.",
+      rating: 4.7,
+      reviews: 39,
+      aosDelay: 700
+    }
+  ];
+  // === Hàm format VND ===
+  function formatVND(n) {
+    return Number(n).toLocaleString('vi-VN');
+  }
+  // === Hàm render product card giống category ===
+  function renderProductCard(product) {
+    const originalPriceHtml = product.originalPrice
+      ? `<span class="original-price">${formatVND(product.originalPrice)} VND</span>`
+      : '';
+    const badgeHtml = product.badge
+      ? `<div class="product-badge ${product.badge.includes('%') ? 'sale' : 'new'}">${product.badge}</div>`
+      : '';
+    return `
+      <div class="col-6 col-xl-4">
+        <div class="product-card" data-id="${product.id}" data-description="${product.description || ''}">
+          <a href="javascript:void(0);" class="product-image-link">
+            <div class="product-image">
+              <img src="${product.image}" class="main-image img-fluid" alt="${product.title}">
+              <div class="product-overlay">
+                <div class="product-actions">
+                  <button type="button" class="action-btn" data-bs-toggle="tooltip" title="Quick View">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button type="button" class="action-btn add-to-cart-btn" data-id="${product.id}" data-bs-toggle="tooltip" title="Add to Cart">
+                    <i class="bi bi-cart-plus"></i>
+                  </button>
+                </div>
+              </div>
+              ${badgeHtml}
+            </div>
+          </a>
+          <div class="product-details">
+            <div class="product-category">${product.category || ''}</div>
+            <h4 class="product-title"><a href="javascript:void(0);" data-id="${product.id}">${product.title}</a></h4>
+            <div class="product-meta">
+              <div class="product-price">${formatVND(product.price)} VND ${originalPriceHtml}</div>
+              <div class="product-rating">
+                <i class="bi bi-star-fill"></i>
+                ${product.rating || 0} <span>(${product.reviews || 0})</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  // === Hàm add to cart ===
+  function addToCart(productId) {
+    const product = productData.find(p => p.id === parseInt(productId));
+    if (!product) return;
+    let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+    const existingItem = cart.find(item => item.id === product.id);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        image: product.image,
+        quantity: 1,
+      });
+    }
+    localStorage.setItem('shoppingCart', JSON.stringify(cart));
+    window.location.href = 'cart.html';
+  }
+  // === Attach cart listeners ===
+  function attachCartListeners() {
+    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+      button.addEventListener('click', function(event) {
+        const productId = event.currentTarget.dataset.id;
+        addToCart(productId);
+      });
+    });
+  }
+  // === Attach quick view listeners ===
+  function attachQuickViewListeners() {
+    const quickViewModalEl = document.getElementById("quickViewModal");
+    const quickViewTriggers = document.querySelectorAll('.product-card .product-image-link, .product-card .product-title a');
+    quickViewTriggers.forEach(trigger => {
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        const card = trigger.closest('.product-card');
+        if (!card) return;
+        if (quickViewModalEl && typeof bootstrap !== 'undefined') {
+          const image = card.querySelector('.main-image')?.src || '';
+          const title = card.querySelector('.product-title a')?.textContent || '';
+          const category = card.querySelector('.product-category')?.textContent || '';
+          const price = card.querySelector('.product-price')?.childNodes[0]?.textContent.trim() || '';
+          const originalPrice = card.querySelector('.original-price')?.textContent || '';
+          const badge = card.querySelector('.product-badge')?.textContent || '';
+          const rating = card.querySelector('.product-rating')?.childNodes[1]?.textContent.trim() || '';
+          const reviews = card.querySelector('.product-rating span')?.textContent || '';
+          const description = card.dataset.description || "Mô tả: Xe đạp chất lượng cao.";
+          // Gán vào modal
+          const qImg = document.getElementById('quickViewImage');
+          const qCat = document.getElementById('quickViewCategory');
+          const qTitle = document.getElementById('quickViewTitle');
+          const qPrice = document.getElementById('quickViewPrice');
+          const qOrig = document.getElementById('quickViewOriginalPrice');
+          const qBadge = document.getElementById('quickViewBadge');
+          const qDesc = document.getElementById('quickViewDescription');
+          const qRating = document.getElementById('quickViewRating');
+          const qReviews = document.getElementById('quickViewReviews');
+          const qAddBtn = document.getElementById('quickViewAddToCart');
+          if (qImg) qImg.src = image;
+          if (qCat) qCat.textContent = category;
+          if (qTitle) qTitle.textContent = title;
+          if (qPrice) qPrice.textContent = price;
+          if (qOrig) qOrig.textContent = originalPrice;
+          if (qBadge) qBadge.textContent = badge;
+          if (qDesc) qDesc.textContent = description;
+          if (qRating) qRating.textContent = rating;
+          if (qReviews) qReviews.textContent = reviews;
+          if (qAddBtn) {
+            qAddBtn.onclick = () => {
+              const productId = card.dataset.id;
+              addToCart(productId);
+              const modalInstance = bootstrap.Modal.getInstance(quickViewModalEl);
+              if (modalInstance) modalInstance.hide();
+            };
+          }
+          const quickViewModal = bootstrap.Modal.getOrCreateInstance(quickViewModalEl);
+          quickViewModal.show();
+        }
+      });
+    });
+  }
+  document.addEventListener("DOMContentLoaded", function() {
+    const searchInputs = document.querySelectorAll('.search-form input[type="text"]');
+    const searchForms = document.querySelectorAll('.search-form');
+    const searchResultsSection = document.getElementById('search-results');
+    const searchResultsGrid = document.getElementById('search-results-grid');
+    const mainSections = document.querySelectorAll('.section:not(#search-results)');
+    // Prevent form submission
+    searchForms.forEach(form => {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+      });
+    });
+    // Add input event listener for live search
+    searchInputs.forEach(input => {
+      input.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        if (searchTerm === '') {
+          // Hiển thị lại các phần chính và ẩn kết quả tìm kiếm
+          mainSections.forEach(section => section.style.display = '');
+          searchResultsSection.style.display = 'none';
+          return;
+        }
+        // Ẩn các phần chính
+        mainSections.forEach(section => section.style.display = 'none');
+        // Lọc sản phẩm từ productData
+        const filteredProducts = productData.filter(product => product.title.toLowerCase().includes(searchTerm));
+        // Xóa kết quả cũ
+        searchResultsGrid.innerHTML = '';
+        // Render sản phẩm lọc được
+        filteredProducts.forEach(product => {
+          const productHTML = renderProductCard(product);
+          searchResultsGrid.insertAdjacentHTML('beforeend', productHTML);
+        });
+        // Attach listeners sau khi render
+        attachQuickViewListeners();
+        attachCartListeners();
+        // Hiển thị section kết quả
+        searchResultsSection.style.display = filteredProducts.length > 0 ? 'block' : 'none';
+      });
+    });
+  });
+</script>
+<!-- Modal Quick View -->
+<div class="modal fade" id="quickViewModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h4 class="mb-2" id="quickViewCategory"></h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <!-- Ảnh sản phẩm -->
+          <div class="col-md-6 text-center">
+            <img id="quickViewImage" src="" class="img-fluid rounded" alt="Product Image">
+          </div>
+          <!-- Thông tin sản phẩm -->
+          <div class="col-md-6">
+            <div class="mb-2">
+              <span class="badge bg-primary" id="quickViewBadge"></span>
+            </div>
+            <h5 class="modal-title" id="quickViewTitle"></h5>
+            <p class="text-muted mb-3" id="quickViewDescription"></p>
+            <div class="mb-3">
+              <span class="fs-4 fw-bold text-danger" id="quickViewPrice"></span>
+              <span class="text-decoration-line-through text-muted ms-2" id="quickViewOriginalPrice"></span>
+            </div>
+            <div class="mb-3">
+              <i class="bi bi-star-fill text-warning"></i>
+              <span id="quickViewRating"></span>
+              <small class="text-muted">(<span id="quickViewReviews"></span> đánh giá)</small>
+            </div>
+            <button class="btn btn-success btn-lg" id="quickViewAddToCart">
+              <i class="bi bi-cart-plus"></i> Thêm vào giỏ hàng
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 </body>
