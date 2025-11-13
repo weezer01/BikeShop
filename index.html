@@ -21,7 +21,7 @@
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="assets/vendor/drift-zoom/drift-basic.css" rel="stylesheet">
 
@@ -171,13 +171,13 @@
             <!-- Wishlist -->
             <a href="account.html" class="header-action-btn d-none d-md-block">
               <i class="bi bi-heart"></i>
-              <span class="wishlist-count badge">0</span>
+              <span class="badge">3</span>
             </a>
 
             <!-- Cart -->
             <a href="cart.html" class="header-action-btn">
               <i class="bi bi-cart3"></i>
-              <span class="badge">0</span>
+              <span class="badge">3</span>
             </a>
 
             <!-- Mobile Navigation Toggle -->
@@ -424,7 +424,7 @@
               <div class="product-badge">Best seller</div>
               <div class="product-info">
                 <h4>Xe Đạp Đường Phố Touring TRINX Free 2.2 – Phanh Đĩa, Bánh 700C</h4>
-                <div class="price">
+                <div class="price">   
                   <span class="sale-price">6.490.000 VND</span>
                   <span class="original-price">7.490.000 VND</span>
                 </div>
@@ -443,20 +443,18 @@
             </div>
           </div>
 
-          <div class="floating-elements">
-            <div class="floating-icon cart" data-aos="fade-up" data-aos-delay="600">
-              <i class="bi bi-cart3"></i>
-              <span class="notification-dot">1</span>
-            </div>
-            <div class="floating-icon wishlist" data-aos="fade-up" data-aos-delay="700">
-              <i class="bi bi-heart"></i>
-            </div>
-            <div class="floating-icon search" data-aos="fade-up" data-aos-delay="800">
-              <i class="bi bi-search"></i>
-            </div>
-          </div>
-        </div>
-      </div>
+<div class="floating-elements">
+  <div class="floating-icon cart">
+    <i class="bi bi-cart3"></i>
+    <span class="notification-dot">1</span>
+  </div>
+  <div class="floating-icon wishlist">
+    <i class="bi bi-heart"></i>
+  </div>
+  <div class="floating-icon search">
+    <i class="bi bi-search"></i>
+  </div>
+</div>
 
     </section><!-- /Hero Section -->
 
@@ -1016,14 +1014,6 @@
 
     </section><!-- /Call To Action Section -->
 
-    <!-- Search Results Section -->
-    <section id="search-results" class="section" style="display: none;">
-      <div class="container">
-        <h2>Kết quả tìm kiếm</h2>
-        <div class="row g-5" id="search-results-grid"></div>
-      </div>
-    </section>
-
   </main>
 
   <footer id="footer" class="footer dark-background">
@@ -1216,269 +1206,7 @@
   });
 </script>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-
-  // === HÀM CẬP NHẬT SỐ LƯỢNG HIỂN THỊ TRÊN HEADER ===
-  function updateHeaderCounts() {
-    const cartBadge = document.querySelector('.header-action-btn[href="cart.html"] .badge');
-    const wishlistBadge = document.querySelector('.header-action-btn[href="account.html"] .bi-heart + .badge, .wishlist-badge');
-    const orderBadge = document.querySelector('.header-action-btn[href="account.html"] .bi-bag-check + .badge, .order-badge');
-
-    const cart = JSON.parse(localStorage.getItem("shoppingCart")) || [];
-    const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-    const orders = JSON.parse(localStorage.getItem("orders")) || [];
-
-    if (cartBadge) cartBadge.textContent = cart.length;
-    if (wishlistBadge) wishlistBadge.textContent = wishlist.length;
-    if (orderBadge) orderBadge.textContent = orders.length;
-  }
-
-  // === HÀM RESET TOÀN BỘ KHI ĐẶT ĐƠN HÀNG ===
-  function resetAfterCheckout() {
-    // Giả sử khi người dùng bấm "Đặt hàng thành công"
-    localStorage.removeItem("shoppingCart"); // Xóa giỏ hàng
-    // Có thể thêm sản phẩm đã mua vào orders
-    const orders = JSON.parse(localStorage.getItem("orders")) || [];
-    const cart = JSON.parse(localStorage.getItem("shoppingCartBackup")) || []; // nếu có backup
-    if (cart.length > 0) {
-      orders.push(...cart);
-      localStorage.setItem("orders", JSON.stringify(orders));
-    }
-
-    updateHeaderCounts();
-  }
-
-  // === GẮN HÀM VÀO BIẾN TOÀN CỤC (để gọi từ các trang khác) ===
-  window.updateHeaderCounts = updateHeaderCounts;
-  window.resetAfterCheckout = resetAfterCheckout;
-
-  // === CẬP NHẬT NGAY KHI TRANG LOAD ===
-  updateHeaderCounts();
-
-  // === LẮNG NGHE KHI localStorage THAY ĐỔI (giữa các tab) ===
-  window.addEventListener("storage", updateHeaderCounts);
-
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  const wishlistBadge = document.querySelector(".wishlist-count");
-
-  // Kiểm tra người dùng đã đăng nhập hay chưa
-  const isLoggedIn = localStorage.getItem("loggedIn") === "true";
-
-  if (isLoggedIn) {
-    // Nếu đã đăng nhập: mặc định hiển thị 3
-    wishlistBadge.textContent = "3";
-  } else {
-    // Nếu chưa đăng nhập: hiển thị 1
-    wishlistBadge.textContent = "1";
-  }
-});
-</script>
-
-
-<script>
-  // Danh sách sản phẩm từ category.html
-  var productData = [
-    {
-      name: "Xe Đạp Đường Phố Fixed Gear VINBIKE Megatron – Bánh 700C",
-      price: 3990000,
-      oldPrice: null,
-      image: "assets/img/product/21.jpg",
-      badge: "Hàng hiếm",
-      category: "Bộ sưu tập xe xịn",
-      rating: 4,
-      ratingCount: 24,
-      colors: ["#2563eb", "#dc2626"]
-    },
-    {
-      name: "Xe Đạp Điện Gấp E-BIKE ADO A20 LITE - PHANH ĐĨA, BÁNH 20 INCHES",
-      price: 17990000,
-      oldPrice: null,
-      image: "assets/img/product/17.jpg",
-      badge: "",
-      category: "",
-      rating: 4.5,
-      ratingCount: 38,
-      colors: ["#919ba8f8", "#ffffff"]
-    },
-    {
-      name: "Xe Đạp Đua Đường Trường Road JAVA Siluro6 - Top - 105 - Phanh Đĩa, Bánh 700C",
-      price: 20490000,
-      oldPrice: null,
-      image: "assets/img/product/ee.jpg",
-      badge: "",
-      category: "Hàng mới về",
-      rating: 3,
-      ratingCount: 12,
-      colors: ["#ef4444", "#06b6d4"]
-    },
-    {
-      name: "Khung Sườn Xe Đạp GIANT Propel Advanced SL Frame And Fork (Team Color)",
-      price: 68000000,
-      oldPrice: null,
-      image: "assets/img/product/rr.jpg",
-      badge: "Hot trend",
-      category: "Những mẫu thiết kế đẹp",
-      rating: 5,
-      ratingCount: 56,
-      colors: ["#64748b", "#7c3aed"]
-    },
-    {
-      name: "Xe Đạp Đường Phố Touring RAPTOR Lily 4 - Bánh 26 Inch",
-      price: 2601000,
-      oldPrice: 2890000,
-      image: "assets/img/product/5.jpg",
-      badge: "-10%",
-      category: "",
-      rating: 4.5,
-      ratingCount: 24,
-      colors: []
-    },
-    {
-      name: "Xe Đạp Đường Phố Touring LIV Alight 4 Disc - Phanh Đĩa, Bánh 700C - 2025",
-      price: 8632000,
-      oldPrice: 10790000,
-      image: "assets/img/product/6.jpg",
-      badge: "-25%",
-      category: "",
-      rating: 5,
-      ratingCount: 41,
-      colors: []
-    },
-    {
-      name: "Xe Đạp Đường Phố Touring JAVA Wahoo City - Phanh Đĩa, Bánh 700C",
-      price: 849000,
-      oldPrice: 1130000,
-      image: "assets/img/product/22.jpg",
-      badge: "-24%",
-      category: "",
-      rating: 4,
-      ratingCount: 18,
-      colors: []
-    },
-    {
-      name: "Xe Đạp Đường Phố Touring RAPTOR Feliz 2 - Phanh Đĩa, Bánh 700C",
-      price: 8000000,
-      oldPrice: 13000000,
-      image: "assets/img/product/16.jpg",
-      badge: "-23%",
-      category: "",
-      rating: 5,
-      ratingCount: 87,
-      colors: []
-    },
-    {
-      name: "Xe Đạp Đường Trường Road JAVA Siluro6-TOP-RX - Phanh Đĩa, Bánh 700C",
-      price: 15990000,
-      oldPrice: null,
-      image: "assets/img/product/24.jpg",
-      badge: "",
-      category: "",
-      rating: 4,
-      ratingCount: 45,
-      colors: []
-    },
-    {
-      name: "Xe Đạp Đường Phố Touring GIANT Escape 2 Disc - Phanh Đĩa, Bánh 700C - 2025",
-      price: 5000000,
-      oldPrice: 12000000,
-      image: "assets/img/product/35.jpg",
-      badge: "-60%",
-      category: "",
-      rating: 4.5,
-      ratingCount: 67,
-      colors: []
-    }
-  ];
-
-  document.addEventListener("DOMContentLoaded", function() {
-    const searchInputs = document.querySelectorAll('.search-form input[type="text"]');
-    const searchForms = document.querySelectorAll('.search-form');
-    const searchResultsSection = document.getElementById('search-results');
-    const searchResultsGrid = document.getElementById('search-results-grid');
-    const mainSections = document.querySelectorAll('.section:not(#search-results)');
-
-    // Prevent form submission
-    searchForms.forEach(form => {
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-      });
-    });
-
-    // Add input event listener for live search
-    searchInputs.forEach(input => {
-      input.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase().trim();
-
-        if (searchTerm === '') {
-          // Hiển thị lại các phần chính và ẩn kết quả tìm kiếm
-          mainSections.forEach(section => section.style.display = '');
-          searchResultsSection.style.display = 'none';
-          return;
-        }
-
-        // Ẩn các phần chính
-        mainSections.forEach(section => section.style.display = 'none');
-
-        // Lọc sản phẩm từ productData
-        const filteredProducts = productData.filter(product => product.name.toLowerCase().includes(searchTerm));
-
-        // Xóa kết quả cũ
-        searchResultsGrid.innerHTML = '';
-
-        // Render sản phẩm lọc được
-        filteredProducts.forEach(product => {
-          const productHTML = `
-            <div class="col-lg-3 col-md-6">
-              <div class="product-item">
-                <div class="product-image">
-                  ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
-                  <img src="${product.image}" alt="${product.name}" class="img-fluid" loading="lazy">
-                  <div class="product-actions">
-                    <button class="action-btn wishlist-btn">
-                      <i class="bi bi-heart"></i>
-                    </button>
-                    <button class="action-btn compare-btn">
-                      <i class="bi bi-arrow-left-right"></i>
-                    </button>
-                    <button class="action-btn quickview-btn">
-                      <i class="bi bi-zoom-in"></i>
-                    </button>
-                  </div>
-                  <button class="cart-btn">Thêm vào giỏ</button>
-                </div>
-                <div class="product-info">
-                  <div class="product-category">${product.category}</div>
-                  <h4 class="product-name"><a href="product-details.html">${product.name}</a></h4>
-                  <div class="product-rating">
-                    <div class="stars">
-                      ${Array.from({length: 5}, (_, i) => i < product.rating ? '<i class="bi bi-star-fill"></i>' : '<i class="bi bi-star"></i>').join('')}
-                    </div>
-                    <span class="rating-count">(${product.ratingCount})</span>
-                  </div>
-                  <div class="product-price">
-                    ${product.oldPrice ? `<span class="old-price">${product.oldPrice.toLocaleString()} VND</span>` : ''}
-                    <span class="current-price">${product.price.toLocaleString()} VND</span>
-                  </div>
-                  <div class="color-swatches">
-                    ${product.colors.map(color => `<span class="swatch" style="background-color: ${color};"></span>`).join('')}
-                  </div>
-                </div>
-              </div>
-            </div>
-          `;
-          searchResultsGrid.insertAdjacentHTML('beforeend', productHTML);
-        });
-
-        // Hiển thị section kết quả
-        searchResultsSection.style.display = filteredProducts.length > 0 ? 'block' : 'none';
-      });
-    });
-  });
-</script>
-
 </body>
 
 </html>
+
