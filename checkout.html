@@ -1027,19 +1027,27 @@
     }
 
     // --- 4. Gắn Listener ---
-    document.addEventListener('DOMContentLoaded', () => {
-        // 1. Tự động điền địa chỉ
-        fillDefaultAddress(); 
-        
-        // 2. Load Tóm tắt đơn hàng
-        loadOrderSummary(); 
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Tự động điền địa chỉ
+    fillDefaultAddress(); 
+    
+    // 2. Load Tóm tắt đơn hàng
+    loadOrderSummary(); 
 
-        // 3. Gắn listener cho form đặt hàng
-        const form = document.getElementById('checkout-form');
-        if (form) {
-            form.addEventListener('submit', handlePlaceOrder); 
-        }
-    });
+    // 3. TỰ ĐỘNG TICK VÀO Ô "ĐỒNG Ý ĐIỀU KHOẢN"
+    const termsCheckbox = document.getElementById('terms');
+    if (termsCheckbox) {
+        termsCheckbox.checked = true;
+        // Kích hoạt sự kiện change nếu cần cho validation
+        termsCheckbox.dispatchEvent(new Event('change'));
+    }
+
+    // 4. Gắn listener cho form đặt hàng
+    const form = document.getElementById('checkout-form');
+    if (form) {
+        form.addEventListener('submit', handlePlaceOrder); 
+    }
+});
 </script>
 
 </body>
