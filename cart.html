@@ -420,7 +420,69 @@
             <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
                 
                 <div class="cart-items" id="cart-items-container">
-                    
+                    <div class="cart-items" id="cart-items-container">
+  <div class="cart-header d-none d-lg-flex fw-bold text-uppercase border-bottom pb-3 mb-3">
+    <div class="col-5">Sản phẩm</div>
+    <div class="col-3 text-center">Số lượng</div>
+    <div class="col-2 text-end">Thành tiền</div>
+    <div class="col-2 text-center">Xóa</div>
+  </div>
+
+  <!-- Sản phẩm 1 -->
+  <div class="cart-item d-flex align-items-center mb-3 border-bottom pb-3">
+    <div class="col-1 me-2">
+      <img src="assets/img/product/21.jpg" alt="VINBIKE Megatron" class="img-fluid rounded">
+    </div>
+    <div class="col-4">
+      <h6 class="mb-1">Xe Đạp Đường Phố Fixed Gear VINBIKE Megatron – Bánh 700C</h6>
+      <p class="text-muted mb-0">Giá: 3.990.000 VND</p>
+    </div>
+    <div class="col-3 text-center">
+      <input type="number" class="form-control text-center" value="1" min="1" style="width:80px; margin:auto;">
+    </div>
+    <div class="col-2 text-end fw-bold">3.990.000 VND</div>
+    <div class="col-2 text-center">
+      <button class="btn btn-sm btn-outline-danger"><i class="bi bi-x"></i></button>
+    </div>
+  </div>
+
+  <!-- Sản phẩm 2 -->
+  <div class="cart-item d-flex align-items-center mb-3 border-bottom pb-3">
+    <div class="col-1 me-2">
+      <img src="assets/img/product/17.jpg" alt="ADO A20 Lite" class="img-fluid rounded">
+    </div>
+    <div class="col-4">
+      <h6 class="mb-1">Xe Đạp Điện Gấp ADO A20 LITE – Phanh Đĩa, Bánh 20 Inches</h6>
+      <p class="text-muted mb-0">Giá: 17.990.000 VND</p>
+    </div>
+    <div class="col-3 text-center">
+      <input type="number" class="form-control text-center" value="1" min="1" style="width:80px; margin:auto;">
+    </div>
+    <div class="col-2 text-end fw-bold">17.990.000 VND</div>
+    <div class="col-2 text-center">
+      <button class="btn btn-sm btn-outline-danger"><i class="bi bi-x"></i></button>
+    </div>
+  </div>
+
+  <!-- Sản phẩm 3 -->
+  <div class="cart-item d-flex align-items-center mb-3 border-bottom pb-3">
+    <div class="col-1 me-2">
+      <img src="assets/img/product/ee.jpg" alt="JAVA Siluro6" class="img-fluid rounded">
+    </div>
+    <div class="col-4">
+      <h6 class="mb-1">Xe Đạp Đua Đường Trường Road JAVA Siluro6 – 105 – Phanh Đĩa, Bánh 700C</h6>
+      <p class="text-muted mb-0">Giá: 20.490.000 VND</p>
+    </div>
+    <div class="col-3 text-center">
+      <input type="number" class="form-control text-center" value="1" min="1" style="width:80px; margin:auto;">
+    </div>
+    <div class="col-2 text-end fw-bold">20.490.000 VND</div>
+    <div class="col-2 text-center">
+      <button class="btn btn-sm btn-outline-danger"><i class="bi bi-x"></i></button>
+    </div>
+  </div>
+</div>
+
                     <div class="cart-header d-none d-lg-block">
                         <div class="row align-items-center">
                             </div>
@@ -542,13 +604,6 @@
         </div>
     </div>
 </section><!-- /Cart Section -->
-    <!-- Search Results Section -->
-    <section id="search-results" class="section" style="display: none;">
-      <div class="container">
-        <h2>Kết quả tìm kiếm</h2>
-        <div class="row g-5" id="search-results-grid"></div>
-      </div>
-    </section>
 
   </main>
 
@@ -718,239 +773,239 @@
 
     // Hàm chuẩn bị dữ liệu giỏ hàng (chuyển chuỗi giá thành số)
     // Hàm chuẩn bị dữ liệu giỏ hàng (chuyển chuỗi giá thành số và chuẩn hóa key)
-    function getParsedCart() {
-        const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+    // function getParsedCart() {
+    //     const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
         
-        return cart.map(item => {
-            // 1. Chuẩn hóa Tên sản phẩm: Ưu tiên 'name' (từ details), nếu không có dùng 'title' (từ category)
-            const standardizedName = item.name || item.title || 'Sản phẩm không rõ tên';
+    //     return cart.map(item => {
+    //         // 1. Chuẩn hóa Tên sản phẩm: Ưu tiên 'name' (từ details), nếu không có dùng 'title' (từ category)
+    //         const standardizedName = item.name || item.title || 'Sản phẩm không rõ tên';
             
-            // 2. Chuẩn hóa Giá trị Số:
-            // - Ưu tiên 'priceValue' (từ details, cần ParseInt)
-            // - Nếu không có, dùng 'price' (từ category, đã là Number)
-            const rawPrice = item.priceValue ? parseInt(item.priceValue) : (item.price || 0);
+    //         // 2. Chuẩn hóa Giá trị Số:
+    //         // - Ưu tiên 'priceValue' (từ details, cần ParseInt)
+    //         // - Nếu không có, dùng 'price' (từ category, đã là Number)
+    //         const rawPrice = item.priceValue ? parseInt(item.priceValue) : (item.price || 0);
             
-            // 3. Chuẩn hóa Giá hiển thị: Ưu tiên 'priceDisplay', nếu không có dùng giá số đã định dạng
-            const standardizedDisplay = item.priceDisplay || formatVND(rawPrice);
+    //         // 3. Chuẩn hóa Giá hiển thị: Ưu tiên 'priceDisplay', nếu không có dùng giá số đã định dạng
+    //         const standardizedDisplay = item.priceDisplay || formatVND(rawPrice);
             
-            return {
-                ...item,
-                name: standardizedName,
-                priceNumeric: rawPrice, // Giá trị số dùng để tính toán
-                priceDisplay: standardizedDisplay, // Giá trị chuỗi dùng để hiển thị
-            };
-        });
-    }
+    //         return {
+    //             ...item,
+    //             name: standardizedName,
+    //             priceNumeric: rawPrice, // Giá trị số dùng để tính toán
+    //             priceDisplay: standardizedDisplay, // Giá trị chuỗi dùng để hiển thị
+    //         };
+    //     });
+    // }
 
     // --- HÀM 1: TẢI VÀ HIỂN THỊ GIỎ HÀNG ---
     // --- HÀM 1: TẢI VÀ HIỂN THỊ GIỎ HÀNG ---
-    function loadCart() {
-        const cart = getParsedCart();
-        const container = document.getElementById('cart-items-container');
+    // function loadCart() {
+    //     const cart = getParsedCart();
+    //     const container = document.getElementById('cart-items-container');
         
-        if (!container) {
-            console.error('Không tìm thấy #cart-items-container.');
-            return;
-        }
+    //     if (!container) {
+    //         console.error('Không tìm thấy #cart-items-container.');
+    //         return;
+    //     }
 
-        container.innerHTML = ''; 
+    //     container.innerHTML = ''; 
 
-        if (cart.length === 0) {
-            container.innerHTML = '<div class="text-center py-5"><h3>Giỏ hàng của bạn đang trống.</h3><p>Hãy trở lại trang sản phẩm để mua sắm!</p></div>';
+    //     if (cart.length === 0) {
+    //         container.innerHTML = '<div class="text-center py-5"><h3>Giỏ hàng của bạn đang trống.</h3><p>Hãy trở lại trang sản phẩm để mua sắm!</p></div>';
             
-            // QUAN TRỌNG: Gọi hàm reset khi giỏ hàng trống
-            resetCartTotals(); 
-        } else {
-            // ... (Phần code hiển thị tiêu đề và vòng lặp sản phẩm giữ nguyên) ...
-            container.innerHTML = `
-                <div class="d-flex cart-header border-bottom pb-2 mb-3 fw-bold text-uppercase d-none d-sm-flex">
-                    <div class="col-5">Sản phẩm</div>
-                    <div class="col-3 text-center">Số lượng</div>
-                    <div class="col-2 text-end">Thành tiền</div>
-                    <div class="col-2 text-center">Xóa</div>
-                </div>
-            `;
+    //         // QUAN TRỌNG: Gọi hàm reset khi giỏ hàng trống
+    //         resetCartTotals(); 
+    //     } else {
+    //         // ... (Phần code hiển thị tiêu đề và vòng lặp sản phẩm giữ nguyên) ...
+    //         container.innerHTML = `
+    //             <div class="d-flex cart-header border-bottom pb-2 mb-3 fw-bold text-uppercase d-none d-sm-flex">
+    //                 <div class="col-5">Sản phẩm</div>
+    //                 <div class="col-3 text-center">Số lượng</div>
+    //                 <div class="col-2 text-end">Thành tiền</div>
+    //                 <div class="col-2 text-center">Xóa</div>
+    //             </div>
+    //         `;
             
-            cart.forEach(item => {
-                // ... (Phần code tạo HTML cho từng sản phẩm giữ nguyên) ...
-                const itemTotal = item.priceNumeric * item.quantity;
+    //         cart.forEach(item => {
+    //             // ... (Phần code tạo HTML cho từng sản phẩm giữ nguyên) ...
+    //             const itemTotal = item.priceNumeric * item.quantity;
                 
-                const itemHtml = `
-                    <div class="cart-item d-flex align-items-center mb-3 border-bottom pb-3" data-product-id="${item.id}" data-price="${item.priceNumeric}">
-                        <div class="col-1 me-2 me-sm-0">
-                            <img src="${item.image}" alt="${item.name}" class="img-fluid rounded">
-                        </div>
-                        <div class="col-4">
-                            <h6 class="mb-1">${item.name}</h6>
-                            <p class="text-muted mb-0 d-none d-sm-block">Giá: ${item.priceDisplay}</p>
-                        </div>
-                        <div class="col-3 text-center">
-                            <input type="number" class="form-control quantity-input" data-id="${item.id}" value="${item.quantity}" min="1" style="width: 80px; margin: auto;">
-                        </div>
-                        <div class="col-2 text-end">
-                            <p class="mb-0 fw-bold item-total">${formatVND(itemTotal)}</p>
-                        </div>
-                        <div class="col-2 text-center">
-                            <button class="btn btn-sm btn-outline-danger remove-item-btn" data-id="${item.id}">
-                                <i class="bi bi-x"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                container.insertAdjacentHTML('beforeend', itemHtml);
-            });
+    //             const itemHtml = `
+    //                 <div class="cart-item d-flex align-items-center mb-3 border-bottom pb-3" data-product-id="${item.id}" data-price="${item.priceNumeric}">
+    //                     <div class="col-1 me-2 me-sm-0">
+    //                         <img src="${item.image}" alt="${item.name}" class="img-fluid rounded">
+    //                     </div>
+    //                     <div class="col-4">
+    //                         <h6 class="mb-1">${item.name}</h6>
+    //                         <p class="text-muted mb-0 d-none d-sm-block">Giá: ${item.priceDisplay}</p>
+    //                     </div>
+    //                     <div class="col-3 text-center">
+    //                         <input type="number" class="form-control quantity-input" data-id="${item.id}" value="${item.quantity}" min="1" style="width: 80px; margin: auto;">
+    //                     </div>
+    //                     <div class="col-2 text-end">
+    //                         <p class="mb-0 fw-bold item-total">${formatVND(itemTotal)}</p>
+    //                     </div>
+    //                     <div class="col-2 text-center">
+    //                         <button class="btn btn-sm btn-outline-danger remove-item-btn" data-id="${item.id}">
+    //                             <i class="bi bi-x"></i>
+    //                         </button>
+    //                     </div>
+    //                 </div>
+    //             `;
+    //             container.insertAdjacentHTML('beforeend', itemHtml);
+    //         });
             
-            attachEventListeners();
+    //         attachEventListeners();
             
-            // Tính toán tổng tiền và cập nhật phí ship sau khi HTML giỏ hàng được render.
-            calculateCartTotals(cart);
-        }
-    }
-    // --- HÀM 1.5: RESET TỔNG TIỀN KHI GIỎ HÀNG TRỐNG ---
-    function resetCartTotals() {
-        const totalElement = document.getElementById('cart-total');
-        const subtotalElement = document.getElementById('cart-subtotal');
-        const shippingFeeElement = document.getElementById('shipping-fee');
-        const standardRadio = document.getElementById('standard');
+    //         // Tính toán tổng tiền và cập nhật phí ship sau khi HTML giỏ hàng được render.
+    //         calculateCartTotals(cart);
+    //     }
+    // }
+    // // --- HÀM 1.5: RESET TỔNG TIỀN KHI GIỎ HÀNG TRỐNG ---
+    // function resetCartTotals() {
+    //     const totalElement = document.getElementById('cart-total');
+    //     const subtotalElement = document.getElementById('cart-subtotal');
+    //     const shippingFeeElement = document.getElementById('shipping-fee');
+    //     const standardRadio = document.getElementById('standard');
         
-        // Đặt phí vận chuyển hiện tại về 0
-        currentShippingFee = 0; 
+    //     // Đặt phí vận chuyển hiện tại về 0
+    //     currentShippingFee = 0; 
 
-        // Cập nhật UI về 0
-        if (subtotalElement) subtotalElement.textContent = formatVND(0);
-        if (shippingFeeElement) shippingFeeElement.textContent = formatVND(0);
-        if (totalElement) totalElement.textContent = formatVND(0);
+    //     // Cập nhật UI về 0
+    //     if (subtotalElement) subtotalElement.textContent = formatVND(0);
+    //     if (shippingFeeElement) shippingFeeElement.textContent = formatVND(0);
+    //     if (totalElement) totalElement.textContent = formatVND(0);
         
-        // Reset lựa chọn phí ship về Standard nhưng vẫn hiển thị phí = 0
-        if (standardRadio) {
-            standardRadio.checked = true;
-        }
-    }
+    //     // Reset lựa chọn phí ship về Standard nhưng vẫn hiển thị phí = 0
+    //     if (standardRadio) {
+    //         standardRadio.checked = true;
+    //     }
+    // }
     
     // --- HÀM 2: TÍNH TOÁN TỔNG CỘNG ---
     // --- HÀM 2: TÍNH TOÁN TỔNG CỘNG ---
-    function calculateCartTotals(cart) {
-        const totalElement = document.getElementById('cart-total');
-        const subtotalElement = document.getElementById('cart-subtotal');
-        const shippingFeeElement = document.getElementById('shipping-fee');
+    // function calculateCartTotals(cart) {
+    //     const totalElement = document.getElementById('cart-total');
+    //     const subtotalElement = document.getElementById('cart-subtotal');
+    //     const shippingFeeElement = document.getElementById('shipping-fee');
         
-        // 1. Tính tổng phụ
-        let subtotalPrice = cart.reduce((sum, item) => sum + item.priceNumeric * item.quantity, 0);
+    //     // 1. Tính tổng phụ
+    //     let subtotalPrice = cart.reduce((sum, item) => sum + item.priceNumeric * item.quantity, 0);
 
-        // 2. Tự động kiểm tra miễn phí vận chuyển và cập nhật phí hiện tại
-        // CHỈ TÍNH PHÍ VẬN CHUYỂN NẾU CÓ SẢN PHẨM TRONG GIỎ
-        if (subtotalPrice > 0) {
-            updateShippingSelection(subtotalPrice);
-        } else {
-            // Đảm bảo phí ship về 0 nếu tổng phụ = 0
-            currentShippingFee = 0; 
-        }
+    //     // 2. Tự động kiểm tra miễn phí vận chuyển và cập nhật phí hiện tại
+    //     // CHỈ TÍNH PHÍ VẬN CHUYỂN NẾU CÓ SẢN PHẨM TRONG GIỎ
+    //     if (subtotalPrice > 0) {
+    //         updateShippingSelection(subtotalPrice);
+    //     } else {
+    //         // Đảm bảo phí ship về 0 nếu tổng phụ = 0
+    //         currentShippingFee = 0; 
+    //     }
         
-        // 3. Tính Tổng cộng
-        let newTotalPrice = subtotalPrice + currentShippingFee;
+    //     // 3. Tính Tổng cộng
+    //     let newTotalPrice = subtotalPrice + currentShippingFee;
         
-        // 4. Cập nhật UI
-        if (subtotalElement) {
-            subtotalElement.textContent = formatVND(subtotalPrice);
-        }
-        if (shippingFeeElement) {
-             shippingFeeElement.textContent = formatVND(currentShippingFee);
-        }
-        if (totalElement) {
-            totalElement.textContent = formatVND(newTotalPrice);
-        }
-    }
-    // --- HÀM 3: TỰ ĐỘNG CHỌN/CẬP NHẬT PHÍ VẬN CHUYỂN ---
-    function updateShippingSelection(subtotalPrice) {
-        const standardRadio = document.getElementById('standard');
-        const expressRadio = document.getElementById('express');
-        const freeRadio = document.getElementById('free');
+    //     // 4. Cập nhật UI
+    //     if (subtotalElement) {
+    //         subtotalElement.textContent = formatVND(subtotalPrice);
+    //     }
+    //     if (shippingFeeElement) {
+    //          shippingFeeElement.textContent = formatVND(currentShippingFee);
+    //     }
+    //     if (totalElement) {
+    //         totalElement.textContent = formatVND(newTotalPrice);
+    //     }
+    // }
+    // // --- HÀM 3: TỰ ĐỘNG CHỌN/CẬP NHẬT PHÍ VẬN CHUYỂN ---
+    // function updateShippingSelection(subtotalPrice) {
+    //     const standardRadio = document.getElementById('standard');
+    //     const expressRadio = document.getElementById('express');
+    //     const freeRadio = document.getElementById('free');
         
-        if (!standardRadio) return; 
+    //     if (!standardRadio) return; 
 
-        if (subtotalPrice >= FREE_SHIPPING_THRESHOLD) {
-            if (freeRadio && !freeRadio.checked) {
-                freeRadio.checked = true;
-                currentShippingFee = 0; 
-            } else if (freeRadio && freeRadio.checked) {
-                currentShippingFee = 0;
-            }
-        } else {
-            if (freeRadio && freeRadio.checked) {
-                standardRadio.checked = true;
-                currentShippingFee = SHIPPING_STANDARD;
-            } else if (standardRadio && standardRadio.checked) {
-                currentShippingFee = SHIPPING_STANDARD;
-            } else if (expressRadio && expressRadio.checked) {
-                currentShippingFee = SHIPPING_EXPRESS;
-            }
-        }
-    }
+    //     if (subtotalPrice >= FREE_SHIPPING_THRESHOLD) {
+    //         if (freeRadio && !freeRadio.checked) {
+    //             freeRadio.checked = true;
+    //             currentShippingFee = 0; 
+    //         } else if (freeRadio && freeRadio.checked) {
+    //             currentShippingFee = 0;
+    //         }
+    //     } else {
+    //         if (freeRadio && freeRadio.checked) {
+    //             standardRadio.checked = true;
+    //             currentShippingFee = SHIPPING_STANDARD;
+    //         } else if (standardRadio && standardRadio.checked) {
+    //             currentShippingFee = SHIPPING_STANDARD;
+    //         } else if (expressRadio && expressRadio.checked) {
+    //             currentShippingFee = SHIPPING_EXPRESS;
+    //         }
+    //     }
+    // }
 
-    // --- HÀM 4: XỬ LÝ KHI NGƯỜI DÙNG THAY ĐỔI PHÍ VẬN CHUYỂN ---
-    function handleShippingChange(event) {
-        const selectedId = event.target.id;
-        let fee = 0;
+    // // --- HÀM 4: XỬ LÝ KHI NGƯỜI DÙNG THAY ĐỔI PHÍ VẬN CHUYỂN ---
+    // function handleShippingChange(event) {
+    //     const selectedId = event.target.id;
+    //     let fee = 0;
 
-        switch (selectedId) {
-            case 'standard':
-                fee = SHIPPING_STANDARD;
-                break;
-            case 'express':
-                fee = SHIPPING_EXPRESS;
-                break;
-            case 'free':
-                const cart = getParsedCart();
-                let subtotal = cart.reduce((sum, item) => sum + item.priceNumeric * item.quantity, 0);
+    //     switch (selectedId) {
+    //         case 'standard':
+    //             fee = SHIPPING_STANDARD;
+    //             break;
+    //         case 'express':
+    //             fee = SHIPPING_EXPRESS;
+    //             break;
+    //         case 'free':
+    //             const cart = getParsedCart();
+    //             let subtotal = cart.reduce((sum, item) => sum + item.priceNumeric * item.quantity, 0);
 
-                if (subtotal >= FREE_SHIPPING_THRESHOLD) {
-                    fee = 0;
-                } else {
-                    document.getElementById('standard').checked = true;
-                    fee = SHIPPING_STANDARD;
-                    alert("Đơn hàng chưa đạt " + formatVND(FREE_SHIPPING_THRESHOLD) + " để được miễn phí vận chuyển. Đã chuyển về Vận chuyển tiêu chuẩn.");
-                }
-                break;
-        }
+    //             if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+    //                 fee = 0;
+    //             } else {
+    //                 document.getElementById('standard').checked = true;
+    //                 fee = SHIPPING_STANDARD;
+    //                 alert("Đơn hàng chưa đạt " + formatVND(FREE_SHIPPING_THRESHOLD) + " để được miễn phí vận chuyển. Đã chuyển về Vận chuyển tiêu chuẩn.");
+    //             }
+    //             break;
+    //     }
         
-        currentShippingFee = fee;
-        const currentCart = getParsedCart();
-        calculateCartTotals(currentCart);
-    }
+    //     currentShippingFee = fee;
+    //     const currentCart = getParsedCart();
+    //     calculateCartTotals(currentCart);
+    // }
     
     // --- HÀM XỬ LÝ SỐ LƯỢNG VÀ XÓA SẢN PHẨM ---
-    function handleQuantityChange(event) {
-        const input = event.target;
-        const productId = input.dataset.id; 
-        let newQuantity = parseInt(input.value);
+    // function handleQuantityChange(event) {
+    //     const input = event.target;
+    //     const productId = input.dataset.id; 
+    //     let newQuantity = parseInt(input.value);
         
-        if (isNaN(newQuantity) || newQuantity < 1) {
-            newQuantity = 1;
-            input.value = 1;
-        }
+    //     if (isNaN(newQuantity) || newQuantity < 1) {
+    //         newQuantity = 1;
+    //         input.value = 1;
+    //     }
         
-        let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
-        const itemIndex = cart.findIndex(item => item.id === productId);
+    //     let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+    //     const itemIndex = cart.findIndex(item => item.id === productId);
 
-        if (itemIndex > -1) {
-            cart[itemIndex].quantity = newQuantity;
+    //     if (itemIndex > -1) {
+    //         cart[itemIndex].quantity = newQuantity;
             
-            // Lấy giá trị số (priceValue) và chuyển sang số để tính toán
-            const itemPriceNumeric = parseInt(cart[itemIndex].priceValue) || 0;
-            const newItemTotal = itemPriceNumeric * newQuantity;
+    //         // Lấy giá trị số (priceValue) và chuyển sang số để tính toán
+    //         const itemPriceNumeric = parseInt(cart[itemIndex].priceValue) || 0;
+    //         const newItemTotal = itemPriceNumeric * newQuantity;
             
-            const itemTotalElement = input.closest('.cart-item').querySelector('.item-total');
-            if (itemTotalElement) {
-                itemTotalElement.textContent = formatVND(newItemTotal);
-            }
+    //         const itemTotalElement = input.closest('.cart-item').querySelector('.item-total');
+    //         if (itemTotalElement) {
+    //             itemTotalElement.textContent = formatVND(newItemTotal);
+    //         }
 
-            localStorage.setItem('shoppingCart', JSON.stringify(cart));
+    //         localStorage.setItem('shoppingCart', JSON.stringify(cart));
             
-            // Tính lại Tổng cộng toàn bộ giỏ hàng
-            const cartForCalculation = getParsedCart();
-            calculateCartTotals(cartForCalculation);
-        }
-    }
+    //         // Tính lại Tổng cộng toàn bộ giỏ hàng
+    //         const cartForCalculation = getParsedCart();
+    //         calculateCartTotals(cartForCalculation);
+    //     }
+    // }
     
     function removeItemFromCart(event) {
         // LỖI Ở ĐÂY: Loại bỏ parseInt() để giữ nguyên kiểu dữ liệu (String/Number)
@@ -995,325 +1050,6 @@
     // Tải giỏ hàng khi trang được load
     window.addEventListener('DOMContentLoaded', loadCart);
 </script> 
-
-<script>
-  // Danh sách sản phẩm từ category.html
-  var productData = [
-    {
-      id: 1,
-      title: "Xe Đạp Đường Phố Touring TRINX Free 2.2 – Phanh Đĩa, Bánh 700C",
-      price: 6490000,
-      originalPrice: 7490000,
-      image: "assets/img/product/13.jpg",
-      badge: "-13%",
-      category: "Bộ sưu tập xe xịn",
-      description: "Xe Đạp Đường Phố Touring TRINX Free 2.2 là sự kết hợp hoàn hảo giữa thiết kế đẹp mắt, chất lượng vượt trội và hiệu suất vận hành ấn tượng. Với khung nhôm TRINX cực kỳ nhẹ nhàng và bền bỉ, chiếc xe này mang lại sự ổn định và linh hoạt trên mọi loại địa hình.",
-      rating: 4.8,
-      reviews: 42,
-      aosDelay: 0
-    },
-    {
-      id: 2,
-      title: "Xe Đạp Đường Trường Road JAVA Auriga R5 - Phanh Đĩa, Bánh 700C",
-      price: 7890000,
-      originalPrice: 12890000,
-      image: "assets/img/product/37.jpg",
-      badge: "-35%",
-      category: "Bộ sưu tập xe xịn",
-      description: "Chinh phục mọi cung đường với JAVA Auriga R5.Nếu bạn là một người yêu tốc độ và muốn có những chuyến đạp xe thật 'phê', thì chiếc JAVA Auriga R5 này chính là người bạn đồng hành lý tưởng đó. Cảm giác lướt đi trên đường trường sẽ mượt mà và đầy phấn khích, đảm bảo bạn sẽ có những trải nghiệm khó quên.",
-      rating: 4.6,
-      reviews: 28,
-      aosDelay: 100
-    },
-    {
-      id: 3,
-      title: "Xe Đạp Đường Phố Touring LIV Alight 4 Disc - Phanh Đĩa, Bánh 700C - 2025",
-      price: 7000000,
-      originalPrice: 9000000,
-      image: "assets/img/product/6.jpg",
-      badge: "-35%",
-      category: "Bộ sưu tập xe xịn",
-      description: "LIV Alight 4 Disc 2025 không chỉ là một chiếc xe đạp đường phố thông thường, mà còn là tuyên ngôn cá tính dành cho những ai yêu thích sự năng động và hiện đại. Với thiết kế khung nhẹ, hệ thống truyền động linh hoạt và phanh đĩa an toàn, mẫu xe này là lựa chọn lý tưởng cho những chuyến đi trong thành phố, dạo chơi cuối tuần hay thậm chí là tập luyện thể dục hàng ngày.",
-      rating: 4.9,
-      reviews: 56,
-      aosDelay: 200
-    },
-    {
-      id: 4,
-      title: "Xe Đạp Đường Phố Fixed Gear VINBIKE Megatron – Bánh 700C",
-      price: 3990000,
-      originalPrice: null,
-      image: "assets/img/product/21.jpg",
-      badge: "Hàng hiếm",
-      category: "Bộ sưu tập xe xịn",
-      description: "Xe Đạp Đường Phố Touring VINBIKE Megatron là một tác phẩm FIXED GEAR nghệ thuật đầy cá tính, được chăm chút tỉ mỉ từng chi tiết. Đây là mẫu xe fixed gear đầu tiên của Trai đẹp bán xe đẹp, mang đậm tính đổi mới và sáng tạo.",
-      rating: 4.7,
-      reviews: 35,
-      aosDelay: 300
-    },
-    {
-      id: 5,
-      title: "Xe Đạp Đường Phố Touring JAVA Wahoo City - Phanh Đĩa, Bánh 700C",
-      price: 5990000,
-      originalPrice: 6990000,
-      image: "assets/img/product/22.jpg",
-      badge: null,
-      category: "Mua nhiều nhất",
-      description: "JAVA Wahoo City là mẫu xe đạp đường phố được thiết kế dành riêng cho nhu cầu di chuyển hằng ngày trong thành phố – từ đi làm, đi học cho đến luyện tập thể dục. Xe mang kiểu dáng tối giản, hiện đại với ba màu sắc thời thượng: Cát (Sand), Xám (Grey) và Trắng (White) – phù hợp với nhiều phong cách cá nhân.",
-      rating: 4.5,
-      reviews: 23,
-      aosDelay: 400
-    },
-    {
-      id: 6,
-      title: "Xe Đạp Đường Phố Touring LIV Alight 2 Disc - Phanh Đĩa, Bánh 700C - 2023",
-      price: 7000000,
-      originalPrice: 9000000,
-      image: "assets/img/product/36.jpg",
-      badge: "-35%",
-      category: "Những mẫu thiết kế đẹp",
-      description: "LIV Alight 2 – Bánh 700C – 2023 là mẫu xe đạp touring đường phố hiện đại, được thiết kế riêng dành cho phái nữ. Với kiểu dáng nhẹ nhàng, hiệu suất vượt trội và sự thoải mái trong từng chi tiết, mẫu xe này mang lại trải nghiệm tuyệt vời cho các hành trình ngắn hay dài ngày trong môi trường đô thị.",
-      rating: 4.8,
-      reviews: 47,
-      aosDelay: 500
-    },
-    {
-      id: 7,
-      title: "Xe Đạp Đường Trường Road JAVA Siluro6-TOP-RX - Phanh Đĩa, Bánh 700C",
-      price: 15990000,
-      originalPrice: null,
-      image: "assets/img/product/24.jpg",
-      badge: "Hot Trend",
-      category: "Những mẫu thiết kế đẹp",
-      description: "JAVA Siluro6-TOP-RX là dòng xe đạp đường trường cao cấp, được thiết kế cho những ai yêu thích tốc độ và trải nghiệm đạp xe hiệu quả. Với thiết kế thể thao mạnh mẽ, hệ truyền động 24 tốc độ và cấu hình tối ưu, chiếc xe này không chỉ phù hợp để luyện tập hàng ngày mà còn sẵn sàng cùng bạn chinh phục những cung đường dài đầy thử thách.",
-      rating: 4.6,
-      reviews: 31,
-      aosDelay: 600
-    },
-    {
-      id: 8,
-      title: "Xe Đạp Đường Phố Touring GIANT Escape 2 Disc - Phanh Đĩa, Bánh 700C - 2025",
-      price: 5000000,
-      originalPrice: 12000000,
-      image: "assets/img/product/35.jpg",
-      badge: "-60%",
-      category: "Bán chạy",
-      description: "Dòng xe đạp đường phố GIANT Escape 2 Disc - Phanh Đĩa, Bánh 700C - 2025 là một sự lựa chọn hoàn hảo cho người “phố” yêu xe. Với thiết kế thanh lịch, khung nhôm ALUXX cao cấp và hệ thống phanh đĩa mạnh mẽ, chiếc xe này mang lại trải nghiệm lái mượt mà và an toàn trên mọi hành trình, bất kể là đi học, đi làm hay chỉ đơn giản là dạo chơi quanh thành phố. Không chỉ dành cho những người đam mê xe đạp, mà đây còn là phương tiện lý tưởng cho những ai muốn sở hữu một phương tiện di chuyển linh hoạt, thân thiện với môi trường và tiết kiệm chi phí.",
-      rating: 4.7,
-      reviews: 39,
-      aosDelay: 700
-    }
-  ];
-  // === Hàm format VND ===
-  function formatVND(n) {
-    return Number(n).toLocaleString('vi-VN');
-  }
-  // === Hàm render product card giống category ===
-  function renderProductCard(product) {
-    const originalPriceHtml = product.originalPrice
-      ? `<span class="original-price">${formatVND(product.originalPrice)} VND</span>`
-      : '';
-    const badgeHtml = product.badge
-      ? `<div class="product-badge ${product.badge.includes('%') ? 'sale' : 'new'}">${product.badge}</div>`
-      : '';
-    return `
-      <div class="col-6 col-xl-4">
-        <div class="product-card" data-id="${product.id}" data-description="${product.description || ''}">
-          <a href="javascript:void(0);" class="product-image-link">
-            <div class="product-image">
-              <img src="${product.image}" class="main-image img-fluid" alt="${product.title}">
-              <div class="product-overlay">
-                <div class="product-actions">
-                  <button type="button" class="action-btn" data-bs-toggle="tooltip" title="Quick View">
-                    <i class="bi bi-eye"></i>
-                  </button>
-                  <button type="button" class="action-btn add-to-cart-btn" data-id="${product.id}" data-bs-toggle="tooltip" title="Add to Cart">
-                    <i class="bi bi-cart-plus"></i>
-                  </button>
-                </div>
-              </div>
-              ${badgeHtml}
-            </div>
-          </a>
-          <div class="product-details">
-            <div class="product-category">${product.category || ''}</div>
-            <h4 class="product-title"><a href="javascript:void(0);" data-id="${product.id}">${product.title}</a></h4>
-            <div class="product-meta">
-              <div class="product-price">${formatVND(product.price)} VND ${originalPriceHtml}</div>
-              <div class="product-rating">
-                <i class="bi bi-star-fill"></i>
-                ${product.rating || 0} <span>(${product.reviews || 0})</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-  // === Hàm add to cart ===
-  function addToCart(productId) {
-    const product = productData.find(p => p.id === parseInt(productId));
-    if (!product) return;
-    let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
-    const existingItem = cart.find(item => item.id === product.id);
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      cart.push({
-        id: product.id,
-        title: product.title,
-        price: product.price,
-        image: product.image,
-        quantity: 1,
-      });
-    }
-    localStorage.setItem('shoppingCart', JSON.stringify(cart));
-    window.location.href = 'cart.html';
-  }
-  // === Attach cart listeners ===
-  function attachCartListeners() {
-    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-      button.addEventListener('click', function(event) {
-        const productId = event.currentTarget.dataset.id;
-        addToCart(productId);
-      });
-    });
-  }
-  // === Attach quick view listeners ===
-  function attachQuickViewListeners() {
-    const quickViewModalEl = document.getElementById("quickViewModal");
-    const quickViewTriggers = document.querySelectorAll('.product-card .product-image-link, .product-card .product-title a');
-    quickViewTriggers.forEach(trigger => {
-      trigger.addEventListener('click', function (e) {
-        e.preventDefault();
-        const card = trigger.closest('.product-card');
-        if (!card) return;
-        if (quickViewModalEl && typeof bootstrap !== 'undefined') {
-          const image = card.querySelector('.main-image')?.src || '';
-          const title = card.querySelector('.product-title a')?.textContent || '';
-          const category = card.querySelector('.product-category')?.textContent || '';
-          const price = card.querySelector('.product-price')?.childNodes[0]?.textContent.trim() || '';
-          const originalPrice = card.querySelector('.original-price')?.textContent || '';
-          const badge = card.querySelector('.product-badge')?.textContent || '';
-          const rating = card.querySelector('.product-rating')?.childNodes[1]?.textContent.trim() || '';
-          const reviews = card.querySelector('.product-rating span')?.textContent || '';
-          const description = card.dataset.description || "Mô tả: Xe đạp chất lượng cao.";
-          // Gán vào modal
-          const qImg = document.getElementById('quickViewImage');
-          const qCat = document.getElementById('quickViewCategory');
-          const qTitle = document.getElementById('quickViewTitle');
-          const qPrice = document.getElementById('quickViewPrice');
-          const qOrig = document.getElementById('quickViewOriginalPrice');
-          const qBadge = document.getElementById('quickViewBadge');
-          const qDesc = document.getElementById('quickViewDescription');
-          const qRating = document.getElementById('quickViewRating');
-          const qReviews = document.getElementById('quickViewReviews');
-          const qAddBtn = document.getElementById('quickViewAddToCart');
-          if (qImg) qImg.src = image;
-          if (qCat) qCat.textContent = category;
-          if (qTitle) qTitle.textContent = title;
-          if (qPrice) qPrice.textContent = price;
-          if (qOrig) qOrig.textContent = originalPrice;
-          if (qBadge) qBadge.textContent = badge;
-          if (qDesc) qDesc.textContent = description;
-          if (qRating) qRating.textContent = rating;
-          if (qReviews) qReviews.textContent = reviews;
-          if (qAddBtn) {
-            qAddBtn.onclick = () => {
-              const productId = card.dataset.id;
-              addToCart(productId);
-              const modalInstance = bootstrap.Modal.getInstance(quickViewModalEl);
-              if (modalInstance) modalInstance.hide();
-            };
-          }
-          const quickViewModal = bootstrap.Modal.getOrCreateInstance(quickViewModalEl);
-          quickViewModal.show();
-        }
-      });
-    });
-  }
-  document.addEventListener("DOMContentLoaded", function() {
-    const searchInputs = document.querySelectorAll('.search-form input[type="text"]');
-    const searchForms = document.querySelectorAll('.search-form');
-    const searchResultsSection = document.getElementById('search-results');
-    const searchResultsGrid = document.getElementById('search-results-grid');
-    const mainSections = document.querySelectorAll('main > *:not(#search-results)');
-    // Prevent form submission
-    searchForms.forEach(form => {
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-      });
-    });
-    // Add input event listener for live search
-    searchInputs.forEach(input => {
-      input.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase().trim();
-        if (searchTerm === '') {
-          // Hiển thị lại các phần chính và ẩn kết quả tìm kiếm
-          mainSections.forEach(section => section.style.display = '');
-          searchResultsSection.style.display = 'none';
-          return;
-        }
-        // Ẩn các phần chính
-        mainSections.forEach(section => section.style.display = 'none');
-        // Lọc sản phẩm từ productData
-        const filteredProducts = productData.filter(product => product.title.toLowerCase().includes(searchTerm));
-        // Xóa kết quả cũ
-        searchResultsGrid.innerHTML = '';
-        // Render sản phẩm lọc được
-        filteredProducts.forEach(product => {
-          const productHTML = renderProductCard(product);
-          searchResultsGrid.insertAdjacentHTML('beforeend', productHTML);
-        });
-        // Attach listeners sau khi render
-        attachQuickViewListeners();
-        attachCartListeners();
-        // Hiển thị section kết quả
-        searchResultsSection.style.display = filteredProducts.length > 0 ? 'block' : 'none';
-      });
-    });
-  });
-</script>
-<!-- Modal Quick View -->
-<div class="modal fade" id="quickViewModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header border-0">
-        <h4 class="mb-2" id="quickViewCategory"></h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <!-- Ảnh sản phẩm -->
-          <div class="col-md-6 text-center">
-            <img id="quickViewImage" src="" class="img-fluid rounded" alt="Product Image">
-          </div>
-          <!-- Thông tin sản phẩm -->
-          <div class="col-md-6">
-            <div class="mb-2">
-              <span class="badge bg-primary" id="quickViewBadge"></span>
-            </div>
-            <h5 class="modal-title" id="quickViewTitle"></h5>
-            <p class="text-muted mb-3" id="quickViewDescription"></p>
-            <div class="mb-3">
-              <span class="fs-4 fw-bold text-danger" id="quickViewPrice"></span>
-              <span class="text-decoration-line-through text-muted ms-2" id="quickViewOriginalPrice"></span>
-            </div>
-            <div class="mb-3">
-              <i class="bi bi-star-fill text-warning"></i>
-              <span id="quickViewRating"></span>
-              <small class="text-muted">(<span id="quickViewReviews"></span> đánh giá)</small>
-            </div>
-            <button class="btn btn-success btn-lg" id="quickViewAddToCart">
-              <i class="bi bi-cart-plus"></i> Thêm vào giỏ hàng
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 </body>
 
 </html>
