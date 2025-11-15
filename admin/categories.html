@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Loại Xe - CRUD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+   body { background-color: #f0f2f5; }
+
+    /* SIDEBAR */
+    #sidebar { min-width: 250px; max-width: 250px; background-color: #ffffff; height: 100vh; position: fixed; top: 0; left: 0; box-shadow: 0 0 10px rgba(0,0,0,0.05); padding-top: 20px; }
+
+    #content { margin-left: 250px; padding: 30px; }
+
+    .sidebar-header h3 { color: #007bff; font-weight: bold; }
+
+    .sidebar-list a { padding: 10px 20px; color: #495057; display: block; text-decoration: none; transition: all 0.2s; }
+
+    .sidebar-list a:hover,
+        /* Đặt active class cho trang hiện tại */
+        .sidebar-list a[href='categories.html'] { background: #e9f2ff; color: #007bff; border-left: 5px solid #007bff; padding-left: 15px; }
+        .sidebar-list .fa-icon { width: 25px; }
+
+    /* CARD LOẠI XE */
+    .bike-type-card { 
+        border-radius: 12px; 
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06); /* nhẹ giống code 2 */
+        border: none; 
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        font-size: 14px; /* đồng bộ chữ nhỏ */
+    }
+
+    .bike-type-card:hover { 
+        transform: translateY(-4px); 
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12); 
+    }
+
+    .bike-type-card .card-body { 
+        padding: 18px !important; /* giảm padding */
+    }
+
+    /* Icon của card */
+    .icon-wrapper { 
+        width: 50px;
+        height: 50px;
+        border-radius: 10px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        font-size: 1.4rem; 
+        color: #fff; 
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        flex-shrink: 0; 
+    }
+
+    .bg-gradient-orange { background: linear-gradient(135deg, #ff9500, #ffcc00); }
+    .bg-gradient-green  { background: linear-gradient(135deg, #4CAF50, #8BC34A); }
+    .bg-gradient-blue   { background: linear-gradient(135deg, #2196F3, #03A9F4); }
+
+    .bike-type-card .card-title { 
+        font-size: 1.15rem; 
+        font-weight: 600; 
+        color: #343a40; 
+        margin-bottom: 0.2rem; 
+    }
+
+    .bike-type-card .text-muted { 
+        font-size: 0.8rem; 
+        color: #666; 
+    }
+
+    .bike-type-card .row.align-items-center.mt-auto { 
+        padding-top: 15px; 
+        border-top: 1px solid #eee; 
+        margin-top: 18px; 
+    }
+
+    .bike-type-card .fw-bold { 
+        font-size: 2rem; 
+        color: #212529; 
+        margin-top: 5px; 
+    }
+
+    .bike-type-card .btn-outline-info, 
+    .bike-type-card .btn-outline-danger { 
+        border-radius: 8px; 
+        font-size: 0.85rem; 
+        padding: 8px 12px; 
+    }
+</style>
+
+</head>
+<body>
+<div class="d-flex">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+        <div class="sidebar-header text-center mb-4">
+            <h3><i class="fas fa-bicycle"></i> Bike Admin</h3>
+        </div>
+        <ul class="list-unstyled sidebar-list">
+            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt fa-icon"></i> Trang chủ</a></li>
+            <li><a href="bikes.html"><i class="fas fa-motorcycle fa-icon"></i> Quản lý Xe Đạp</a></li>
+            <li><a href="categories.html" class="active"><i class="fas fa-sitemap fa-icon"></i> Loại Xe</a></li>
+            <li><a href="orders.html"><i class="fas fa-receipt fa-icon"></i> Đơn hàng</a></li>
+            <li><a href="customers.html"><i class="fas fa-users fa-icon"></i> Khách hàng</a></li>
+                                    <li><a href="stock.html"><i class="fas fa-warehouse fa-icon"></i> Tồn kho</a></li>
+            <li><a href="stock_in.html"><i class="fas fa-truck-loading fa-icon"></i> Nhập Hàng Mới</a></li>
+
+            <li class="mt-4"><a href="admin-login.html"><i class="fas fa-sign-out-alt fa-icon"></i> Đăng xuất</a></li>
+        </ul>
+    </div>
+
+    <!-- CONTENT -->
+    <div id="content" class="w-100 p-4">
+
+        <!-- TITLE -->
+        <div class="card bg-white shadow-sm border-0 mb-4 p-4" style="border-radius:12px;">
+            <h2 class="fw-bold mb-0" style="font-size:1.8rem;color:#343a40;">Quản lý Loại Xe</h2>
+        </div>
+
+        <!-- SEARCH + ADD -->
+        <div class="d-flex align-items-center mb-4 p-3 bg-white shadow-sm" style="border-radius:12px;">
+            <div class="d-flex flex-grow-1 align-items-center me-4">
+                <input type="text" class="form-control form-control-lg me-3 flex-fill" 
+                       placeholder="Tìm theo mô tả..." id="searchDescInput">
+                <button class="btn btn-dark btn-lg me-2" id="searchButton" style="width:100px;">
+                    <i class="fas fa-search"></i> 
+                </button>
+                <button class="btn btn-outline-secondary btn-lg" id="resetButton" style="width:100px;">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+            <button class="btn btn-warning btn-lg fw-bold text-white shadow-sm" id="addButton">
+                <i class="fas fa-plus-circle me-2"></i> Thêm Loại Mới
+            </button>
+        </div>
+
+        <!-- CARD CONTAINER -->
+        <div class="row g-4" id="categoryCardsContainer"></div>
+    </div>
+</div>
+
+<!-- MODAL THÊM / SỬA LOẠI XE -->
+<div class="modal fade" id="categoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="categoryModalLabel">Thêm Loại Xe</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="categoryForm">
+                    <div class="mb-3">
+                        <label class="form-label">Tên loại xe</label>
+                        <input type="text" id="categoryName" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mô tả</label>
+                        <textarea id="categoryDesc" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+    <label class="form-label">Số lượng</label>
+    <input type="number" id="categoryCount" class="form-control" min="0">
+</div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button class="btn btn-primary" id="saveCategoryButton">Lưu</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryCardsContainer = document.getElementById('categoryCardsContainer'); 
+    const categoryModal = document.getElementById('categoryModal'); 
+    const modalTitle = document.getElementById('categoryModalLabel');
+    const categoryForm = document.getElementById('categoryForm');
+    const searchDescInput = document.getElementById('searchDescInput');
+    const searchButton = document.getElementById('searchButton');
+    const resetButton = document.getElementById('resetButton');
+    const addButton = document.getElementById('addButton');
+
+    let editingCategoryId = null;
+
+    // ===== LOAD DATA =====
+    let categories = JSON.parse(localStorage.getItem('categoriesData') || '[]');
+    if (categories.length === 0) {
+        categories = [
+            { id: 'LC01', name: 'Xe đạp địa hình', desc: 'Địa hình gồ ghề', count: 45, color: 'orange', icon: 'fas fa-bicycle' },
+            { id: 'LC02', name: 'Xe đạp đua', desc: 'Đường bằng phẳng', count: 30, color: 'green', icon: 'fas fa-bicycle' },
+            { id: 'LC03', name: 'Xe đạp gấp', desc: 'Có thể gấp lại', count: 25, color: 'blue', icon: 'fas fa-bicycle' }
+        ];
+        localStorage.setItem('categoriesData', JSON.stringify(categories));
+    }
+
+    // ===== SAVE FUNCTION =====
+    function saveCategories() {
+        localStorage.setItem('categoriesData', JSON.stringify(categories));
+    }
+
+    // ===== CREATE ID =====
+    function generateNextCategoryId() {
+        if (categories.length === 0) return 'LC01';
+        let maxNum = Math.max(...categories.map(c => parseInt(c.id.replace('LC','')) || 0));
+        return 'LC' + String(maxNum + 1).padStart(2,'0');
+    }
+
+    // ===== RENDER =====
+    function renderCategories(list = categories) {
+        categoryCardsContainer.innerHTML = '';
+        list.forEach(cat => {
+            categoryCardsContainer.insertAdjacentHTML('beforeend', `
+                <div class="col-lg-4 col-md-6" data-id="${cat.id}">
+                    <div class="bike-type-card card shadow-sm border-0 h-100">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex align-items-start mb-3">
+                                <div class="icon-wrapper bg-gradient-${cat.color} text-white me-3">
+                                    <i class="${cat.icon}"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="card-title mb-1">${cat.name}</h5>
+                                    <small class="text-muted">ID: ${cat.id}</small>
+                                </div>
+                            </div>
+
+                            <p class="card-text">${cat.desc}</p>
+
+                            <div class="row align-items-center mt-auto pt-3 border-top">
+                                <div class="col-7">
+                                    <p class="mb-0 text-muted">Số lượng xe:</p>
+                                    <h4 class="mb-0 fw-bold text-dark">${cat.count}</h4>
+                                </div>
+                                <div class="col-5 text-end">
+                                    <button class="btn btn-sm btn-outline-info edit-btn" data-id="${cat.id}">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${cat.id}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            `);
+        });
+        attachCardEvents();
+    }
+
+    // ===== ATTACH EVENTS TO EDIT & DELETE =====
+    function attachCardEvents() {
+        document.querySelectorAll(".edit-btn").forEach(btn => {
+            btn.onclick = () => {
+                const id = btn.dataset.id;
+                const cate = categories.find(c => c.id === id);
+                editingCategoryId = id;
+
+                // Gán dữ liệu lên modal
+                modalTitle.textContent = "Sửa Loại Xe";
+                document.getElementById('categoryName').value = cate.name;
+                document.getElementById('categoryDesc').value = cate.desc;
+                document.getElementById('categoryCount').value = cate.count;
+
+                new bootstrap.Modal(categoryModal).show();
+            };
+        });
+
+        document.querySelectorAll(".delete-btn").forEach(btn => {
+            btn.onclick = () => {
+                const id = btn.dataset.id;
+                if (confirm("Bạn có chắc muốn xóa loại xe này?")) {
+                    categories = categories.filter(c => c.id !== id);
+                    saveCategories();
+                    renderCategories();
+                    alert("Đã xóa thành công!");
+                }
+            };
+        });
+    }
+
+    // ===== ADD NEW =====
+    addButton.addEventListener('click', () => {
+        editingCategoryId = null;
+        modalTitle.textContent = "Thêm Loại Xe Mới";
+        categoryForm.reset();
+        document.getElementById('categoryCount').value = 0;
+        new bootstrap.Modal(categoryModal).show();
+    });
+
+    // ===== SAVE BUTTON =====
+    document.getElementById('saveCategoryButton').addEventListener('click', () => {
+        const name = document.getElementById('categoryName').value.trim();
+        const desc = document.getElementById('categoryDesc').value.trim();
+        const count = parseInt(document.getElementById('categoryCount').value) || 0;
+
+        if (!name || !desc) {
+            alert("Vui lòng nhập đầy đủ thông tin!");
+            return;
+        }
+
+        if (editingCategoryId) {
+            const cate = categories.find(c => c.id === editingCategoryId);
+            cate.name = name;
+            cate.desc = desc;
+            cate.count = count;
+        } else {
+            categories.push({
+                id: generateNextCategoryId(),
+                name,
+                desc,
+                count,
+                color: 'blue',
+                icon: 'fas fa-bicycle'
+            });
+        }
+
+        saveCategories();
+        renderCategories();
+        bootstrap.Modal.getInstance(categoryModal).hide();
+    });
+
+    // ===== SEARCH =====
+    searchButton.addEventListener('click', () => {
+        const query = searchDescInput.value.toLowerCase();
+        renderCategories(categories.filter(c => c.desc.toLowerCase().includes(query)));
+    });
+
+    resetButton.addEventListener('click', () => {
+        searchDescInput.value = '';
+        renderCategories();
+    });
+
+    renderCategories();
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Đơn hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* CSS tương tự dashboard.html */
+        body { background-color: #f0f2f5; }
+        #sidebar { min-width: 250px; max-width: 250px; background-color: #ffffff; height: 100vh; position: fixed; top: 0; left: 0; box-shadow: 0 0 10px rgba(0,0,0,0.05); padding-top: 20px; }
+        #content { margin-left: 250px; padding: 30px; }
+        .sidebar-header h3 { color: #007bff; font-weight: bold; }
+        .sidebar-list a { padding: 10px 20px; color: #495057; display: block; text-decoration: none; transition: all 0.2s; }
+        .sidebar-list a:hover,
+        /* Đặt active class cho trang hiện tại */
+        .sidebar-list a[href='orders.html'] { background: #e9f2ff; color: #007bff; border-left: 5px solid #007bff; padding-left: 15px; }
+        .sidebar-list .fa-icon { width: 25px; }
+
+        /* BỔ SUNG CSS CHO CHỨC NĂNG CHI TIẾT ĐƠN HÀNG */
+        .table th, .table td {
+            vertical-align: middle; /* Căn giữa nội dung bảng */
+        }
+        
+        /* Đảm bảo badge màu vàng có chữ đen */
+        .badge.bg-warning { background-color: #ffc100 !important; color: #343a40 !important; font-weight: bold; }
+        .badge.bg-danger { font-weight: bold; } /* Style cho Đã hủy */
+        .badge.bg-info { background-color: #0dcaf0 !important; color: #343a40 !important; font-weight: bold; } /* Style cho Đang giao */
+        .badge.bg-primary { font-weight: bold; } /* Style cho Đã hoàn thành */
+
+        /* Style cho badge trong Modal */
+        .status-badge-modal {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .status-badge-modal.bg-warning { background-color: #ffc100 !important; color: #343a40 !important; }
+        .status-badge-modal.bg-success,
+        .status-badge-modal.bg-danger,
+        .status-badge-modal.bg-info,
+        .status-badge-modal.bg-primary { color: #fff !important; }
+
+    </style>
+</head>
+<body>
+
+<div class="d-flex">
+    <div id="sidebar">
+        <div class="sidebar-header text-center mb-4"><h3><i class="fas fa-bicycle"></i> Bike Admin</h3></div>
+        <ul class="list-unstyled sidebar-list">
+            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt fa-icon"></i> Trang chủ</a></li>
+            <li><a href="bikes.html"><i class="fas fa-motorcycle fa-icon"></i> Quản lý Xe Đạp</a></li>
+            <li><a href="categories.html"><i class="fas fa-sitemap fa-icon"></i> Loại Xe</a></li>
+            <li><a href="orders.html" class="active"><i class="fas fa-receipt fa-icon"></i> Đơn hàng</a></li>
+            <li><a href="customers.html"><i class="fas fa-users fa-icon"></i> Khách hàng</a></li>
+            <li><a href="stock.html"><i class="fas fa-warehouse fa-icon"></i> Tồn kho</a></li>
+            <li><a href="stock_in.html"><i class="fas fa-truck-loading fa-icon"></i> Nhập Hàng Mới</a></li>
+          <li class="mt-4"><a href="admin-login.html"><i class="fas fa-sign-out-alt fa-icon"></i> Đăng xuất</a></li>
+        </ul>
+    </div>
+    <div id="content" class="w-100">
+        <nav class="navbar navbar-light bg-white mb-5 rounded shadow-sm">
+            <div class="container-fluid">
+                <span class="navbar-brand h1 mb-0 text-primary">Quản Lý Đơn Hàng</span>
+            </div>
+        </nav>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white">
+                <h5 class="mb-0 text-muted">Danh sách Đơn hàng gần đây</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Mã Đơn</th>
+                            <th>Khách hàng</th>
+                            <th>Ngày đặt</th>
+                            <th class="text-end">Tổng tiền</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center">Hành động</th>
+                        </tr>
+                    </thead>
+<tbody>
+    <tr>
+        <td>#DH0012</td>
+        <td>Nguyễn Văn Đạt</td>
+        <td>11/11/2025</td>
+        <td class="text-end fw-bold">9,990,000₫</td> <td class="text-center"><span class="badge bg-warning text-dark">Chờ xác nhận</span></td>
+        <td class="text-center">
+            <button class="btn btn-sm btn-info detail-btn" data-bs-toggle="modal" data-bs-target="#orderDetailModal" data-id="#DH0012">
+                <i class="fas fa-eye"></i> Chi tiết
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td>#DH0011</td>
+        <td>Trần Thị Đẹp</td>
+        <td>10/11/2025</td>
+        <td class="text-end fw-bold">7,700,000₫</td> <td class="text-center"><span class="badge bg-success">Đã giao</span></td>
+        <td class="text-center">
+            <button class="btn btn-sm btn-info detail-btn" data-bs-toggle="modal" data-bs-target="#orderDetailModal" data-id="#DH0011">
+                <i class="fas fa-eye"></i> Chi tiết
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td>#DH0010</td>
+        <td>Phạm Thị Nhung</td>
+        <td>09/11/2025</td>
+        <td class="text-end fw-bold">5,990,000₫</td> <td class="text-center"><span class="badge bg-danger">Đã hủy</span></td>
+        <td class="text-center">
+            <button class="btn btn-sm btn-info detail-btn" data-bs-toggle="modal" data-bs-target="#orderDetailModal" data-id="#DH0010">
+                <i class="fas fa-eye"></i> Chi tiết
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td>#DH0009</td>
+        <td>Lê Văn Tèo Em</td>
+        <td>08/11/2025</td>
+        <td class="text-end fw-bold">10,750,000₫</td> <td class="text-center"><span class="badge bg-info">Đang giao</span></td>
+        <td class="text-center">
+            <button class="btn btn-sm btn-info detail-btn" data-bs-toggle="modal" data-bs-target="#orderDetailModal" data-id="#DH0009">
+                <i class="fas fa-eye"></i> Chi tiết
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td>#DH0008</td>
+        <td>Nguyễn Hoàng Đức</td>
+        <td>07/11/2025</td>
+        <td class="text-end fw-bold">2,100,000₫</td> <td class="text-center"><span class="badge bg-primary">Đã hoàn thành</span></td>
+        <td class="text-center">
+            <button class="btn btn-sm btn-info detail-btn" data-bs-toggle="modal" data-bs-target="#orderDetailModal" data-id="#DH0008">
+                <i class="fas fa-eye"></i> Chi tiết
+            </button>
+        </td>
+    </tr>
+</tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+<div class="modal fade" id="orderDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Chi tiết Đơn hàng: <span id="orderIdDisplay">#DHXXXX</span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+          <div class="modal-body">
+    <div id="orderDetailContent">
+        
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <p class="mb-1 text-muted">Khách hàng:</p>
+                <p class="fw-bold fs-5" id="customerName">...</p>
+            </div>
+            <div class="col-md-6">
+                <p class="mb-1 text-muted">Ngày đặt:</p>
+                <p class="fw-bold fs-5" id="orderDate">...</p>
+            </div>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <p class="mb-1 text-muted">Email:</p>
+                <p class="fw-bold" id="customerEmail">...</p>
+            </div>
+            <div class="col-md-6">
+                <p class="mb-1 text-muted">Số điện thoại:</p>
+                <p class="fw-bold" id="customerPhone">...</p>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <p class="mb-1 text-muted">Địa chỉ giao hàng:</p>
+                <p class="fw-bold" id="shippingAddress">...</p>
+            </div>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <p class="mb-1 text-muted">Trạng thái:</p>
+                <span class="status-badge-modal bg-secondary fs-6 text-white" id="orderStatus">...</span>
+            </div>
+            <div class="col-md-6">
+                <p class="mb-1 text-muted">Tổng tiền:</p>
+                <p class="fw-bold text-danger fs-4" id="orderTotal">...</p>
+            </div>
+        </div>
+
+        <h6 class="fw-bold border-bottom pb-2 mb-3">Danh sách sản phẩm</h6>
+        <table class="table table-bordered table-striped mb-4">
+            <thead>
+                <tr class="table-primary">
+                    <th>Sản phẩm</th>
+                    <th class="text-center">SL</th>
+                    <th class="text-end">Đơn giá</th>
+                    <th class="text-end">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody id="productDetailTableBody">
+                </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Dữ liệu đơn hàng mẫu (thay thế bằng API thực tế)
+// Dữ liệu đơn hàng mẫu (ĐÃ THÊM EMAIL VÀ PHONE)
+const ordersData = {
+    '#DH0012': {
+        customer: 'Nguyễn Văn Đạt',
+        email: 'nguyenvandat@example.com', // THÊM MỚI
+        phone: '0901 123 456',           // THÊM MỚI
+        date: '11/11/2025',
+        status: 'Chờ xác nhận',
+        total: '9,990,000₫',
+        address: '456/78, Đường Trần Phú, Quận 1, TP.HCM',
+        statusClass: 'bg-warning',
+        products: [
+            { name: 'Xe Đạp Đường Phố Touring TRINX Free 2.2 – Phanh Đĩa, Bánh 700C', quantity: 1, price: '6,490,000₫', total: '6,490,000₫' },
+            { name: 'Phụ kiện đèn xe', quantity: 1, price: '3,500,000₫', total: '3,500,000₫' }
+        ]
+    },
+    '#DH0011': {
+        customer: 'Trần Thị Đẹp',
+        email: 'tranthidep@example.com', // THÊM MỚI
+        phone: '0988 999 000',           // THÊM MỚI
+        date: '10/11/2025',
+        status: 'Đã giao',
+        total: '7,700,000₫',
+        address: '123/45, Đường Lê Lợi, Quận 5, Hà Nội',
+        statusClass: 'bg-success',
+        products: [
+            { name: 'Xe Đạp Đường Phố Touring LIV Alight 4 Disc - 2025', quantity: 1, price: '7,000,000₫', total: '7,000,000₫' },
+            { name: 'Khóa chống trộm', quantity: 1, price: '700,000₫', total: '700,000₫' }
+        ]
+    },
+    // ĐƠN HÀNG MỚI 1
+    '#DH0010': {
+        customer: 'Phạm Thị Nhung',
+        email: 'phamthinhung@example.com', // THÊM MỚI
+        phone: '0905 555 111',           // THÊM MỚI
+        date: '09/11/2025',
+        status: 'Đã hủy',
+        total: '5,990,000₫',
+        address: '321/11, Đường Nguyễn Huệ, Quận 1, TP.HCM',
+        statusClass: 'bg-danger',
+        products: [
+            { name: 'Xe Đạp Đường Phố Touring JAVA Wahoo City - Phanh Đĩa, Bánh 700C', quantity: 1, price: '5,990,000₫', total: '5,990,000₫' }
+        ]
+    },
+    // ĐƠN HÀNG MỚI 2
+    '#DH0009': {
+        customer: 'Lê Văn Tèo Em',
+        email: 'levanteoem@example.com',  // THÊM MỚI
+        phone: '0919 777 888',           // THÊM MỚI
+        date: '08/11/2025',
+        status: 'Đang giao',
+        total: '10,750,000₫',
+        address: '77, Đường Hùng Vương, Quận Hải Châu, Đà Nẵng',
+        statusClass: 'bg-info',
+        products: [
+            { name: 'Xe Đạp Đường Phố Touring LIV Alight 2 Disc - 2023', quantity: 1, price: '7,000,000₫', total: '7,000,000₫' },
+            { name: 'Bộ đèn xe cao cấp', quantity: 1, price: '3,750,000₫', total: '3,750,000₫' }
+        ]
+    },
+    // ĐƠN HÀNG MỚI 3
+    '#DH0008': {
+        customer: 'Nguyễn Hoàng Đức',
+        email: 'nguyenhoangduc@example.com', // THÊM MỚI
+        phone: '0903 000 999',             // THÊM MỚI
+        date: '07/11/2025',
+        status: 'Đã hoàn thành',
+        total: '2,100,000₫',
+        address: '88/1, Đường Phạm Văn Đồng, Quận Thủ Đức, TP.HCM',
+        statusClass: 'bg-primary',
+        products: [
+            { name: 'Phụ kiện bơm xe', quantity: 3, price: '700,000₫', total: '2,100,000₫' }
+        ]
+    }
+};
+
+    const orderDetailModal = document.getElementById('orderDetailModal');
+
+    // Hàm hiển thị chi tiết đơn hàng
+    function showOrderDetail(orderId) {
+    const data = ordersData[orderId];
+    if (!data) return;
+
+    // Cập nhật thông tin chung
+    document.getElementById('orderIdDisplay').textContent = orderId;
+    document.getElementById('customerName').textContent = data.customer;
+    document.getElementById('orderDate').textContent = data.date;
+    
+    // THÊM MỚI: Đổ dữ liệu Email và SĐT
+    document.getElementById('customerEmail').textContent = data.email;
+    document.getElementById('customerPhone').textContent = data.phone;
+    
+    document.getElementById('orderTotal').textContent = data.total;
+    document.getElementById('shippingAddress').textContent = data.address;
+        
+        // Cập nhật trạng thái và màu sắc
+        const statusEl = document.getElementById('orderStatus');
+        statusEl.textContent = data.status;
+        
+        // Xóa class cũ và thêm class mới
+        statusEl.className = `status-badge-modal fs-6 text-white ${data.statusClass}`; 
+        
+        // Cập nhật chi tiết sản phẩm
+        const productDetailTableBody = document.getElementById('productDetailTableBody');
+        productDetailTableBody.innerHTML = '';
+        data.products.forEach(p => {
+            // Tạm thời fix màu chữ cho bg-warning trong modal
+            const textColor = data.statusClass === 'bg-warning' ? 'text-dark' : 'text-white';
+            
+            productDetailTableBody.insertAdjacentHTML('beforeend', `
+                <tr>
+                    <td>${p.name}</td>
+                    <td class="text-center">${p.quantity}</td>
+                    <td class="text-end">${p.price}</td>
+                    <td class="text-end fw-bold">${p.total}</td>
+                </tr>
+            `);
+        });
+    }
+
+    // Gắn sự kiện để load data trước khi modal hiện ra
+    orderDetailModal.addEventListener('show.bs.modal', function (event) {
+        // Nút đã kích hoạt modal
+        const button = event.relatedTarget; 
+        // Lấy thông tin ID từ data-id
+        const orderId = button.getAttribute('data-id'); 
+        
+        showOrderDetail(orderId);
+    });
+});
+</script>
+</body>
+</html>

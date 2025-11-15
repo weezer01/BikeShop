@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Xe Đạp - Thêm Ảnh</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* CSS giữ nguyên, chỉ thêm style cho ảnh */
+        body { background-color: #f0f2f5; }
+        #sidebar { min-width: 250px; max-width: 250px; background-color: #ffffff; height: 100vh; position: fixed; top: 0; left: 0; box-shadow: 0 0 10px rgba(0,0,0,0.05); padding-top: 20px; }
+        #content { margin-left: 250px; padding: 30px; }
+        .sidebar-header h3 { color: #007bff; font-weight: bold; }
+        .sidebar-list a { padding: 10px 20px; color: #495057; display: block; text-decoration: none; transition: all 0.2s; }
+        .sidebar-list a:hover,
+        .sidebar-list a[href='bikes.html'] { background: #e9f2ff; color: #007bff; border-left: 5px solid #007bff; padding-left: 15px; }
+        .sidebar-list .fa-icon { width: 25px; }
+        
+        /* Style mới cho ảnh trong bảng */
+        .bike-img-thumb {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        /* CSS MỚI ĐỂ CĂN CHỈNH BẢNG */
+.table th, .table td {
+    vertical-align: middle; /* Căn giữa theo chiều dọc cho toàn bộ bảng */
+}
+
+.table thead th {
+    /* Đảm bảo tiêu đề cột luôn đậm */
+    font-weight: bold;
+}
+
+/* Căn chỉnh cụ thể cho từng cột */
+.table th:nth-child(1), .table td:nth-child(1) { width: 80px; text-align: center; } /* Ảnh */
+.table th:nth-child(2), .table td:nth-child(2) { width: 60px; text-align: center; } /* ID */
+.table th:nth-child(5), .table td:nth-child(5) { width: 130px; text-align: right; } /* Giá Bán */
+.table th:nth-child(6), .table td:nth-child(6) { width: 90px; text-align: center; } /* Tồn Kho */
+.table th:nth-child(7), .table td:nth-child(7) { width: 120px; text-align: center; } /* Trạng Thái */
+.table th:nth-child(8), .table td:nth-child(8) { width: 200px; text-align: center; } /* Hành Động */
+
+/* Tên xe và Loại xe sẽ tự động chiếm phần còn lại và căn trái mặc định */
+    </style>
+</head>
+<body>
+
+<div class="d-flex">
+    <div id="sidebar">
+        <div class="sidebar-header text-center mb-4"><h3><i class="fas fa-bicycle"></i> Bike Admin</h3></div>
+        <ul class="list-unstyled sidebar-list">
+            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt fa-icon"></i> Trang chủ</a></li>
+            <li><a href="bikes.html" class="active"><i class="fas fa-motorcycle fa-icon"></i> Quản lý Xe Đạp</a></li>
+            <li><a href="categories.html"><i class="fas fa-sitemap fa-icon"></i> Loại Xe</a></li>
+            <li><a href="orders.html"><i class="fas fa-receipt fa-icon"></i> Đơn hàng</a></li>
+            <li><a href="customers.html"><i class="fas fa-users fa-icon"></i> Khách hàng</a></li>
+                        <li><a href="stock.html"><i class="fas fa-warehouse fa-icon"></i> Tồn kho</a></li>
+            <li><a href="stock_in.html"><i class="fas fa-truck-loading fa-icon"></i> Nhập Hàng Mới</a></li>
+            <li class="mt-4"><a href="admin-login.html"><i class="fas fa-sign-out-alt fa-icon"></i> Đăng xuất</a></li>
+        </ul>
+    </div>
+    <div id="content" class="w-100">
+        <nav class="navbar navbar-light bg-white mb-5 rounded shadow-sm">
+            <div class="container-fluid">
+                <span class="navbar-brand h1 mb-0 text-primary">Quản Lý Danh Mục Xe Đạp</span>
+            </div>
+        </nav>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 text-muted">Danh sách mẫu xe</h5>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bikeModal" data-action="add">
+                    <i class="fas fa-plus"></i> Thêm Xe Mới
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="filter-controls mb-4 d-flex align-items-center">
+    
+    <div class="input-group me-3" style="max-width: 300px;">
+        <span class="input-group-text"><i class="fas fa-search"></i></span>
+        <input type="text" class="form-control" id="searchKeyword" placeholder="Tìm kiếm theo Tên Xe, ID...">
+    </div>
+    
+    <div class="me-3" style="min-width: 200px;">
+        <select class="form-select" id="filterCategory">
+            <option value="">-- Lọc theo Loại Xe --</option>
+            </select>
+    </div>
+
+    <button class="btn btn-outline-secondary" id="resetFilters">
+        <i class="fas fa-sync-alt"></i> Đặt lại
+    </button>
+</div>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Ảnh</th> <th>ID</th>
+                            <th>Tên Xe</th>
+                            <th>Loại</th>
+                            <th>Giá bán</th>
+                            <th>Tồn kho</th>
+                            <th>Trạng thái</th>
+<th>Hành động</th>
+                    </thead>
+                    <tbody id="bikeTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+<div class="modal fade" id="viewBikeModal" tabindex="-1" aria-labelledby="viewBikeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="viewBikeModalLabel">Chi Tiết Sản Phẩm: <span id="viewBikeName" class="fw-bold"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-5 text-center">
+                        <img id="viewBikeImage" src="https://via.placeholder.com/300?text=Ảnh+Chi+Tiết" alt="Ảnh xe" class="img-fluid rounded shadow-sm">
+                    </div>
+                    <div class="col-md-7">
+                        <h4 class="text-primary mt-3 mt-md-0">Thông Tin Chung</h4>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Mã Xe:</strong> <span id="viewBikeId"></span></li>
+                            <li class="list-group-item"><strong>Loại Xe:</strong> <span id="viewBikeCategory"></span></li>
+                            <li class="list-group-item"><strong>Giá Bán:</strong> <span id="viewBikePrice" class="text-success fw-bold"></span></li>
+                            <li class="list-group-item"><strong>Tồn Kho:</strong> <span id="viewBikeStock"></span></li>
+                            <li class="list-group-item"><strong>Trạng Thái:</strong> <span id="viewBikeStatus"></span></li>
+                        </ul>
+                        <h4 class="text-primary mt-3">Mô Tả Chi Tiết</h4>
+                        <p id="viewBikeDescription" class="text-muted"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="bikeModal" tabindex="-1" aria-labelledby="bikeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="bikeModalLabel">Thêm Xe Đạp Mới</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="bikeForm">
+                    
+                    
+                    <div class="mb-3 text-center">
+<img id="bikeImagePreview" src="https://via.placeholder.com/150?text=Ảnh+Xe" alt="Ảnh xem trước" class="img-thumbnail mb-2" style="width: 150px; height: 150px; object-fit: cover;">                        <label for="bikeImageURL" class="form-label">URL Ảnh (hoặc Tải lên)</label>
+                        <input type="text" class="form-control" id="bikeImageURL" placeholder="Nhập URL ảnh hoặc dùng nút bên dưới">
+                        <input type="file" class="form-control mt-2" id="bikeImageFile" accept="image/*">
+                    </div>
+           <div class="mb-3">
+    <label for="bikeId" class="form-label">Mã ID Sản phẩm</label>
+    <input type="text" class="form-control" id="bikeId" required> 
+</div>
+                    <div class="mb-3">
+                        <label for="bikeName" class="form-label">Tên Xe Đạp</label>
+                        <input type="text" class="form-control" id="bikeName" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="bikeDescription" class="form-label">Mô Tả Chi Tiết</label>
+                        <textarea class="form-control" id="bikeDescription" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="bikeCategory" class="form-label">Loại Xe</label>
+                        <select class="form-select" id="bikeCategory" required>
+                            <option value="">-- Chọn loại xe --</option>
+                            <option value="Xe đạp đua">Xe đạp đua</option>
+                            <option value="Xe đạp gấp">Xe đạp gấp</option>
+                            <option value="Xe đạp địa hình">Xe đạp địa hình</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="bikePrice" class="form-label">Giá Bán (VNĐ)</label>
+                        <input type="number" class="form-control" id="bikePrice" required min="0">
+                    </div>
+                    <div class="mb-3">
+                        <label for="bikeStock" class="form-label">Tồn Kho</label>
+                        <input type="number" class="form-control" id="bikeStock" required min="0">
+                    </div>
+                    <div class="mb-3">
+                        <label for="bikeStatus" class="form-label">Trạng thái</label>
+                        <select class="form-select" id="bikeStatus" required>
+                            <option value="Đang bán">Đang bán</option>
+                            <option value="Ngừng bán">Ngừng bán</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="saveBikeBtn">Lưu Thông Tin</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // DOM elements
+    const bikeModal = document.getElementById('bikeModal');
+    const viewBikeModal = document.getElementById('viewBikeModal');
+    const bikeForm = document.getElementById('bikeForm');
+    const bikeTableBody = document.getElementById('bikeTableBody');
+    const modalTitle = document.getElementById('bikeModalLabel');
+    const bikeImagePreview = document.getElementById('bikeImagePreview');
+    const bikeImageURL = document.getElementById('bikeImageURL');
+    const bikeImageFile = document.getElementById('bikeImageFile');
+    const bikeDescription = document.getElementById('bikeDescription');
+    const bikeIdInput = document.getElementById('bikeId');
+
+    let editingId = null; // nếu đang sửa sẽ chứa id (string)
+
+    // ===================== Dữ liệu mẫu (chỉ dùng khi localStorage trống) =====================
+    const initialBikes = [
+        { id: "001", name: "Xe Đạp Đường Phố Touring TRINX Free 2.2 – Phanh Đĩa, Bánh 700C", price: 6490000, originalPrice: 7490000, status: 'Đang bán', stock: 15, image: "../assets/img/product/13.jpg", badge: "-13%", category: "Bộ sưu tập xe xịn", description: "Xe Đạp Đường Phố Touring TRINX Free 2.2 là sự kết hợp hoàn hảo giữa thiết kế đẹp mắt, chất lượng vượt trội và hiệu suất vận hành ấn tượng. Với khung nhôm TRINX cực kỳ nhẹ nhàng và bền bỉ, chiếc xe này mang lại sự ổn định và linh hoạt trên mọi loại địa hình." },
+        { id: "002", name: "Xe Đạp Đường Trường Road JAVA Auriga R5 - Phanh Đĩa, Bánh 700C", price: 7890000, originalPrice: 12890000, status: 'Đang bán', stock: 15, image: "../assets/img/product/37.jpg", badge: "-35%", category: "Bộ sưu tập xe xịn", description: "Chinh phục mọi cung đường với JAVA Auriga R5..." },
+        { id: "003", name: "Xe Đạp Đường Phố Touring LIV Alight 4 Disc - 2025", price: 7000000, originalPrice: 9000000, status: 'Đang bán', stock: 12, image: "../assets/img/product/6.jpg", badge: "-35%", category: "Bộ sưu tập xe xịn", description: "LIV Alight 4 Disc 2025 không chỉ là một chiếc xe đạp..." },
+        { id: "004", name: "Xe Đạp Đường Phố Fixed Gear VINBIKE Megatron – Bánh 700C", price: 3990000, originalPrice: null, status: 'Đang bán', stock: 15, image: "../assets/img/product/21.jpg", badge: "Hàng hiếm", category: "Bộ sưu tập xe xịn", description: "Xe Đạp Đường Phố Touring VINBIKE Megatron..." },
+        { id: "005", name: "Xe Đạp Đường Phố Touring JAVA Wahoo City - Phanh Đĩa, Bánh 700C", price: 5990000, originalPrice: 6990000, status: 'Đang bán', stock: 15, image: "../assets/img/product/22.jpg", badge: null, category: "Mua nhiều nhất", description: "JAVA Wahoo City là mẫu xe đạp đường phố..." },
+        { id: "006", name: "Xe Đạp Đường Phố Touring LIV Alight 2 Disc - 2023", price: 7000000, originalPrice: 9000000, status: 'Đang bán', stock: 15, image: "../assets/img/product/36.jpg", badge: "-35%", category: "Những mẫu thiết kế đẹp", description: "LIV Alight 2 – Bánh 700C – 2023 là mẫu xe đạp touring..." },
+        { id: "007", name: "Xe Đạp Đường Trường Road JAVA Siluro6-TOP-RX", price: 15990000, originalPrice: null, status: 'Đang bán', stock: 15, image: "../assets/img/product/24.jpg", badge: "Hot Trend", category: "Những mẫu thiết kế đẹp", description: "JAVA Siluro6-TOP-RX là dòng xe đạp đường trường cao cấp..." },
+        { id: "008", name: "Xe Đạp Đường Phố Touring GIANT Escape 2 Disc - 2025", price: 5000000, originalPrice: 12000000, status: 'Đang bán', stock: 15, image: "../assets/img/product/35.jpg", badge: "-60%", category: "Bán chạy", description: "Dòng xe đạp đường phố GIANT Escape 2 Disc - 2025..." }
+    ];
+
+    let bikes = [];
+
+    // ===================== Local Storage =====================
+    function saveBikes(bikesArray) {
+        localStorage.setItem('bikesData', JSON.stringify(bikesArray));
+    }
+
+    function loadBikes() {
+        const stored = localStorage.getItem('bikesData');
+        if (stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                // đảm bảo mỗi bike có image & description (fallback)
+                return parsed.map(b => ({
+                    id: String(b.id),
+                    name: b.name || '',
+                    price: Number(b.price) || 0,
+                    originalPrice: b.originalPrice || null,
+                    status: b.status || 'Đang bán',
+                    stock: Number(b.stock) || 0,
+                    image: b.image || b.img || 'https://via.placeholder.com/150?text=No+Image',
+                    badge: b.badge || null,
+                    category: b.category || '',
+                    description: b.description || b.desc || ''
+                }));
+            } catch (e) {
+                console.error('Lỗi parse localStorage, sẽ reset dữ liệu mẫu', e);
+            }
+        }
+        // nếu không có hoặc lỗi -> lưu mẫu
+        saveBikes(initialBikes);
+        return initialBikes.slice();
+    }
+
+    // ===================== Utils =====================
+    function updateImagePreview(src) {
+        bikeImagePreview.src = src || 'https://via.placeholder.com/150?text=Ảnh+Xe';
+    }
+
+    function generateNextId(bikesArray) {
+        // IDs là chuỗi số có pad 3 chữ số
+        if (!bikesArray || bikesArray.length === 0) return '001';
+        const numericIds = bikesArray.map(b => parseInt(b.id, 10)).filter(n => !isNaN(n));
+        const maxId = numericIds.length ? Math.max(...numericIds) : 0;
+        return String(maxId + 1).padStart(3, '0');
+    }
+
+    // ===================== Filter & Render =====================
+    function populateCategoryFilter() {
+        const categorySelect = document.getElementById('filterCategory');
+        if (!categorySelect) return;
+        categorySelect.innerHTML = '<option value="">-- Lọc theo Loại Xe --</option>';
+        const allCategories = Array.from(new Set(bikes.map(b => b.category || ''))).filter(c => c).sort();
+        allCategories.forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = cat;
+            opt.textContent = cat;
+            categorySelect.appendChild(opt);
+        });
+    }
+
+    function attachFilterListeners() {
+        const searchInput = document.getElementById('searchKeyword');
+        const categorySelect = document.getElementById('filterCategory');
+        const resetBtn = document.getElementById('resetFilters');
+
+        if (searchInput) searchInput.addEventListener('input', filterAndRenderBikes);
+        if (categorySelect) categorySelect.addEventListener('change', filterAndRenderBikes);
+        if (resetBtn) resetBtn.addEventListener('click', function() {
+            if (searchInput) searchInput.value = '';
+            if (categorySelect) categorySelect.value = '';
+            filterAndRenderBikes();
+        });
+    }
+
+    function attachEventListenersToButtons() {
+        // delete buttons
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.onclick = handleDelete;
+        });
+        // (view/edit buttons sử dụng data-bs-toggle -> modal show sẽ lắng nghe)
+    }
+
+    function filterAndRenderBikes() {
+        const keyword = (document.getElementById('searchKeyword')?.value || '').toLowerCase().trim();
+        const selectedCategory = document.getElementById('filterCategory')?.value || '';
+
+        let filtered = bikes.slice();
+
+        if (keyword) {
+            filtered = filtered.filter(b =>
+                (b.name || '').toLowerCase().includes(keyword) ||
+                String(b.id).includes(keyword)
+            );
+        }
+
+        if (selectedCategory) {
+            filtered = filtered.filter(b => b.category === selectedCategory);
+        }
+
+        bikeTableBody.innerHTML = '';
+
+        if (filtered.length === 0) {
+            bikeTableBody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4"><i class="fas fa-exclamation-circle me-2"></i> Không tìm thấy sản phẩm nào phù hợp với điều kiện lọc.</td></tr>';
+            return;
+        }
+
+        filtered.forEach(bike => {
+            const priceFormatted = (Number(bike.price) || 0).toLocaleString('vi-VN');
+            const statusText = (bike.stock < 10 && bike.status !== 'Ngừng bán') ? 'Sắp hết' : bike.status;
+            const statusClass = statusText === 'Sắp hết' ? 'bg-warning text-dark' : (statusText === 'Đang bán' ? 'bg-success' : 'bg-secondary');
+
+            const row = document.createElement('tr');
+            row.setAttribute('data-id', bike.id);
+            row.setAttribute('data-name', bike.name);
+            row.setAttribute('data-price', bike.price);
+            row.setAttribute('data-stock', bike.stock);
+            row.setAttribute('data-img', bike.image);
+            row.setAttribute('data-desc', bike.description);
+            row.setAttribute('data-category', bike.category);
+
+            row.innerHTML = `
+                <td><img src="${bike.image}" alt="Ảnh xe" class="bike-img-thumb" style="width:80px; height:auto; object-fit:cover;"></td>
+                <td>#${bike.id}</td>
+                <td>${bike.name}</td>
+                <td>${bike.category}</td>
+                <td>${priceFormatted}₫</td>
+                <td>${bike.stock}</td>
+                <td><span class="badge ${statusClass}">${statusText}</span></td>
+                <td>
+                    <button class="btn btn-sm btn-secondary me-1 view-btn" data-bs-toggle="modal" data-bs-target="#viewBikeModal"><i class="fas fa-eye"></i> Xem</button>
+                    <button class="btn btn-sm btn-info me-1 edit-btn" data-bs-toggle="modal" data-bs-target="#bikeModal" data-action="edit"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger delete-btn"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            `;
+            bikeTableBody.appendChild(row);
+        });
+
+        attachEventListenersToButtons();
+    }
+
+    // ===================== Delete handler =====================
+    function handleDelete() {
+        const row = this.closest('tr');
+        if (!row) return;
+        const id = row.getAttribute('data-id');
+        const bikeName = row.cells[2]?.textContent || '';
+
+        if (!confirm(`Bạn có chắc chắn muốn XÓA xe "${bikeName}" không?`)) return;
+
+        bikes = bikes.filter(b => String(b.id) !== String(id));
+        saveBikes(bikes);
+        populateCategoryFilter();
+        filterAndRenderBikes();
+        alert(`Đã xóa xe "${bikeName}" thành công.`);
+    }
+
+    // ===================== Image preview logic =====================
+    bikeImageURL?.addEventListener('input', function() { updateImagePreview(this.value); });
+    bikeImageFile?.addEventListener('change', function() {
+        const f = this.files && this.files[0];
+        if (!f) return;
+        const reader = new FileReader();
+        reader.onload = e => updateImagePreview(e.target.result);
+        reader.readAsDataURL(f);
+    });
+
+    // ===================== Modal: Thêm / Sửa (show event) =====================
+    if (bikeModal) {
+        bikeModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const action = button?.getAttribute('data-action') || 'add';
+
+            editingId = null;
+            bikeForm.reset();
+            updateImagePreview(null);
+            bikeIdInput.removeAttribute('disabled');
+            bikeIdInput.removeAttribute('readonly');
+
+            if (action === 'add') {
+                modalTitle.textContent = 'Thêm Xe Đạp Mới';
+                const newId = generateNextId(bikes);
+                bikeIdInput.value = newId;
+                bikeIdInput.setAttribute('readonly', 'readonly');
+            } else if (action === 'edit') {
+                modalTitle.textContent = 'Chỉnh Sửa Thông Tin Xe';
+                // tìm row đang chứa button
+                const row = button.closest('tr');
+                if (!row) {
+                    alert('Không tìm thấy hàng dữ liệu để sửa.');
+                    return;
+                }
+                const idText = row.cells[1].textContent.replace('#', '').trim();
+                const bikeData = bikes.find(b => String(b.id) === String(idText));
+                if (!bikeData) {
+                    alert('Lỗi: Không tìm thấy dữ liệu xe đạp với ID: ' + idText);
+                    return;
+                }
+                editingId = String(bikeData.id);
+
+                // gán giá trị vào form
+                bikeIdInput.value = bikeData.id;
+                bikeIdInput.setAttribute('readonly', 'readonly');
+                document.getElementById('bikeName').value = bikeData.name || '';
+                document.getElementById('bikeDescription').value = bikeData.description || '';
+                document.getElementById('bikeCategory').value = bikeData.category || '';
+                document.getElementById('bikePrice').value = bikeData.price || '';
+                document.getElementById('bikeStock').value = bikeData.stock || '';
+                document.getElementById('bikeStatus').value = bikeData.status || '';
+                document.getElementById('bikeImageURL').value = bikeData.image || '';
+                updateImagePreview(bikeData.image || '');
+            }
+        });
+    }
+
+    // ===================== Modal: Xem chi tiết =====================
+    if (viewBikeModal) {
+        viewBikeModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const row = button.closest('tr');
+            if (!row) return;
+            const idText = row.cells[1].textContent.replace('#', '').trim();
+            const bikeData = bikes.find(b => String(b.id) === String(idText));
+            if (!bikeData) {
+                console.error('Không tìm thấy dữ liệu xe để xem.');
+                document.getElementById('viewBikeName').textContent = "Lỗi dữ liệu";
+                return;
+            }
+            const priceFormatted = (Number(bikeData.price) || 0).toLocaleString('vi-VN') + '₫';
+            const statusText = (bikeData.stock < 10 && bikeData.status !== 'Ngừng bán') ? 'Sắp hết' : bikeData.status;
+            const statusClass = statusText === 'Sắp hết' ? 'bg-warning text-dark' : (statusText === 'Đang bán' ? 'bg-success' : 'bg-secondary');
+
+            document.getElementById('viewBikeName').textContent = bikeData.name || '';
+            document.getElementById('viewBikeImage').src = bikeData.image || 'https://via.placeholder.com/200?text=No+Image';
+            document.getElementById('viewBikeId').textContent = '#' + bikeData.id;
+            document.getElementById('viewBikeCategory').textContent = bikeData.category || '';
+            document.getElementById('viewBikePrice').textContent = priceFormatted;
+            document.getElementById('viewBikeStock').textContent = bikeData.stock;
+            document.getElementById('viewBikeStatus').innerHTML = `<span class="badge ${statusClass}">${statusText}</span>`;
+            document.getElementById('viewBikeDescription').textContent = bikeData.description || '';
+        });
+    }
+
+    // ===================== Lưu (Save) =====================
+    document.getElementById('saveBikeBtn')?.addEventListener('click', function() {
+        if (!bikeForm.checkValidity()) {
+            bikeForm.reportValidity();
+            return;
+        }
+
+        const formId = String(bikeIdInput.value).trim();
+        const isEditing = !!editingId;
+        const duplicate = bikes.some(b => String(b.id) === formId && (!isEditing || String(b.id) !== String(editingId)));
+        if (duplicate) {
+            alert(`Lỗi: ID "${formId}" đã tồn tại. Vui lòng chọn ID khác.`);
+            return;
+        }
+
+        const newBikeData = {
+            id: formId,
+            name: document.getElementById('bikeName').value.trim(),
+            description: document.getElementById('bikeDescription').value.trim(),
+            category: document.getElementById('bikeCategory').value.trim(),
+            price: parseFloat(document.getElementById('bikePrice').value) || 0,
+            stock: parseInt(document.getElementById('bikeStock').value) || 0,
+            status: document.getElementById('bikeStatus').value,
+            image: bikeImagePreview.src || (document.getElementById('bikeImageURL').value || 'https://via.placeholder.com/150?text=No+Image'),
+            badge: null,
+            originalPrice: null
+        };
+
+        if (isEditing) {
+            const idx = bikes.findIndex(b => String(b.id) === String(editingId));
+            if (idx !== -1) {
+                bikes[idx] = Object.assign({}, bikes[idx], newBikeData);
+            } else {
+                // fallback: thêm mới nếu không tìm thấy
+                bikes.unshift(newBikeData);
+            }
+        } else {
+            bikes.unshift(newBikeData);
+        }
+
+        saveBikes(bikes);
+        populateCategoryFilter();
+        filterAndRenderBikes();
+
+        alert(`${isEditing ? 'Sửa' : 'Thêm'} thành công! Xe: ${newBikeData.name}.`);
+
+        // đóng modal
+        try {
+            const modalInstance = bootstrap.Modal.getInstance(bikeModal);
+            if (modalInstance) modalInstance.hide();
+        } catch (e) {
+            // ignore nếu không dùng bootstrap
+        }
+    });
+
+    // ===================== Khởi động =====================
+    bikes = loadBikes();
+    populateCategoryFilter();
+    attachFilterListeners();
+    filterAndRenderBikes();
+});
+</script>
+
+
+</body>
+</html>

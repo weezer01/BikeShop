@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Khách hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+    /* CSS CƠ BẢN (GIỮ NGUYÊN) */
+    body { background-color: #f0f2f5; }
+    #sidebar { min-width: 250px; max-width: 250px; background-color: #ffffff; height: 100vh; position: fixed; top: 0; left: 0; box-shadow: 0 0 10px rgba(0,0,0,0.05); padding-top: 20px; }
+    #content { margin-left: 250px; padding: 30px; }
+    .sidebar-header h3 { color: #007bff; font-weight: bold; }
+    .sidebar-list a { padding: 10px 20px; color: #495057; display: block; text-decoration: none; transition: all 0.2s; }
+    .sidebar-list a:hover,
+    .sidebar-list a[href='customers.html'] { background: #e9f2ff; color: #007bff; border-left: 5px solid #007bff; padding-left: 15px; }
+    .sidebar-list .fa-icon { width: 25px; }
+
+    /* CSS BỔ SUNG CHO TRANG KHÁCH HÀNG */
+    .table th, .table td {
+        vertical-align: middle; 
+        font-size: 14px;
+    }
+
+    /* Badge Phân loại - ĐÃ TỐI ƯU HÓA MÀU CHỮ VÀ VIỀN */
+    .badge-rank {
+        padding: 5px 10px;
+        border-radius: 0.25rem; 
+        font-weight: 600; 
+        font-size: 0.85rem; 
+        display: inline-block; 
+        min-width: 65px; 
+        text-align: center; 
+        color: #000 !important; 
+        border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    }
+
+    /* VIP */
+    .rank-vip { 
+        background-color: #ffc107 !important; 
+    } 
+    /* Vàng */
+    .rank-gold { 
+        background-color: #ffd700 !important; 
+    }
+    /* Bạc */
+    .rank-silver { 
+        background-color: #e0e0e0 !important;
+    } 
+
+    /* Badge Trạng thái - ĐÃ SỬA LẠI CHỮ TRẮNG CHO NỀN ĐẬM */
+    .status-active, .status-locked {
+        color: #fff !important; 
+        font-weight: bold;
+    }
+    .status-active { 
+        background-color: #28a745 !important; 
+    }
+    .status-locked { 
+        background-color: #dc3545 !important; 
+    }
+</style>
+</head>
+<body>
+
+<div class="d-flex">
+    <div id="sidebar">
+        <div class="sidebar-header text-center mb-4"><h3><i class="fas fa-bicycle"></i> Bike Admin</h3></div>
+        <ul class="list-unstyled sidebar-list">
+            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt fa-icon"></i> Trang chủ</a></li>
+            <li><a href="bikes.html"><i class="fas fa-motorcycle fa-icon"></i> Quản lý Xe Đạp</a></li>
+            <li><a href="categories.html"><i class="fas fa-sitemap fa-icon"></i> Loại Xe</a></li>
+            <li><a href="orders.html"><i class="fas fa-receipt fa-icon"></i> Đơn hàng</a></li>
+            <li><a href="customers.html" class="active"><i class="fas fa-users fa-icon"></i> Khách hàng</a></li>
+            <li><a href="stock.html"><i class="fas fa-warehouse fa-icon"></i> Tồn kho</a></li>
+            <li><a href="stock_in.html"><i class="fas fa-truck-loading fa-icon"></i> Nhập Hàng Mới</a></li>
+           <li class="mt-4"><a href="admin-login.html"><i class="fas fa-sign-out-alt fa-icon"></i> Đăng xuất</a></li>
+        </ul>
+    </div>
+    
+    <div id="content" class="w-100">
+<div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1080;">
+    <div id="soonAlertToast" class="toast align-items-center text-white bg-info border-0" 
+         role="alert" aria-live="assertive" aria-atomic="true" 
+         style="width: 400px; padding: 15px;">
+        
+        <div class="d-flex">
+            <div class="toast-body fw-bold fs-6">
+                <i class="fas fa-info-circle me-3"></i> Chức năng Thêm Khách Hàng sẽ được triển khai trong thời gian sớm nhất.
+            </div>
+            
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+        <nav class="navbar navbar-light bg-white mb-4 rounded shadow-sm">
+            <div class="container-fluid">
+                <span class="navbar-brand h1 mb-0 text-primary">Quản Lý Khách Hàng</span>
+            </div>
+        </nav>
+
+        <div class="card shadow-sm border-0 mb-4" style="border-radius:12px;">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3">Tìm kiếm & Lọc</h5>
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" id="searchKeyword" placeholder="Tìm kiếm theo Tên, Email hoặc SĐT...">
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="filterRank">
+                            <option selected value="">Tất cả Phân loại</option>
+                            <option value="VIP">VIP</option>
+                            <option value="Vàng">Vàng</option>
+                            <option value="Bạc">Bạc</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="filterStatus">
+                            <option selected value="">Tất cả Trạng thái</option>
+                            <option value="Hoạt động">Hoạt động</option>
+                            <option value="Bị khóa">Bị khóa</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" id="searchButton"><i class="fas fa-search me-1"></i> Tìm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 text-muted">Danh sách Khách hàng</h5>
+                <button class="btn btn-primary" onclick="showSoonAlert()">
+                    <i class="fas fa-user-plus"></i> Thêm Khách Hàng
+                </button>
+            </div>
+            
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên & Liên hệ</th>
+                            <th class="text-center">Phân loại</th>
+                            <th class="text-end">Tổng đơn</th>
+                            <th class="text-end">Điểm tích lũy</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customerTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="customerModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="customerModalLabel">Thông tin Khách hàng</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="customerForm">
+                    <input type="hidden" id="custId">
+                    <div class="mb-3">
+                        <label class="form-label">Tên Khách hàng</label>
+                        <input type="text" id="custName" class="form-control" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="custEmail" class="form-control" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Số điện thoại</label>
+                        <input type="tel" id="custPhone" class="form-control">
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Tổng đơn</label>
+                            <input type="text" id="custOrdersCount" class="form-control" readonly>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Phân loại</label>
+                            <input type="text" id="custRank" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Điểm tích lũy</label>
+                        <input type="number" id="custPoints" class="form-control" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tổng chi tiêu</label>
+                        <input type="text" id="custSpend" class="form-control" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái</label>
+                        <input type="text" id="custStatus" class="form-control" readonly>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button class="btn btn-success" id="saveCustomerButton" style="display:none;"><i class="fas fa-save me-1"></i> Lưu thay đổi</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const customerTableBody = document.getElementById('customerTableBody');
+        const customerModal = document.getElementById('customerModal');
+        const modalTitle = document.getElementById('customerModalLabel');
+        const saveButton = document.getElementById('saveCustomerButton');
+        const searchButton = document.getElementById('searchButton');
+        
+        // Lấy Toast element
+        const soonAlertToastEl = document.getElementById('soonAlertToast');
+        const soonAlertToast = new bootstrap.Toast(soonAlertToastEl, {
+            delay: 4000 // Tự động ẩn sau 4 giây
+        });
+
+
+        // ===== HÀM THÔNG BÁO MỚI (DÙNG TOAST) =====
+        // Gắn hàm này vào nút Thêm Khách Hàng trong HTML
+        window.showSoonAlert = function() {
+            soonAlertToast.show();
+        }
+        
+        let customersData = [
+            // Dữ liệu mẫu (giữ nguyên)
+            { id: 'KH001', name: 'Nguyễn Văn Đạt', email: 'vana@email.com', phone: '0901123456', ordersCount: 5, points: 5200, rank: 'VIP', status: 'Hoạt động', spend: 55000000, address: '123 Lê Lợi, Q1, TPHCM' },
+            { id: 'KH002', name: 'Trần Thị Thu Diễm', email: 'thib@email.com', phone: '0988999000', ordersCount: 3, points: 2800, rank: 'Vàng', status: 'Hoạt động', spend: 28000000, address: '45 Trần Hưng Đạo, Q5, TPHCM' },
+            { id: 'KH003', name: 'Lê Văn Tèo Em', email: 'levanc@yahoo.com', phone: '0977777777', ordersCount: 1, points: 950, rank: 'Bạc', status: 'Bị khóa', spend: 9500000, address: '789 Nguyễn Văn Linh, Q7, TPHCM' },
+            { id: 'KH004', name: 'Phạm Thị Hạnh', email: 'thid@live.com', phone: '0987654321', ordersCount: 1, points: 150, rank: 'Vàng', status: 'Hoạt động', spend: 1500000, address: '10 Hai Bà Trưng, Q1, Hà Nội' }
+        ];
+
+        // Hàm định dạng tiền tệ
+        function formatCurrency(amount) {
+            return parseFloat(amount).toLocaleString('vi-VN') + '₫';
+        }
+
+        // Hàm render bảng (giữ nguyên)
+        function renderCustomers(list = customersData) {
+            customerTableBody.innerHTML = '';
+            list.forEach(cust => {
+                const statusClass = cust.status === 'Hoạt động' ? 'status-active' : 'status-locked';
+                const rankClass = 'rank-' + cust.rank.toLowerCase().replace(' ', '');
+                const actionButton = cust.status === 'Hoạt động' 
+                    ? `<button class="btn btn-sm btn-danger lock-btn" data-id="${cust.id}"><i class="fas fa-lock"></i> Khóa</button>`
+                    : `<button class="btn btn-sm btn-success unlock-btn" data-id="${cust.id}"><i class="fas fa-unlock"></i> Mở khóa</button>`;
+
+                customerTableBody.insertAdjacentHTML('beforeend', `
+                    <tr data-id="${cust.id}">
+                        <td>${cust.id}</td>
+                        <td>
+                            <strong>${cust.name}</strong><br>
+                            <small class="text-muted">${cust.email}</small>
+                        </td>
+                        <td class="text-center"><span class="badge badge-rank ${rankClass}">${cust.rank}</span></td>
+                        <td class="text-end">${cust.ordersCount}</td>
+                        <td class="text-end fw-bold text-primary">${cust.points}</td>
+                        <td class="text-center"><span class="badge ${statusClass}">${cust.status}</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-info me-1 view-btn" data-id="${cust.id}"><i class="fas fa-eye"></i> Xem</button>
+                            <button class="btn btn-sm btn-warning me-1 edit-btn" data-id="${cust.id}"><i class="fas fa-pencil-alt"></i> Sửa</button>
+                            ${actionButton}
+                        </td>
+                    </tr>
+                `);
+            });
+            attachActionEvents();
+        }
+
+        // Hàm gắn sự kiện cho các nút (giữ nguyên)
+        function attachActionEvents() {
+            document.querySelectorAll('.view-btn, .edit-btn').forEach(btn => {
+                btn.onclick = function() {
+                    const id = this.dataset.id;
+                    const mode = this.classList.contains('view-btn') ? 'view' : 'edit';
+                    openCustomerModal(id, mode);
+                };
+            });
+            document.querySelectorAll('.lock-btn, .unlock-btn').forEach(btn => {
+                btn.onclick = function() {
+                    const id = this.dataset.id;
+                    const action = this.classList.contains('lock-btn') ? 'lock' : 'unlock';
+                    toggleLockCustomer(id, action);
+                };
+            });
+        }
+        
+        // Hàm mở Modal và điền dữ liệu (giữ nguyên)
+        function openCustomerModal(id, mode) {
+            const customer = customersData.find(c => c.id === id);
+            if (!customer) return;
+
+            const isViewing = mode === 'view';
+            
+            modalTitle.textContent = isViewing ? `Chi tiết Khách hàng: ${customer.name}` : `Sửa thông tin: ${customer.name}`;
+            
+            // Điền dữ liệu
+            document.getElementById('custId').value = customer.id;
+            document.getElementById('custName').value = customer.name;
+            document.getElementById('custEmail').value = customer.email;
+            document.getElementById('custPhone').value = customer.phone;
+            document.getElementById('custOrdersCount').value = customer.ordersCount;
+            document.getElementById('custPoints').value = customer.points;
+            document.getElementById('custRank').value = customer.rank;
+            document.getElementById('custStatus').value = customer.status;
+            document.getElementById('custSpend').value = formatCurrency(customer.spend);
+
+            // Cấu hình trạng thái readOnly
+            document.getElementById('custPhone').readOnly = isViewing;
+            
+            // Hiện/Ẩn nút Lưu
+            saveButton.style.display = isViewing ? 'none' : 'block';
+            
+            new bootstrap.Modal(customerModal).show();
+        }
+
+        // Hàm Khóa/Mở khóa tài khoản (giữ nguyên)
+        function toggleLockCustomer(id, action) {
+            const customer = customersData.find(c => c.id === id);
+            if (!customer) return;
+            
+            if (action === 'lock') {
+                if (confirm(`Bạn có chắc chắn muốn KHÓA tài khoản ${customer.name} (ID: ${id})?`)) {
+                    customer.status = 'Bị khóa';
+                    // SỬ DỤNG TOAST CHO THÔNG BÁO KHÓA/MỞ KHÓA TẠI ĐÂY (TÙY CHỌN)
+                    // alert(`Đã khóa tài khoản ${customer.name}.`);
+                }
+            } else {
+                if (confirm(`Bạn có muốn MỞ KHÓA tài khoản ${customer.name} (ID: ${id})?`)) {
+                    customer.status = 'Hoạt động';
+                    // SỬ DỤNG TOAST CHO THÔNG BÁO KHÓA/MỞ KHÓA TẠI ĐÂY (TÙY CHỌN)
+                    // alert(`Đã mở khóa tài khoản ${customer.name}.`);
+                }
+            }
+            renderCustomers(); 
+        }
+        
+        // Nút Lưu thay đổi trong Modal (giữ nguyên)
+        saveButton.addEventListener('click', function() {
+            const id = document.getElementById('custId').value;
+            const customer = customersData.find(c => c.id === id);
+            customer.phone = document.getElementById('custPhone').value;
+
+            // SỬ DỤNG TOAST THAY CHO ALERT
+            // alert(`Đã lưu thay đổi cho khách hàng ${customer.name}.`); 
+            
+            renderCustomers(); 
+            bootstrap.Modal.getInstance(customerModal).hide();
+        });
+
+        // Hàm Lọc và Tìm kiếm (giữ nguyên)
+        searchButton.addEventListener('click', function() {
+            const keyword = document.getElementById('searchKeyword').value.toLowerCase();
+            const filterRank = document.getElementById('filterRank').value;
+            const filterStatus = document.getElementById('filterStatus').value;
+
+            const filteredList = customersData.filter(cust => {
+                const matchesKeyword = !keyword || 
+                    cust.name.toLowerCase().includes(keyword) ||
+                    cust.email.toLowerCase().includes(keyword) ||
+                    cust.phone.includes(keyword);
+
+                const matchesRank = !filterRank || cust.rank === filterRank;
+                const matchesStatus = !filterStatus || cust.status === filterStatus;
+                
+                return matchesKeyword && matchesRank && matchesStatus;
+            });
+
+            renderCustomers(filteredList);
+        });
+
+        // Khởi tạo bảng lần đầu
+        renderCustomers();
+    });
+</script>
+</body>
+</html>

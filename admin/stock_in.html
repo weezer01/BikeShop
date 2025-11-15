@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhập Hàng Mới - Stock In</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        body { background-color: #f0f2f5; }
+        #sidebar { min-width: 250px; max-width: 250px; background-color: #ffffff; height: 100vh; position: fixed; top: 0; left: 0; box-shadow: 0 0 10px rgba(0,0,0,0.05); padding-top: 20px; }
+        #content { margin-left: 250px; padding: 30px; }
+        .sidebar-header h3 { color: #007bff; font-weight: bold; }
+        .sidebar-list a { padding: 10px 20px; color: #495057; display: block; text-decoration: none; transition: all 0.2s; }
+        .sidebar-list a:hover,
+        .sidebar-list a[href='stock.html'] { background: #e9f2ff; color: #007bff; border-left: 5px solid #007bff; padding-left: 15px; }
+        .sidebar-list .fa-icon { width: 25px; }
+        /* Đảm bảo rằng tất cả các link không active luôn bị tắt màu xanh */
+.sidebar-list a {
+    color: #495057 !important; /* Màu chữ mặc định */
+    background: transparent !important; /* Nền trong suốt */
+    border-left: none !important; /* Bỏ border */
+}
+
+/* Đảm bảo chỉ trạng thái active hiện tại có hiệu lực */
+.sidebar-list a.active {
+    background: #e9f2ff !important;
+    color: #007bff !important;
+    border-left: 5px solid #007bff !important; 
+    /* ... các quy tắc active khác ... */
+}
+    </style>
+</head>
+<body>
+
+<div class="d-flex">
+    <div id="sidebar">
+        <div class="sidebar-header text-center mb-4"><h3><i class="fas fa-bicycle"></i> Bike Admin</h3></div>
+        <ul class="list-unstyled sidebar-list">
+            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt fa-icon"></i> Trang chủ</a></li>
+            <li><a href="bikes.html"><i class="fas fa-motorcycle fa-icon"></i> Quản lý Xe Đạp</a></li>
+            <li><a href="categories.html"><i class="fas fa-sitemap fa-icon"></i> Loại Xe</a></li>
+            <li><a href="orders.html"><i class="fas fa-receipt fa-icon"></i> Đơn hàng</a></li>
+            <li><a href="customers.html"><i class="fas fa-users fa-icon"></i> Khách hàng</a></li>
+            <li><a href="stock.html"><i class="fas fa-warehouse fa-icon"></i> Tồn kho</a></li>
+            <li><a href="stock_in.html" class = "active"><i class="fas fa-truck-loading fa-icon"></i> Nhập Hàng Mới</a></li>
+                       <li class="mt-4"><a href="admin-login.html"><i class="fas fa-sign-out-alt fa-icon"></i> Đăng xuất</a></li>
+        </ul>
+    </div>
+    <div id="content" class="w-100">
+        <nav class="navbar navbar-light bg-white mb-5 rounded shadow-sm">
+            <div class="container-fluid">
+                <span class="navbar-brand h1 mb-0 text-primary">Nhập Hàng Mới vào Kho</span>
+            </div>
+        </nav>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-truck-loading"></i> Phiếu Nhập Kho</h5>
+            </div>
+            <div class="card-body">
+                <form id="stockInForm">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="stockInId" class="form-label">Mã Phiếu Nhập</label>
+                            <input type="text" class="form-control" id="stockInId" readonly value="PNK001">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="stockInDate" class="form-label">Ngày Nhập</label>
+                            <input type="date" class="form-control" id="stockInDate" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="stockInSupplier" class="form-label">Nhà Cung Cấp</label>
+                            <input type="text" class="form-control" id="stockInSupplier" required placeholder="Tên nhà cung cấp">
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4 mb-3 text-primary">Chi Tiết Sản Phẩm Nhập</h5>
+                    <div class="row g-3 align-items-end"> <div class="col-md-2">
+                            <label for="inputProductId" class="form-label">Mã ID</label>
+                            <input type="text" class="form-control" id="inputProductId" required placeholder="Ví dụ: #001">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="inputProductName" class="form-label">Tên Sản Phẩm</label>
+                            <input type="text" class="form-control" id="inputProductName" required placeholder="Xe Địa Hình Pro-X">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="inputProductCategory" class="form-label">Loại Xe</label>
+                            <select class="form-select" id="inputProductCategory" required>
+                                <option value="">-- Chọn loại --</option>
+                                <option value="Xe Đạp Địa Hình">Xe đạp địa hình</option>
+                                <option value="Xe Đạp Đua">Xe đạp đua</option>
+                                <option value="Xe Đạp Thành Phố">Xe đạp gấp</option>
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="inputQuantity" class="form-label">SL</label>
+                            <input type="number" class="form-control" id="inputQuantity" required min="1" value="1">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="inputImportPrice" class="form-label">Giá Nhập (VNĐ)</label>
+                            <input type="number" class="form-control" id="inputImportPrice" required min="0">
+                        </div>
+                        <div class="col-md-1 d-flex align-items-end">
+                            <button type="button" class="btn btn-success w-100" id="addItemBtn">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID Xe</th>
+                                    <th>Tên Xe</th>
+                                    <th>Loại Xe</th>
+                                    <th>Giá Nhập</th>
+                                    <th>Số Lượng</th>
+                                    <th>Thành Tiền</th>
+                                    <th>Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stockInDetailBody">
+                                </tbody>
+                            <tfoot>
+                                <tr>
+                                   <td colspan="5" class="text-end fw-bold">Tổng Cộng:</td>
+                                    <td colspan="2" class="fw-bold text-danger" id="totalAmount">0₫</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn btn-lg btn-primary" id="finalizeStockInBtn" disabled>
+                            <i class="fas fa-save"></i> Hoàn Tất Nhập Kho
+                        </button>
+                    </div>
+                    <h3 class="mt-5 mb-3 text-primary"><i class="fas fa-history"></i> Lịch Sử Nhập Hàng Gần Đây</h3>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Mã Phiếu</th>
+                            <th>Ngày Nhập</th>
+                            <th>Nhà Cung Cấp</th>
+                            <th>Số SP</th>
+                            <th>Tổng Tiền</th>
+                            <th>Chi tiết</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentStockHistoryBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
+</div> 
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="detailModalLabel">Chi Tiết Phiếu Nhập: <span id="detailStockInId" class="fw-bold"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Ngày Nhập:</strong> <span id="detailDate"></span> | <strong>Nhà Cung Cấp:</strong> <span id="detailSupplier"></span></p>
+                <h6 class="mt-3">Sản Phẩm Đã Nhập:</h6>
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên Xe</th>
+                            <th>Loại Xe</th>
+                            <th>SL</th>
+                            <th>Giá Nhập</th>
+                            <th>Thành Tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detailItemsBody">
+                        </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" class="text-end fw-bold">Tổng Cộng Phiếu Nhập:</td>
+                            <td id="detailTotal" class="fw-bold text-danger"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Khai báo biến DOM (đã chuẩn hóa)
+        const inputProductId = document.getElementById('inputProductId');
+        const inputProductName = document.getElementById('inputProductName');
+        const inputProductCategory = document.getElementById('inputProductCategory');
+        const stockInForm = document.getElementById('stockInForm');
+        // const selectProduct = document.getElementById('selectProduct'); // Không dùng vì đã chuyển sang input
+        const inputQuantity = document.getElementById('inputQuantity');
+        const inputImportPrice = document.getElementById('inputImportPrice');
+        const addItemBtn = document.getElementById('addItemBtn');
+        const stockInDetailBody = document.getElementById('stockInDetailBody');
+        const totalAmount = document.getElementById('totalAmount');
+        const finalizeStockInBtn = document.getElementById('finalizeStockInBtn');
+        const stockInIdInput = document.getElementById('stockInId');
+        const detailModal = document.getElementById('detailModal'); // Biến cho Modal Chi tiết
+
+        let entryItems = []; // Danh sách các sản phẩm chờ nhập
+        
+        // --- HÀM QUẢN LÝ DỮ LIỆU CƠ BẢN ---
+        function loadStockInHistory() {
+            const history = localStorage.getItem('stockInHistory');
+            return history ? JSON.parse(history) : [];
+        }
+
+        function saveStockInHistory(historyArray) {
+            localStorage.setItem('stockInHistory', JSON.stringify(historyArray));
+        }
+        
+        function generateNextStockInId(historyArray) {
+            if (historyArray.length === 0) return 'PNK001';
+            
+            let maxNum = 0;
+            historyArray.forEach(entry => {
+                const numPart = parseInt(entry.id.replace('PNK', '')) || 0;
+                if (numPart > maxNum) {
+                    maxNum = numPart;
+                }
+            });
+            return 'PNK' + String(maxNum + 1).padStart(3, '0');
+        }
+
+        function formatCurrency(amount) {
+            const num = parseFloat(amount);
+            return isNaN(num) ? '0₫' : num.toLocaleString('vi-VN') + '₫';
+        }
+        
+        // --- HÀM XỬ LÝ GIAO DIỆN ---
+
+        // Kiểm tra để bật/tắt nút Thêm Sản phẩm
+        function checkAddItemButton() {
+            const id = inputProductId.value.trim();
+            const name = inputProductName.value.trim();
+            const category = inputProductCategory.value;
+            const quantity = parseInt(inputQuantity.value);
+            const price = parseFloat(inputImportPrice.value);
+            
+            if (
+                id && name && category !== '' && 
+                !isNaN(quantity) && quantity > 0 &&
+                !isNaN(price) && price >= 0
+            ) { 
+                addItemBtn.removeAttribute('disabled');
+            } else {
+                addItemBtn.setAttribute('disabled', 'disabled');
+            }
+        }
+
+        // Cập nhật tổng tiền và trạng thái nút Hoàn tất
+        function updateSummary() {
+            const total = entryItems.reduce((sum, item) => sum + item.subtotal, 0);
+            totalAmount.textContent = formatCurrency(total);
+            
+            if (entryItems.length > 0) {
+                finalizeStockInBtn.removeAttribute('disabled');
+            } else {
+                finalizeStockInBtn.setAttribute('disabled', 'disabled');
+            }
+        }
+        
+        // Xóa sản phẩm khỏi danh sách nhập
+        function removeItem() {
+            const indexToRemove = parseInt(this.getAttribute('data-index')); 
+            entryItems.splice(indexToRemove, 1); 
+            renderDetailTable(); 
+        }
+
+        // Vẽ lại danh sách sản phẩm nhập
+        function renderDetailTable() {
+            stockInDetailBody.innerHTML = '';
+            entryItems.forEach((item, index) => {
+                const row = `
+                    <tr data-product-id="${item.id}">
+                        <td>#${item.id}</td>
+                        <td>${item.name}</td>
+                        <td>${item.category}</td> 
+                        <td>${formatCurrency(item.price)}</td>
+                        <td>${item.quantity}</td>
+                        <td>${formatCurrency(item.subtotal)}</td>
+                        <td><button type="button" class="btn btn-sm btn-danger remove-item-btn" data-index="${index}"><i class="fas fa-times"></i></button></td>
+                    </tr>
+                `;
+                stockInDetailBody.insertAdjacentHTML('beforeend', row);
+            });
+            updateSummary();
+
+            document.querySelectorAll('.remove-item-btn').forEach(btn => {
+                btn.onclick = removeItem;
+            });
+        }
+        
+        // Hàm Render bảng lịch sử gần đây
+        function renderRecentHistory() {
+            const historyArray = loadStockInHistory();
+            const recentStockHistoryBody = document.getElementById('recentStockHistoryBody');
+
+            recentStockHistoryBody.innerHTML = '';
+            
+            // Chỉ hiển thị 5 phiếu nhập gần nhất
+            const recentEntries = historyArray.slice(0, 5); 
+            
+            recentEntries.forEach(entry => {
+                const totalItems = entry.items.reduce((sum, item) => sum + item.quantity, 0);
+                
+                const row = `
+                    <tr data-id="${entry.id}">
+                        <td>${entry.id}</td>
+                        <td>${entry.date}</td>
+                        <td>${entry.supplier}</td>
+                        <td>${totalItems}</td>
+                        <td>${formatCurrency(entry.totalAmount)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-info view-detail-btn" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#detailModal" 
+                                data-entry-id="${entry.id}">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                recentStockHistoryBody.insertAdjacentHTML('beforeend', row);
+            });
+        }
+        
+        // Khởi tạo form khi load trang
+        function initializeForm() {
+            const history = loadStockInHistory();
+            
+            // 1. Tự động điền Mã phiếu nhập mới
+            stockInIdInput.value = generateNextStockInId(history);
+
+            // 2. Tự động điền Ngày nhập (Hôm nay)
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('stockInDate').value = today;
+
+            // 3. Gắn listener cho các trường nhập liệu
+            inputProductId.addEventListener('input', checkAddItemButton);
+            inputProductName.addEventListener('input', checkAddItemButton);
+            inputProductCategory.addEventListener('change', checkAddItemButton);
+            inputQuantity.addEventListener('input', checkAddItemButton);
+            inputImportPrice.addEventListener('input', checkAddItemButton);
+            inputImportPrice.addEventListener('change', checkAddItemButton);
+            
+            // 4. Reset các danh sách và tổng tiền
+            entryItems = []; 
+            stockInDetailBody.innerHTML = '';
+            updateSummary();
+            
+            // 5. Load lịch sử gần đây
+            renderRecentHistory(); 
+        }
+
+        // --- XỬ LÝ SỰ KIỆN CHÍNH ---
+
+        // Thêm sản phẩm vào danh sách nhập
+        addItemBtn.addEventListener('click', function() {
+            checkAddItemButton(); 
+            if (addItemBtn.hasAttribute('disabled')) {
+                return;
+            }
+
+            const selectedId = inputProductId.value.toUpperCase();
+            const name = inputProductName.value;
+            const category = inputProductCategory.value;
+            const quantity = parseInt(inputQuantity.value);
+            const price = parseFloat(inputImportPrice.value);
+            
+            const subtotal = quantity * price;
+
+            const existingItem = entryItems.find(item => item.id === selectedId);
+
+            if (existingItem) {
+                existingItem.quantity += quantity;
+                existingItem.price = price; 
+                existingItem.subtotal = existingItem.quantity * existingItem.price;
+            } else {
+                entryItems.push({
+                    id: selectedId,
+                    name: name,
+                    category: category,
+                    quantity: quantity,
+                    price: price,
+                    subtotal: subtotal
+                });
+            }
+            
+            // Reset chi tiết nhập sau khi thêm
+            inputProductId.value = '';
+            inputProductName.value = '';
+            inputProductCategory.value = '';
+            inputQuantity.value = '1';
+            inputImportPrice.value = '';
+            addItemBtn.setAttribute('disabled', 'disabled');
+            
+            renderDetailTable();
+        });
+
+        // Hoàn tất và lưu phiếu nhập
+        stockInForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (entryItems.length === 0) {
+                alert('Vui lòng thêm ít nhất một sản phẩm vào phiếu nhập.');
+                return;
+            }
+
+            // 1. Tạo bản ghi lịch sử nhập và lưu
+            const history = loadStockInHistory();
+            const newEntryId = stockInIdInput.value;
+            const total = entryItems.reduce((sum, item) => sum + item.subtotal, 0);
+
+            const newStockInEntry = {
+                id: newEntryId,
+                date: document.getElementById('stockInDate').value,
+                supplier: document.getElementById('stockInSupplier').value,
+                totalAmount: total,
+                items: entryItems,
+                timestamp: new Date().toISOString()
+            };
+
+            history.unshift(newStockInEntry);
+            saveStockInHistory(history);
+
+            // 2. Thông báo và Reset form
+            alert(`Hoàn tất nhập kho! Mã phiếu: ${newEntryId}. Tổng tiền: ${formatCurrency(total)}`);
+            
+            // Reset form chính
+            stockInForm.reset();
+            
+            // Cài đặt lại các giá trị ban đầu và cập nhật lịch sử
+            initializeForm(); 
+        });
+        
+        // Bắt sự kiện Modal hiển thị (đổ dữ liệu chi tiết lịch sử)
+        if (detailModal) {
+            detailModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget; 
+                const entryId = button.getAttribute('data-entry-id');
+                const history = loadStockInHistory();
+                const entry = history.find(e => e.id === entryId);
+
+                if (!entry) return;
+
+                document.getElementById('detailStockInId').textContent = entry.id;
+                document.getElementById('detailDate').textContent = entry.date;
+                document.getElementById('detailSupplier').textContent = entry.supplier;
+                document.getElementById('detailTotal').textContent = formatCurrency(entry.totalAmount);
+                
+                const detailItemsBody = document.getElementById('detailItemsBody');
+                detailItemsBody.innerHTML = '';
+                
+                entry.items.forEach(item => {
+                    const itemRow = `
+                        <tr>
+                            <td>#${item.id}</td>
+                            <td>${item.name}</td>
+                            <td>${item.category || 'N/A'}</td>
+                            <td>${item.quantity}</td>
+                            <td>${formatCurrency(item.price)}</td>
+                            <td>${formatCurrency(item.subtotal)}</td>
+                        </tr>
+                    `;
+                    detailItemsBody.insertAdjacentHTML('beforeend', itemRow);
+                });
+            });
+        }
+        // --- KHỞI CHẠY ---
+        initializeForm();
+    });
+</script>
+
+</body>
+</html>

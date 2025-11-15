@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard Xe Đạp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        body { background-color: #f0f2f5; } /* Nền xám nhạt */
+        #sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            background-color: #ffffff;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            padding-top: 20px;
+        }
+        #content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+        .sidebar-header h3 { color: #007bff; font-weight: bold; }
+        .sidebar-list a {
+            padding: 10px 20px;
+            color: #495057;
+            display: block;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .sidebar-list a:hover,
+        .sidebar-list a.active {
+            background: #e9f2ff; /* Màu nền xanh nhạt */
+            color: #007bff; /* Màu chữ xanh dương */
+            border-left: 5px solid #007bff;
+            padding-left: 15px;
+        }
+        .sidebar-list .fa-icon { width: 25px; }
+        .card-icon { font-size: 3rem; opacity: 0.5; }
+        /* Thêm vào khối <style> của bạn */
+.sidebar-list .list-unstyled {
+    margin-bottom: 0;
+    margin-top: 5px;
+    /* Có thể thêm padding-left nếu chưa có ps-4 */
+}
+
+.sidebar-list .list-unstyled a {
+    /* Điều chỉnh phong cách cho mục phụ */
+    padding: 8px 20px 8px 45px; /* Tăng padding trái để thụt vào */
+    font-size: 0.95em;
+    color: #6c757d; 
+}
+
+.sidebar-list .list-unstyled a:hover {
+    background: #e9f2ff;
+    color: #007bff;
+    border-left: none; /* Bỏ border-left cho mục phụ */
+}
+/* CARD NỔI BẬT */
+.recent-activity-card {
+    border-left: 8px solid #0d6efd;
+    background: linear-gradient(135deg, #f3f7ff, #ffffff);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+    border-radius: 14px;
+    transition: all 0.25s ease;
+}
+
+.recent-activity-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22);
+}
+
+/* TỪNG DÒNG HOẠT ĐỘNG */
+#recentActivities li {
+    padding: 15px 12px;
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    border-bottom: 1px solid #e1e1e1;
+    transition: all 0.25s ease;
+    background: transparent;
+}
+
+#recentActivities li:hover {
+    background: #e9f2ff;
+    padding-left: 20px;
+}
+
+/* ICON */
+.activity-icon {
+    font-size: 26px;
+    color: #0d6efd;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+}
+
+/* CHỮ NỘI DUNG */
+.activity-content span:first-child {
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+/* THỜI GIAN */
+.activity-time {
+    font-size: 13px;
+    color: #6c757d;
+    margin-top: 4px;
+}
+.stat-card {
+    border-radius: 16px;
+    color: white;
+    padding: 22px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    transition: 0.25s;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+}
+
+.stat-icon {
+    font-size: 42px;
+    opacity: 0.9;
+}
+/* --- Styling các thẻ mới theo mẫu --- */
+
+/* Thẻ Chức năng (Action Card) */
+.action-card {
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    padding: 10px 0;
+}
+.action-card:hover {
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+}
+.action-card .icon-lg {
+    font-size: 2.5rem;
+}
+.action-card .card-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #343a40;
+}
+
+/* Thẻ Thống kê (Metric Card) */
+.metric-card {
+    border-radius: 10px;
+    padding: 5px 0;
+}
+.metric-card .metric-icon {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    /* Hiệu ứng màu nền nhẹ cho icon */
+    background-color: rgba(0, 123, 255, 0.1); /* Sẽ được ghi đè bằng màu khác */
+}
+
+/* Màu nền nhẹ cho từng icon */
+.metric-card .text-success ~ div .metric-icon { background-color: rgba(40, 167, 69, 0.1); }
+.metric-card .text-primary ~ div .metric-icon { background-color: rgba(0, 123, 255, 0.1); }
+.metric-card .text-danger ~ div .metric-icon { background-color: rgba(220, 53, 69, 0.1); }
+.metric-card .text-dark ~ div .metric-icon { background-color: rgba(52, 58, 64, 0.1); }
+
+.metric-card h2 {
+    font-size: 1.8rem;
+}
+.metric-card p {
+    font-size: 0.8rem;
+}
+.metric-card small {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Điều chỉnh lại khối Card chung (Biểu đồ) */
+.card {
+    border-radius: 10px !important; /* Đảm bảo góc bo tròn */
+}
+
+    </style>
+</head>
+
+<body>
+
+<div class="d-flex">
+    <div id="sidebar">
+        <div class="sidebar-header text-center mb-4">
+            <h3><i class="fas fa-bicycle"></i> Bike Admin</h3>
+        </div>
+
+        <ul class="list-unstyled sidebar-list">
+            <li><a href="dashboard.html" class="active"><i class="fas fa-tachometer-alt fa-icon"></i> Trang chủ</a></li>
+            <li><a href="bikes.html"><i class="fas fa-motorcycle fa-icon"></i> Quản lý Xe Đạp</a></li>
+            <li><a href="categories.html"><i class="fas fa-sitemap fa-icon"></i> Loại Xe</a></li>
+            <li><a href="orders.html"><i class="fas fa-receipt fa-icon"></i> Đơn hàng</a></li>
+            <li><a href="customers.html"><i class="fas fa-users fa-icon"></i> Khách hàng</a></li>
+            <li><a href="stock.html"><i class="fas fa-warehouse fa-icon"></i> Tồn kho</a></li>
+            <li><a href="stock_in.html"><i class="fas fa-truck-loading fa-icon"></i> Nhập Hàng Mới</a></li>
+
+        <li class="mt-4"><a href="admin-login.html"><i class="fas fa-sign-out-alt fa-icon"></i> Đăng xuất</a></li>
+        </ul>
+    </div>
+   <div id="content" class="w-100">
+    <nav class="navbar navbar-light bg-white mb-5 rounded shadow-sm">
+        <div class="container-fluid">
+            <span class="navbar-brand h1 mb-0 text-primary">Tổng Quan Hệ Thống</span>
+            <div class="d-flex align-items-center">
+                <span class="me-3 text-muted">Chào mừng, Admin!</span>
+                <button class="btn btn-outline-danger btn-sm"><i class="fas fa-power-off"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="row g-4 mb-5">
+        
+        <div class="col-lg-3 col-md-6">
+                        <a href="bikes.html" class="text-decoration-none d-block">
+
+            <div class="card action-card shadow-sm border-0 text-center">
+                <div class="card-body">
+                    <i class="fas fa-plus-circle text-success mb-2 icon-lg"></i>
+                    <h5 class="card-title mb-0">Thêm sản phẩm</h5>
+                </div>
+            </div>
+                        </a>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+                        <a href="orders.html" class="text-decoration-none d-block">
+
+            <div class="card action-card shadow-sm border-0 text-center">
+                <div class="card-body">
+                    <i class="fas fa-shopping-cart text-primary mb-2 icon-lg"></i>
+                    <h5 class="card-title mb-0">Xem đơn hàng</h5>
+                </div>
+            </div>
+                        </a>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <a href="stock_in.html" class="text-decoration-none d-block">
+            <div class="card action-card shadow-sm border-0 text-center">
+                <div class="card-body">
+                    <i class="fas fa-box-open text-info mb-2 icon-lg"></i>
+                    <h5 class="card-title mb-0">Nhập hàng</h5>
+                </div>
+            </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+                        <a href="stock.html" class="text-decoration-none d-block">
+
+            <div class="card action-card shadow-sm border-0 text-center">
+                <div class="card-body">
+                    <i class="fas fa-chart-line text-secondary mb-2 icon-lg"></i>
+                    <h5 class="card-title mb-0">Báo cáo tồn kho</h5>
+                </div>
+            </div>
+        </div>
+    </a>
+    </div>
+
+    <div class="row g-4 mb-5">
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="card metric-card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-receipt metric-icon text-success me-3"></i>
+                        <div>
+                            <p class="text-uppercase text-muted mb-0">Đơn hàng mới</p>
+                            <h2 class="fw-bold mb-0 text-success">12</h2>
+                            <small class="text-success"><i class="fas fa-arrow-up"></i> 12% so với hôm qua</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="card metric-card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-dollar-sign metric-icon text-primary me-3"></i>
+                        <div>
+                            <p class="text-uppercase text-muted mb-0">Doanh thu (Hôm nay)</p>
+                            <h2 class="fw-bold mb-0 text-primary">25.000.000₫</h2>
+                            <small class="text-primary"><i class="fas fa-arrow-up"></i> 8% so với tuần qua</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card metric-card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-users metric-icon text-danger me-3"></i>
+                        <div>
+                            <p class="text-uppercase text-muted mb-0">Khách hàng mới</p>
+                            <h2 class="fw-bold mb-0 text-danger">58</h2>
+                            <small class="text-danger"><i class="fas fa-arrow-up"></i> 5% so với tuần trước</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="card metric-card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-box-open metric-icon text-dark me-3"></i>
+                        <div>
+                            <p class="text-uppercase text-muted mb-0">Sản phẩm sắp hết</p>
+                            <h2 class="fw-bold mb-0 text-dark">5</h2>
+                            <small class="text-danger"><i class="fas fa-exclamation-triangle"></i> Cần nhập hàng</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+<div class="row g-4 mb-5">
+        
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 p-3">
+                <h5 class="card-title fw-bold">Doanh thu 7 ngày qua</h5>
+                <div style="height: 300px;">
+                    <canvas id="revenueChart"></canvas> 
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 p-3">
+                <h5 class="card-title fw-bold">Sản phẩm bán chạy <small class="text-muted float-end">Top 5</small></h5>
+                <div style="height: 300px; display: flex; align-items: center; justify-content: center;">
+                    <canvas id="productChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row g-4 mb-5">
+        <div class="col-12">
+            <div class="card recent-activity-card shadow-sm border-0 p-3">
+                <h5 class="card-title fw-bold mb-0">Hoạt động gần đây</h5>
+                <ul class="list-unstyled mt-3" id="recentActivities">
+                    </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Dữ liệu và hàm render Activities
+    const recentActivitiesData = [
+        { action: "Đã bán 1 xe đạp GIANT Escape 2 Disc ", time: "10 phút trước", icon: "fas fa-cash-register", color: "#28a745" },
+        { action: "Nhập kho 5 xe Fixed Gear VINBIKE Megatron", time: "30 phút trước", icon: "fas fa-box-open", color: "#17a2b8" },
+        { action: "Khách hàng Nguyễn Văn Đạt tạo đơn hàng mới", time: "1 giờ trước", icon: "fas fa-receipt", color: "#007bff" },
+        { action: "Cập nhật giá xe Touring JAVA Wahoo City", time: "2 giờ trước", icon: "fas fa-tags", color: "#ffc107" },
+        { action: "Xe JAVA Auriga R5 còn 10 chiếc", time: "3 giờ trước", icon: "fas fa-exclamation-triangle", color: "#dc3545" }
+    ];
+
+    function renderActivities() {
+        const list = document.getElementById("recentActivities");
+        if (!list) return; // Kiểm tra nếu phần tử không tồn tại
+
+        list.innerHTML = "";
+
+        recentActivitiesData.forEach(item => {
+            const li = document.createElement("li");
+            // Sử dụng các class của bạn
+            li.className = "list-group-item d-flex align-items-center"; 
+            
+            li.innerHTML = `
+                <i class="${item.icon}" style="font-size: 20px; color: ${item.color}; margin-right: 15px;"></i>
+                <div class="activity-content flex-grow-1 d-flex justify-content-between align-items-center">
+                    <span>${item.action}</span>
+                    <span class="activity-time text-end" style="min-width: 100px;">${item.time}</span>
+                </div>
+            `;
+            list.appendChild(li);
+        });
+    }
+
+    // Biểu đồ
+    document.addEventListener("DOMContentLoaded", function () {
+        
+        // Dữ liệu biểu đồ (Đã được sửa lỗi ID canvas)
+        const revenueData = {
+            labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
+            datasets: [{
+                label: 'Doanh thu (Triệu VNĐ)',
+                data: [12, 18, 15, 25, 22, 29, 27],
+                fill: true,
+                backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                borderColor: 'rgba(40, 167, 69, 1)',
+                tension: 0.4,
+                pointRadius: 5,
+                pointBackgroundColor: 'rgba(40, 167, 69, 1)'
+            }]
+        };
+
+        const productData = {
+            labels: ['Xe đạp đua', 'Xe đạp địa hình', 'Xe đạp gấp'],
+            datasets: [{
+                label: 'Sản phẩm bán chạy',
+                data: [40, 35, 25],
+                backgroundColor: [
+                    '#007bff', 
+                    '#28a745', 
+                    '#dc3545', 
+                    '#ffc107', 
+                    '#6c757d'  
+                ],
+                hoverOffset: 10
+            }]
+        };
+
+        // --- 1. Vẽ Biểu đồ Doanh thu (Line Chart) ---
+        const revenueCtx = document.getElementById('revenueChart');
+        if (revenueCtx) {
+            new Chart(revenueCtx.getContext('2d'), {
+                type: 'line',
+                data: revenueData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(context.parsed.y * 1000000);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Triệu VNĐ' } }
+                    }
+                }
+            });
+        }
+
+
+        // --- 2. Vẽ Biểu đồ Sản phẩm (Donut Chart) ---
+        const productCtx = document.getElementById('productChart');
+        if (productCtx) {
+            new Chart(productCtx.getContext('2d'), {
+                type: 'doughnut',
+                data: productData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { usePointStyle: true } }
+                    }
+                }
+            });
+        }
+        
+        renderActivities();
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
