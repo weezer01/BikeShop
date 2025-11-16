@@ -1478,30 +1478,30 @@ if (clearAllBtn) {
 //     });
 // }
 
-// // Lọc theo Sidebar (Thương hiệu, Loại, v.v. - KHÔNG PHẢI KHOẢNG GIÁ)
-// sidebarLinks.forEach(link => {
-//     // Chỉ xử lý các link KHÔNG thuộc mục Khoảng giá (đã có listener riêng)
-//     if (!link.closest('#categories-1-price-subcategories')) {
-//         link.addEventListener('click', (e) => {
-//             e.preventDefault();
-//             const selectedValue = e.target.textContent.trim();
+// Lọc theo Sidebar (Thương hiệu, Loại, v.v. - KHÔNG PHẢI KHOẢNG GIÁ)
+sidebarLinks.forEach(link => {
+    // Chỉ xử lý các link KHÔNG thuộc mục Khoảng giá (đã có listener riêng)
+    if (!link.closest('#categories-1-price-subcategories')) {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const selectedValue = e.target.textContent.trim();
 
-//             const isActive = e.target.classList.contains('active');
+            const isActive = e.target.classList.contains('active');
             
-//             // Xóa active cho tất cả các link Sidebar khác
-//             sidebarLinks.forEach(l => l.classList.remove('active')); 
+            // Xóa active cho tất cả các link Sidebar khác
+            sidebarLinks.forEach(l => l.classList.remove('active')); 
 
-//             if (!isActive) {
-//                 e.target.classList.add('active');
-//                 activeFilters.sidebarBrand = selectedValue;
-//             } else {
-//                 activeFilters.sidebarBrand = '';
-//             }
+            if (!isActive) {
+                e.target.classList.add('active');
+                activeFilters.sidebarBrand = selectedValue;
+            } else {
+                activeFilters.sidebarBrand = '';
+            }
             
-//             applyFilters();
-//         });
-//     }
-// });
+            applyFilters();
+        });
+    }
+});
 
 // // !!! LISTENER QUAN TRỌNG CHO KHOẢNG GIÁ DROPDOWN SIDEBAR !!!
 // // !!! LISTENER CHO KHOẢNG GIÁ DROPDOWN SIDEBAR !!!
