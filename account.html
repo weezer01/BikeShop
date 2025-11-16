@@ -166,14 +166,14 @@ header a:active {
           </a>
 
           <!-- Search -->
-          <form id="mainSearchForm" class="search-form desktop-search-form">
-    <div class="input-group">
-      <input id="mainSearchInput" type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
-      <button class="btn" type="submit">
-        <i class="bi bi-search"></i>
-      </button>
-    </div>
-</form>
+          <form class="search-form desktop-search-form">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+              <button class="btn" type="submit">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </form>
 
           <!-- Actions -->
           <div class="header-actions d-flex align-items-center justify-content-end">
@@ -568,189 +568,203 @@ header a:active {
 
                   <div class="orders-grid">
                     <!-- Order Card 1 -->
-                    <div class="order-card" data-aos="fade-up" data-aos-delay="100">
-                      <div class="order-header">
-                        <div class="order-id">
-                          <span class="label">Mã đơn hàng:</span>
-                          <span class="value">#ORD-2025-1278</span>
-                        </div>
-                        <div class="order-date">Ngày đặt: 20/05/2025</div>
-                      </div>
-                      <div class="order-content">
-                        <div class="product-grid">
-                          <img src="assets/img/product/6.jpg" alt="Product" loading="lazy">
-                          <img src="assets/img/product/13.jpg" alt="Product" loading="lazy">
-                        </div>
-                        <div class="order-info">
-                          <div class="info-row">
-                            <span>Trạng thái</span>
-                            <span class="status processing">Đang xử lý</span>
-                          </div>
-                          <div class="info-row">
-                            <span>Số lượng</span>
-                            <span>2 sản phẩm</span>
-                          </div>
-                          <div class="info-row">
-                            <span>Tổng cộng</span>
-                            <span class="price">29.850.000 VND</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="order-footer">
-                        <button type="button" class="btn-track" data-bs-toggle="collapse" data-bs-target="#tracking1" aria-expanded="false">Theo dõi đơn hàng</button>
-                        <button type="button" class="btn-details" data-bs-toggle="collapse" data-bs-target="#details1" aria-expanded="false">Xem chi tiết</button>
-                      </div>
+<!-- Order Card 1 -->
+<div class="order-card" data-aos="fade-up" data-aos-delay="100">
 
-                      <!-- Order Tracking -->
-                      <div class="collapse tracking-info" id="tracking1">
-                        <div class="tracking-timeline">
-                          <div class="timeline-item completed">
-                            <div class="timeline-icon">
-                              <i class="bi bi-check-circle-fill"></i>
-                            </div>
-                            <div class="timeline-content">
-                              <h5>Đơn hàng đã được xác nhận</h5>
-                              <p>Đơn hàng của bạn đã được nhận và xác nhận.</p>
-                              <span class="timeline-date">20/05/2025 - 10:30</span>
-                            </div>
-                          </div>
-
-                          <div class="timeline-item completed">
-                            <div class="timeline-icon">
-                              <i class="bi bi-check-circle-fill"></i>
-                            </div>
-                            <div class="timeline-content">
-                              <h5>Đang xử lý</h5>
-                              <p>Đơn hàng của bạn đang được chuẩn bị để giao đi</p>
-                              <span class="timeline-date">20/05/2025 - 14:45</span>
-                            </div>
-                          </div>
-
-                          <div class="timeline-item active">
-                            <div class="timeline-icon">
-                              <i class="bi bi-box-seam"></i>
-                            </div>
-                            <div class="timeline-content">
-                              <h5>Đang đóng gói</h5>
-                              <p>Sản phẩm của bạn đang được đóng gói để vận chuyển</p>
-                              <span class="timeline-date">20/05/2025 - 16:15</span>
-                            </div>
-                          </div>
-
-                          <div class="timeline-item">
-                            <div class="timeline-icon">
-                              <i class="bi bi-truck"></i>
-                            </div>
-                            <div class="timeline-content">
-                              <h5>Đang vận chuyển</h5>
-                              <p>Dự kiến gửi trong vòng 24 giờ</p>
-                            </div>
-                          </div>
-
-                          <div class="timeline-item">
-                            <div class="timeline-icon">
-                              <i class="bi bi-house-door"></i>
-                            </div>
-                            <div class="timeline-content">
-                              <h5>Giao hàng</h5>
-                              <p>Dự kiến giao hàng: 22/05/2025</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-  <!-- Chi tiết đơn hàng -->
-<div class="collapse order-details" id="details1">
-  <div class="details-content">
-
-    <!-- Phương thức đặt hàng -->
-    <div class="detail-section">
-      <h5>Thông tin đặt hàng</h5>
-      <div class="info-grid">
-        <div class="info-item">
-          <span class="label">Phương thức thanh toán</span>
-          <span class="value">Thẻ tín dụng (**** 4589)</span>
-        </div>
-        <div class="info-item">
-          <span class="label">Phương thức giao hàng</span>
-          <span class="value">Giao hàng nhanh (2-3 ngày)</span>
-        </div>
-      </div>
+  <!-- HEADER -->
+  <div class="order-header">
+    <div class="order-id">
+      <span class="label">Mã đơn hàng:</span>
+      <span class="value">#ORD-2025-1278</span>
     </div>
-
-    <!-- Sản phẩm -->
-    <div class="detail-section">
-      <h5>Sản phẩm (2)</h5>
-      <div class="order-items">
-
-        <div class="item">
-          <img src="assets/img/product/6.jpg" alt="Sản phẩm" loading="lazy">
-          <div class="item-info">
-            <h6>Xe Đạp Đường Phố Touring GIANT Fastroad AR Advanced 1-Asia - Phanh Đĩa, Bánh 700C - 2026</h6>
-            <div class="item-meta">
-              <span class="sku">Mã sản phẩm: XD-001</span>
-              <span class="qty">Số lượng: 1</span>
-            </div>
-          </div>
-          <div class="item-price">18.850.000 VND</div>
-        </div>
-
-        <div class="item">
-          <img src="assets/img/product/13.jpg" alt="Sản phẩm" loading="lazy">
-          <div class="item-info">
-            <h6>Xe Đạp Đường Phố Touring JAVA Sequoia-7S-City - Phanh Đĩa, Bánh 700C</h6>
-            <div class="item-meta">
-              <span class="sku">Mã sản phẩm: XD-002</span>
-              <span class="qty">Số lượng: 1</span>
-            </div>
-          </div>
-          <div class="item-price">10.000.000 VND</div>
-        </div>
-
-        <div class="item">
-          <div class="item-info">
-            <div class="item-meta">
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-     <!-- Giá tiền -->
-    <div class="detail-section">
-      <h5>Chi tiết giá</h5>
-      <div class="price-breakdown">
-        <div class="price-row">
-          <span>Tạm tính</span>
-          <span>28.850.000 VND</span>
-        </div>
-        <div class="price-row">
-          <span>Phí vận chuyển</span>
-          <span>800.000 VND</span>
-        </div>
-        <div class="price-row">
-          <span>Thuế</span>
-          <span>200.000 VND</span>
-        </div>
-        <div class="price-row total">
-          <span>Tổng cộng</span>
-          <span>29.850.000 VND</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Địa chỉ giao hàng -->
-    <div class="detail-section">
-      <h5>Địa chỉ giao hàng</h5>
-      <div class="address-info">
-        <p>Trần Trung Hậu<br>123 Đường Lê Văn Quới<br> Phường Bình Trị Đông <br>Thành phố Hồ Chí Minh, TPHCM 70000<br>Việt Nam</p>
-        <p class="contact">+84 908 546 274</p>
-      </div>
-    </div>
-
+    <div class="order-date">Ngày đặt: 20/05/2025</div>
   </div>
+
+  <!-- CONTENT -->
+  <div class="order-content">
+    <div class="product-grid">
+      <img src="assets/img/product/6.jpg" alt="Product" loading="lazy">
+      <img src="assets/img/product/13.jpg" alt="Product" loading="lazy">
+    </div>
+
+    <div class="order-info">
+      <div class="info-row">
+        <span>Trạng thái</span>
+        <span class="status processing">Đang xử lý</span>
+      </div>
+
+      <div class="info-row">
+        <span>Số lượng</span>
+        <span>2 sản phẩm</span>
+      </div>
+
+      <div class="info-row">
+        <span>Tổng cộng</span>
+        <span class="price">29.850.000 VND</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER BUTTONS -->
+  <div class="order-footer">
+    <button type="button" class="btn-track" data-bs-toggle="collapse" data-bs-target="#tracking1">
+      Theo dõi đơn hàng
+    </button>
+
+    <button type="button" class="btn-details" data-bs-toggle="collapse" data-bs-target="#details1">
+      Xem chi tiết
+    </button>
+  </div>
+
+  <!-- ============================= -->
+  <!-- TRACKING COLLAPSE INSIDE CARD -->
+  <!-- ============================= -->
+  <div id="tracking1" class="collapse tracking-info">
+    <div class="tracking-timeline">
+
+      <div class="timeline-item completed">
+        <div class="timeline-icon"><i class="bi bi-check-circle-fill"></i></div>
+        <div class="timeline-content">
+          <h5>Đơn hàng đã được xác nhận</h5>
+          <p>Đơn hàng của bạn đã được nhận và xác nhận.</p>
+          <span class="timeline-date">20/05/2025 - 10:30</span>
+        </div>
+      </div>
+
+      <div class="timeline-item completed">
+        <div class="timeline-icon"><i class="bi bi-check-circle-fill"></i></div>
+        <div class="timeline-content">
+          <h5>Đang xử lý</h5>
+          <p>Đơn hàng của bạn đang được chuẩn bị.</p>
+          <span class="timeline-date">20/05/2025 - 14:45</span>
+        </div>
+      </div>
+
+      <div class="timeline-item active">
+        <div class="timeline-icon"><i class="bi bi-box-seam"></i></div>
+        <div class="timeline-content">
+          <h5>Đang đóng gói</h5>
+          <p>Sản phẩm đang được đóng gói.</p>
+          <span class="timeline-date">20/05/2025 - 16:15</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-icon"><i class="bi bi-truck"></i></div>
+        <div class="timeline-content">
+          <h5>Đang vận chuyển</h5>
+          <p>Dự kiến gửi trong vòng 24 giờ.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-icon"><i class="bi bi-house-door"></i></div>
+        <div class="timeline-content">
+          <h5>Giao hàng</h5>
+          <p>Dự kiến giao: 22/05/2025</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================= -->
+  <!-- ORDER DETAILS COLLAPSE INSIDE CARD -->
+  <!-- ============================= -->
+  <div class="collapse order-details" id="details1">
+    <div class="details-content">
+
+      <!-- Thông tin đặt hàng -->
+      <div class="detail-section card-box">
+        <h5 class="section-title">
+          <i class="bi bi-receipt"></i> Thông tin đặt hàng
+        </h5>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Phương thức thanh toán</span>
+            <span class="value">Thẻ tín dụng (**** 4589)</span>
+          </div>
+
+          <div class="info-item">
+            <span class="label">Phương thức giao hàng</span>
+            <span class="value">Giao hàng nhanh (2–3 ngày)</span>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- SẢN PHẨM -->
+      <div class="detail-section card-box">
+        <h5 class="section-title">
+          <i class="bi bi-box-seam"></i> Sản phẩm (2)
+        </h5>
+
+        <div class="order-items">
+          <div class="item">
+            <img src="assets/img/product/6.jpg" class="item-img">
+            <div class="item-info">
+              <h6 class="item-name">Xe Đạp Đường Phố GIANT Fastroad AR Advanced 1</h6>
+              <div class="item-meta">
+                <span class="sku">Mã: XD-001</span>
+                <span class="qty">SL: 1</span>
+              </div>
+            </div>
+            <div class="item-price">18.850.000 VND</div>
+          </div>
+
+          <div class="item">
+            <img src="assets/img/product/13.jpg" class="item-img">
+            <div class="item-info">
+              <h6 class="item-name">Xe Đạp JAVA Sequoia 7S City</h6>
+              <div class="item-meta">
+                <span class="sku">Mã: XD-002</span>
+                <span class="qty">SL: 1</span>
+              </div>
+            </div>
+            <div class="item-price">10.000.000 VND</div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- CHI TIẾT GIÁ -->
+      <div class="detail-section card-box">
+        <h5 class="section-title"><i class="bi bi-cash-stack"></i> Chi tiết giá</h5>
+
+        <div class="price-breakdown">
+          <div class="price-row"><span>Tạm tính</span><span>28.850.000 VND</span></div>
+          <div class="price-row"><span>Phí vận chuyển</span><span>800.000 VND</span></div>
+          <div class="price-row"><span>Thuế</span><span>200.000 VND</span></div>
+          <div class="price-row total"><span>Tổng cộng</span><span>29.850.000 VND</span></div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- ĐỊA CHỈ GIAO HÀNG -->
+      <div class="detail-section card-box">
+        <h5 class="section-title"><i class="bi bi-geo-alt"></i> Địa chỉ giao hàng</h5>
+
+        <div class="address-info">
+          <p>
+            Trần Trung Hậu<br>
+            123 Lê Văn Quới<br>
+            P. Bình Trị Đông<br>
+            TP. Hồ Chí Minh 70000<br>
+            Việt Nam
+          </p>
+          <p class="contact">+84 908 546 274</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 </div>
+
 
 
                     
@@ -922,8 +936,6 @@ header a:active {
 </script>
                     </div>         
                     </div>
-</div>
-</div>
                 <!-- Wishlist Tab -->
                 <div class="tab-pane fade" id="wishlist">
                   <div class="section-header" data-aos="fade-up">
@@ -1574,80 +1586,80 @@ function logout() {
         `).join('');
     }
     
-    // --- HÀM TẠO HTML CHO MỘT THẺ ĐƠN HÀNG (Dựa trên HTML bạn cung cấp) ---
-    function createOrderCardHtml(order) {
-        const orderIdDisplay = `#ORD-${new Date(order.id).getFullYear()}-${String(order.id).slice(-4)}`;
-        const orderDate = order.date;
-        const totalItems = order.items.reduce((sum, item) => sum + item.quantity, 0);
-        const statusClass = order.status === 'Đang xử lý' ? 'processing' : (order.status === 'Đã giao' ? 'delivered' : 'pending');
+    // // --- HÀM TẠO HTML CHO MỘT THẺ ĐƠN HÀNG (Dựa trên HTML bạn cung cấp) ---
+    // function createOrderCardHtml(order) {
+    //     const orderIdDisplay = `#ORD-${new Date(order.id).getFullYear()}-${String(order.id).slice(-4)}`;
+    //     const orderDate = order.date;
+    //     const totalItems = order.items.reduce((sum, item) => sum + item.quantity, 0);
+    //     const statusClass = order.status === 'Đang xử lý' ? 'processing' : (order.status === 'Đã giao' ? 'delivered' : 'pending');
         
-        return `
-            <div class="order-card" data-aos="fade-up" data-aos-delay="100" data-order-id="${order.id}">
-                <div class="order-header">
-                    <div class="order-id">
-                        <span class="label">Mã đơn hàng:</span>
-                        <span class="value">${orderIdDisplay}</span>
-                    </div>
-                    <div class="order-date">Ngày đặt: ${orderDate}</div>
-                </div>
-                <div class="order-content">
-                    <div class="product-grid">
-                        ${generateProductImagesHtml(order.items)}
-                        ${order.items.length > 3 ? `<span class="more-items">+${order.items.length - 3}</span>` : ''}
-                    </div>
-                    <div class="order-info">
-                        <div class="info-row">
-                            <span>Trạng thái</span>
-                            <span class="status ${statusClass}">${order.status}</span>
-                        </div>
-                        <div class="info-row">
-                            <span>Số lượng</span>
-                            <span>${totalItems} sản phẩm</span>
-                        </div>
-                        <div class="info-row">
-                            <span>Tổng cộng</span>
-                            <span class="price">${formatVND(order.total)}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="order-footer">
-                    <button type="button" class="btn-track" data-bs-toggle="collapse" data-bs-target="#tracking-${order.id}" aria-expanded="false">Theo dõi đơn hàng</button>
-                    <button type="button" class="btn-details" data-bs-toggle="collapse" data-bs-target="#details-${order.id}" aria-expanded="false">Xem chi tiết</button>
-                </div>
+    //     return `
+    //         <div class="order-card" data-aos="fade-up" data-aos-delay="100" data-order-id="${order.id}">
+    //             <div class="order-header">
+    //                 <div class="order-id">
+    //                     <span class="label">Mã đơn hàng:</span>
+    //                     <span class="value">${orderIdDisplay}</span>
+    //                 </div>
+    //                 <div class="order-date">Ngày đặt: ${orderDate}</div>
+    //             </div>
+    //             <div class="order-content">
+    //                 <div class="product-grid">
+    //                     ${generateProductImagesHtml(order.items)}
+    //                     ${order.items.length > 3 ? `<span class="more-items">+${order.items.length - 3}</span>` : ''}
+    //                 </div>
+    //                 <div class="order-info">
+    //                     <div class="info-row">
+    //                         <span>Trạng thái</span>
+    //                         <span class="status ${statusClass}">${order.status}</span>
+    //                     </div>
+    //                     <div class="info-row">
+    //                         <span>Số lượng</span>
+    //                         <span>${totalItems} sản phẩm</span>
+    //                     </div>
+    //                     <div class="info-row">
+    //                         <span>Tổng cộng</span>
+    //                         <span class="price">${formatVND(order.total)}</span>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //             <div class="order-footer">
+    //                 <button type="button" class="btn-track" data-bs-toggle="collapse" data-bs-target="#tracking-${order.id}" aria-expanded="false">Theo dõi đơn hàng</button>
+    //                 <button type="button" class="btn-details" data-bs-toggle="collapse" data-bs-target="#details-${order.id}" aria-expanded="false">Xem chi tiết</button>
+    //             </div>
 
-                <div class="collapse tracking-info" id="tracking-${order.id}">
-                    <div class="tracking-timeline">
-                        <div class="timeline-item completed">
-                            <div class="timeline-icon"><i class="bi bi-check-circle-fill"></i></div>
-                            <div class="timeline-content"><h5>Đơn hàng đã được xác nhận</h5><p>Đã nhận đơn hàng.</p></div>
-                        </div>
-                        <div class="timeline-item active">
-                            <div class="timeline-icon"><i class="bi bi-box-seam"></i></div>
-                            <div class="timeline-content"><h5>Đang xử lý</h5><p>Đơn hàng đang được chuẩn bị.</p></div>
-                        </div>
-                        </div>
-                </div>
+    //             <div class="collapse tracking-info" id="tracking-${order.id}">
+    //                 <div class="tracking-timeline">
+    //                     <div class="timeline-item completed">
+    //                         <div class="timeline-icon"><i class="bi bi-check-circle-fill"></i></div>
+    //                         <div class="timeline-content"><h5>Đơn hàng đã được xác nhận</h5><p>Đã nhận đơn hàng.</p></div>
+    //                     </div>
+    //                     <div class="timeline-item active">
+    //                         <div class="timeline-icon"><i class="bi bi-box-seam"></i></div>
+    //                         <div class="timeline-content"><h5>Đang xử lý</h5><p>Đơn hàng đang được chuẩn bị.</p></div>
+    //                     </div>
+    //                     </div>
+    //             </div>
                 
-                <div class="collapse details-info" id="details-${order.id}">
-                    <div class="p-3 border mt-2">
-                        <h6>Chi tiết giao hàng:</h6>
-                        <p class="mb-1 small">Người nhận: <strong>${order.customer.name}</strong></p>
-                        <p class="mb-1 small">Địa chỉ: ${order.customer.address}</p>
-                        <p class="mb-1 small">PTTT: ${order.customer.payment}</p>
-                        <p class="mb-1 small">Phí vận chuyển: ${order.shippingFee === 0 ? 'Miễn phí' : formatVND(order.shippingFee)}</p>
-                        <hr class="my-2">
-                        <h6>Sản phẩm:</h6>
-                        <ul class="list-unstyled small">
-                            ${order.items.map(item => `
-                                <li>${item.title.substring(0, 40)}... - ${item.quantity} x ${formatVND(item.price)}</li>
-                            `).join('')}
-                        </ul>
-                    </div>
-                </div>
+    //             <div class="collapse details-info" id="details-${order.id}">
+    //                 <div class="p-3 border mt-2">
+    //                     <h6>Chi tiết giao hàng:</h6>
+    //                     <p class="mb-1 small">Người nhận: <strong>${order.customer.name}</strong></p>
+    //                     <p class="mb-1 small">Địa chỉ: ${order.customer.address}</p>
+    //                     <p class="mb-1 small">PTTT: ${order.customer.payment}</p>
+    //                     <p class="mb-1 small">Phí vận chuyển: ${order.shippingFee === 0 ? 'Miễn phí' : formatVND(order.shippingFee)}</p>
+    //                     <hr class="my-2">
+    //                     <h6>Sản phẩm:</h6>
+    //                     <ul class="list-unstyled small">
+    //                         ${order.items.map(item => `
+    //                             <li>${item.title.substring(0, 40)}... - ${item.quantity} x ${formatVND(item.price)}</li>
+    //                         `).join('')}
+    //                     </ul>
+    //                 </div>
+    //             </div>
 
-            </div>
-        `;
-    }
+    //         </div>
+    //     `;
+    // }
 
     // --- HÀM TẢI LỊCH SỬ ĐƠN HÀNG CHÍNH ---
     function loadOrderHistory() {
@@ -2000,16 +2012,22 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 <script>
-document.getElementById("mainSearchForm").addEventListener("submit", function(e) {
-    e.preventDefault();
+document.querySelectorAll('.btn-details').forEach(btn => {
+  btn.addEventListener('click', function () {
+    const target = document.querySelector(this.dataset.bsTarget);
+    target.classList.toggle('show');
+  });
+});
 
-    const keyword = document.getElementById("mainSearchInput").value.trim();
-    if (!keyword) return;
-
-    // Chuyển sang category và gửi từ khóa
-    window.location.href = "category.html?search=" + encodeURIComponent(keyword);
+document.querySelectorAll('.btn-track').forEach(btn => {
+  btn.addEventListener('click', function () {
+    const target = document.querySelector(this.dataset.bsTarget);
+    target.classList.toggle('show');
+  });
 });
 </script>
+
+
 
 
 
