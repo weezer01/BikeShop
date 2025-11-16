@@ -166,14 +166,14 @@ header a:active {
           </a>
 
           <!-- Search -->
-          <form class="search-form desktop-search-form">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
-              <button class="btn" type="submit">
-                <i class="bi bi-search"></i>
-              </button>
-            </div>
-          </form>
+          <form id="mainSearchForm" class="search-form desktop-search-form">
+    <div class="input-group">
+      <input id="mainSearchInput" type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+      <button class="btn" type="submit">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+</form>
 
           <!-- Actions -->
           <div class="header-actions d-flex align-items-center justify-content-end">
@@ -1998,6 +1998,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 </script>
+
+<script>
+document.getElementById("mainSearchForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const keyword = document.getElementById("mainSearchInput").value.trim();
+    if (!keyword) return;
+
+    // Chuyển sang category và gửi từ khóa
+    window.location.href = "category.html?search=" + encodeURIComponent(keyword);
+});
+</script>
+
 
 
 

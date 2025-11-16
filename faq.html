@@ -116,14 +116,14 @@
           </a>
 
           <!-- Search -->
-          <form class="search-form desktop-search-form">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
-              <button class="btn" type="submit">
-                <i class="bi bi-search"></i>
-              </button>
-            </div>
-          </form>
+<form id="mainSearchForm" class="search-form desktop-search-form">
+    <div class="input-group">
+      <input id="mainSearchInput" type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+      <button class="btn" type="submit">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+</form>
 
           <!-- Actions -->
           <div class="header-actions d-flex align-items-center justify-content-end">
@@ -975,87 +975,18 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
   }
-  document.addEventListener("DOMContentLoaded", function() {
-    const searchInputs = document.querySelectorAll('.search-form input[type="text"]');
-    const searchForms = document.querySelectorAll('.search-form');
-    const searchResultsSection = document.getElementById('search-results');
-    const searchResultsGrid = document.getElementById('search-results-grid');
-    const mainSections = document.querySelectorAll('main > *:not(#search-results)');
-    // Prevent form submission
-    searchForms.forEach(form => {
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-      });
-    });
-    // Add input event listener for live search
-    searchInputs.forEach(input => {
-      input.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase().trim();
-        if (searchTerm === '') {
-          // Hiển thị lại các phần chính và ẩn kết quả tìm kiếm
-          mainSections.forEach(section => section.style.display = '');
-          searchResultsSection.style.display = 'none';
-          return;
-        }
-        // Ẩn các phần chính
-        mainSections.forEach(section => section.style.display = 'none');
-        // Lọc sản phẩm từ productData
-        const filteredProducts = productData.filter(product => product.title.toLowerCase().includes(searchTerm));
-        // Xóa kết quả cũ
-        searchResultsGrid.innerHTML = '';
-        // Render sản phẩm lọc được
-        filteredProducts.forEach(product => {
-          const productHTML = renderProductCard(product);
-          searchResultsGrid.insertAdjacentHTML('beforeend', productHTML);
-        });
-        // Attach listeners sau khi render
-        attachQuickViewListeners();
-        attachCartListeners();
-        // Hiển thị section kết quả
-        searchResultsSection.style.display = filteredProducts.length > 0 ? 'block' : 'none';
-      });
-    });
-  });
+  </script>
+  <script>
+document.getElementById("mainSearchForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const keyword = document.getElementById("mainSearchInput").value.trim();
+    if (!keyword) return;
+
+    // Chuyển sang category và gửi từ khóa
+    window.location.href = "category.html?search=" + encodeURIComponent(keyword);
+});
 </script>
-<!-- Modal Quick View -->
-<div class="modal fade" id="quickViewModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header border-0">
-        <h4 class="mb-2" id="quickViewCategory"></h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <!-- Ảnh sản phẩm -->
-          <div class="col-md-6 text-center">
-            <img id="quickViewImage" src="" class="img-fluid rounded" alt="Product Image">
-          </div>
-          <!-- Thông tin sản phẩm -->
-          <div class="col-md-6">
-            <div class="mb-2">
-              <span class="badge bg-primary" id="quickViewBadge"></span>
-            </div>
-            <h5 class="modal-title" id="quickViewTitle"></h5>
-            <p class="text-muted mb-3" id="quickViewDescription"></p>
-            <div class="mb-3">
-              <span class="fs-4 fw-bold text-danger" id="quickViewPrice"></span>
-              <span class="text-decoration-line-through text-muted ms-2" id="quickViewOriginalPrice"></span>
-            </div>
-            <div class="mb-3">
-              <i class="bi bi-star-fill text-warning"></i>
-              <span id="quickViewRating"></span>
-              <small class="text-muted">(<span id="quickViewReviews"></span> đánh giá)</small>
-            </div>
-            <button class="btn btn-success btn-lg" id="quickViewAddToCart">
-              <i class="bi bi-cart-plus"></i> Thêm vào giỏ hàng
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 </body>
 
