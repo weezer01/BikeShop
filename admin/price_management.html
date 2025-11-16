@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Giá Bán</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* CSS CHỦ ĐẠO (GIỮ NGUYÊN) */
+        body { background-color: #f0f2f5; font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+        #sidebar {
+            min-width: 250px; max-width: 250px; background-color: #ffffff;
+            height: 100vh; position: fixed; top: 0; left: 0;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05); padding-top: 20px;
+        }
+        #content { margin-left: 250px; padding: 30px; }
+        .sidebar-header h3 { color: #007bff; font-weight: bold; }
+        .sidebar-list a {
+            padding: 10px 20px; color: #495057; display: block; text-decoration: none; transition: all 0.2s;
+        }
+        .sidebar-list a:hover,
+        .sidebar-list a.active {
+            background: #e9f2ff;
+            color: #007bff;
+            border-left: 5px solid #007bff;
+            padding-left: 15px;
+        }
+        .sidebar-list .fa-icon { width: 25px; }
+
+        /* HEADER & SECTION */
+        .navbar-custom { background-color: #ffffff !important; border-bottom: 3px solid #007bff; }
+        .navbar-brand-custom { color: #007bff !important; font-weight: bold; font-size: 1.5rem; }
+        .section-header-bg {
+            background-color: #007bff; color: white; padding: 10px 30px;
+            margin-bottom: 0; border-radius: 5px 5px 0 0;
+        }
+        
+        /* TABS & BUTTONS */
+        .nav-tabs .nav-link { color: #495057; font-weight: 600; border: none; border-bottom: 3px solid transparent; }
+        .nav-tabs .nav-link.active { color: #007bff; border-bottom: 3px solid #007bff; background-color: transparent; }
+        .btn-save { background-color: #007bff; color: white; font-weight: bold; }
+        .btn-save:hover { background-color: #0056b3; color: white; }
+        .btn-search {
+            background-color: #007bff; color: white; font-weight: 600; font-size: 1rem; padding: 8px 15px; border-radius: 8px; transition: background-color 0.2s;
+        }
+        .btn-search:hover { background-color: #0056b3; color: white; }
+        .btn-reset {
+            background-color: #ffc107; color: black; font-weight: 600; font-size: 1rem; padding: 8px 15px; border-radius: 8px; transition: background-color 0.2s;
+        }
+        .btn-reset:hover { background-color: #e0a800; }
+
+        /* INPUTS */
+        .profit-input { width: 70px; text-align: right; padding: 5px; border-radius: 5px 0 0 5px; border: 1px solid #ccc; }
+        .input-group-percent {
+            border: 1px solid #ccc; border-left: none; padding: 5px 8px;
+            background-color: #eee; color: #555; border-radius: 0 5px 5px 0;
+        }
+        .table td { vertical-align: middle; }
+
+        /* Tra cứu giá */
+        .price-result-card {
+            border-left: 5px solid #28a745;
+        }
+    </style>
+</head>
+<body>
+
+<div class="d-flex">
+    <div id="sidebar">
+        <div class="sidebar-header text-center mb-4"><h3><i class="fas fa-bicycle"></i> Bike Admin</h3></div>
+        <ul class="list-unstyled sidebar-list">
+            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt fa-icon"></i> Trang chủ</a></li>
+            <li><a href="bikes.html"><i class="fas fa-motorcycle fa-icon"></i> Quản lý Xe Đạp</a></li>
+            <li><a href="categories.html"><i class="fas fa-sitemap fa-icon"></i> Loại Xe</a></li>
+            <li><a href="orders.html"><i class="fas fa-receipt fa-icon"></i> Đơn hàng</a></li>
+            <li><a href="customers.html"><i class="fas fa-users fa-icon"></i> Khách hàng</a></li>
+            <li><a href="stock.html"><i class="fas fa-warehouse fa-icon"></i> Tồn kho</a></li>
+            <li><a href="stock_in.html"><i class="fas fa-truck-loading fa-icon"></i> Nhập Hàng Mới</a></li>
+            
+            <li><a href="price_management.html" class="active"><i class="fas fa-tags fa-icon"></i> Quản lý Giá bán</a></li> 
+
+            <li class="mt-4"><a href="admin-login.html"><i class="fas fa-sign-out-alt fa-icon"></i> Đăng xuất</a></li>
+            <li><a href="/BikeShop-main/index.html"><i class="fas fa-home fa-icon"></i> Về trang chủ</a></li>
+        </ul>
+    </div>
+
+    <div id="content" class="w-100">
+        <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1080;">
+    <div id="saveAlertToast" class="toast align-items-center text-white bg-success border-0" 
+         role="alert" aria-live="assertive" aria-atomic="true" 
+         style="width: 350px; padding: 15px;">
+        
+        <div class="d-flex">
+            <div class="toast-body fw-bold">
+                <i class="fas fa-check-circle me-3"></i> <span id="toastMessage"></span>
+            </div>
+            
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+        <nav class="navbar navbar-light navbar-custom mb-5 rounded shadow-sm">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <span class="navbar-brand-custom h1 mb-0">Quản Lý Giá bán</span>
+                <div class="d-flex align-items-center">
+                    <span class="me-3">Xin chào, Admin</span>
+                    <button class="btn btn-danger btn-sm" onclick="alert('Đã đăng xuất!')">
+                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                    </button>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="section-header-bg shadow-sm">
+            <h4 class="h6 mb-0">Quản lý tỷ lệ lợi nhuận và giá bán</h4>
+        </div>
+
+        <div class="card shadow-sm border-0" style="border-radius: 0 0 8px 8px;">
+            <div class="card-body p-4">
+                
+                <ul class="nav nav-tabs mb-4" id="priceTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="category-tab" data-bs-toggle="tab" data-bs-target="#categoryProfit" type="button" role="tab" aria-controls="categoryProfit" aria-selected="true">Tỷ lệ lợi nhuận theo danh mục</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="product-tab" data-bs-toggle="tab" data-bs-target="#productProfit" type="button" role="tab" aria-controls="productProfit" aria-selected="false">Tỷ lệ lợi nhuận theo sản phẩm</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="query-tab" data-bs-toggle="tab" data-bs-target="#priceQueryTable" type="button" role="tab" aria-controls="priceQueryTable" aria-selected="false">Tra cứu giá bán</button>
+                    </li>
+                    </ul>
+
+                <div class="tab-content" id="priceTabsContent">
+                    
+                    <div class="tab-pane fade show active" id="categoryProfit" role="tabpanel" aria-labelledby="category-tab">
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-5">
+                                <label class="form-label fw-bold">Tìm kiếm danh mục</label>
+                                <input type="text" class="form-control" id="categorySearchInput" placeholder="Nhập tên danh mục...">
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label fw-bold">Khoảng tỷ lệ lợi nhuận</label>
+                                <select class="form-select" id="profitRangeFilter">
+                                    <option selected value="">Tất cả</option>
+                                    <option value="20-30">20% - 30%</option>
+                                    <option value="30-40">30% - 40%</option>
+                                    <option value="<20">Dưới 20%</option>
+                                    <option value=">40">Trên 40%</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end justify-content-between">
+                                <button class="btn btn-search w-50 me-2" id="searchCategoryButton"><i class="fas fa-search me-1"></i> Tìm kiếm</button>
+                                <button class="btn btn-reset w-50" id="resetCategoryButton"><i class="fas fa-redo me-1"></i> Đặt lại</button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>TÊN DANH MỤC</th>
+                                        <th class="text-end">TỶ LỆ LỢI NHUẬN (%)</th>
+                                        <th>THAO TÁC</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="categoryTableBody">
+                                    </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane fade" id="productProfit" role="tabpanel" aria-labelledby="product-tab">
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-5">
+                                <label class="form-label fw-bold">Tìm kiếm sản phẩm</label>
+                                <input type="text" class="form-control" id="productSearchInput" placeholder="Nhập tên hoặc mã sản phẩm...">
+                            </div>
+                             <div class="col-md-5">
+                                <label class="form-label fw-bold">Khoảng tỷ lệ lợi nhuận</label>
+                                <select class="form-select" id="productProfitFilter">
+                                    <option selected value="">Tất cả</option>
+                                    <option value="20-30">20% - 30%</option>
+                                    <option value="30-40">30% - 40%</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end justify-content-between">
+                                <button class="btn btn-search w-50 me-2" id="searchProductButton"><i class="fas fa-search me-1"></i> Tìm kiếm</button>
+                                <button class="btn btn-reset w-50" id="resetProductButton"><i class="fas fa-redo me-1"></i> Đặt lại</button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>MÃ SP</th>
+                                        <th>TÊN SẢN PHẨM</th>
+                                        <th>DANH MỤC</th>
+                                        <th class="text-end">TỶ LỆ LỢI NHUẬN (%)</th>
+                                        <th>THAO TÁC</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productTableBody">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="priceQueryTable" role="tabpanel" aria-labelledby="query-tab">
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Tìm kiếm sản phẩm</label>
+                                <input type="text" class="form-control" id="tableSearchInput" placeholder="Nhập tên sản phẩm...">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Danh mục</label>
+                                <select class="form-select" id="tableCategoryFilter">
+                                    <option selected value="">Tất cả danh mục</option>
+                                    <option value="Xe đạp đua">Xe đạp đua</option>
+                                    <option value="Xe đạp địa hình">Xe đạp địa hình</option>
+                                    <option value="Phụ kiện">Phụ kiện</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Khoảng giá bán</label>
+                                <select class="form-select" id="tablePriceRangeFilter">
+                                    <option selected value="">Tất cả</option>
+                                    <option value="<5000000">Dưới 5 Triệu VND</option>
+                                    <option value="5000000-15000000">5 - 15 Triệu VND</option>
+                                    <option value=">15000000">Trên 15 Triệu VND</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end justify-content-between">
+                                <button class="btn btn-search w-50 me-2" id="searchQueryTableButton"><i class="fas fa-search me-1"></i> Tìm kiếm</button>
+                                <button class="btn btn-reset w-50" id="resetQueryTableButton"><i class="fas fa-redo me-1"></i> Đặt lại</button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>SẢN PHẨM</th>
+                                        <th>DANH MỤC</th>
+                                        <th>GIÁ VỐN</th>
+                                        <th class="text-end">TỶ LỆ LỢI NHUẬN (%)</th>
+                                        <th class="text-end">GIÁ BÁN</th>
+                                        <th>THAO TÁC</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="priceQueryTableBody">
+                                    </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // --- KHAI BÁO BIẾN ---
+    const categoryTableBody = document.getElementById('categoryTableBody');
+    const productTableBody = document.getElementById('productTableBody');
+    const priceQueryTableBody = document.getElementById('priceQueryTableBody');
+    
+    // Toast
+    const saveAlertToastEl = document.getElementById('saveAlertToast');
+    const toastMessageEl = document.getElementById('toastMessage');
+    const saveAlertToast = new bootstrap.Toast(saveAlertToastEl, { delay: 4000 });
+    
+    // Khai báo các biến khác (giữ nguyên)
+    const categorySearchInput = document.getElementById('categorySearchInput');
+    const profitRangeFilter = document.getElementById('profitRangeFilter');
+    const searchCategoryButton = document.getElementById('searchCategoryButton');
+    const resetCategoryButton = document.getElementById('resetCategoryButton');
+    const productSearchInput = document.getElementById('productSearchInput');
+    const productProfitFilter = document.getElementById('productProfitFilter');
+    const searchProductButton = document.getElementById('searchProductButton');
+    const resetProductButton = document.getElementById('resetProductButton');
+    const tableSearchInput = document.getElementById('tableSearchInput');
+    const tableCategoryFilter = document.getElementById('tableCategoryFilter');
+    const tablePriceRangeFilter = document.getElementById('tablePriceRangeFilter');
+    const searchQueryTableButton = document.getElementById('searchQueryTableButton');
+    const resetQueryTableButton = document.getElementById('resetQueryTableButton');
+
+
+    // --- DỮ LIỆU MẪU (GIỮ NGUYÊN) ---
+    let categoryProfitData = [
+
+    { id: 1, name: 'Xe đạp đua', profitRate: 35 },
+
+    { id: 2, name: 'Xe đạp địa hình', profitRate: 45 },
+
+    { id: 3, name: 'Phụ kiện', profitRate: 25 },
+
+    { id: 4, name: 'Xe đạp đường phố', profitRate: 30 }
+
+];
+
+
+
+let productProfitData = [
+
+    { id: 'SP001', name: 'Xe Đạp Đường Phố Touring TRINX Free 2.2 – Phanh Đĩa, Bánh 700C', category: 'Xe đạp đường phố', profitRate: 40, cost: 6490000 },
+
+    { id: 'SP002', name: 'Xe Đạp Đường Trường Road JAVA Auriga R5 - Phanh Đĩa, Bánh 700C', category: 'Xe đạp đua', profitRate: 45, cost: 7890000 },
+
+    { id: 'SP003', name: 'Xe Đạp Đường Phố Touring LIV Alight 4 Disc - 2025', category: 'Xe đạp đường phố', profitRate: 20, cost: 7000000 },
+
+    { id: 'SP004', name: 'Xe Đạp Đường Phố Fixed Gear VINBIKE Megatron – Bánh 700C', category: 'Xe đạp đường phố', profitRate: 30, cost: 3990000 },
+
+    { id: 'SP005', name: 'Xe Đạp Đường Phố Touring JAVA Wahoo City - Phanh Đĩa, Bánh 700C', category: 'Xe đạp đường phố', profitRate: 32, cost: 5990000 },
+
+    { id: 'SP006', name: 'Xe Đạp Đường Phố Touring LIV Alight 2 Disc - 2023', category: 'Xe đạp đường phố', profitRate: 28, cost: 7000000 },
+
+    { id: 'SP007', name: 'Xe Đạp Đường Trường Road JAVA Siluro6-TOP-RX', category: 'Xe đạp đua', profitRate: 38, cost: 15990000 },
+
+    { id: 'SP008', name: 'Xe Đạp Đường Phố Touring GIANT Escape 2 Disc - 2025', category: 'Xe đạp đường phố', profitRate: 50, cost: 5000000 }
+
+];
+
+
+
+let priceQueryTableData = [
+
+    { id: 1, name: 'Xe Đạp Đường Phố Touring TRINX Free 2.2 – Phanh Đĩa, Bánh 700C', category: 'Xe đạp đường phố', cost: 6490000, profit: 30, price: 9271428, code: 'TRINX1' },
+
+    { id: 2, name: 'Xe Đạp Đường Trường Road JAVA Auriga R5 - Phanh Đĩa, Bánh 700C', category: 'Xe đạp đua', cost: 7890000, profit: 45, price: 14345454, code: 'JAVA1' },
+
+    { id: 3, name: 'Xe Đạp Đường Phố Touring LIV Alight 4 Disc - 2025', category: 'Xe đạp đường phố', cost: 7000000, profit: 20, price: 8750000, code: 'LIV4' },
+
+    { id: 4, name: 'Xe Đạp Đường Phố Fixed Gear VINBIKE Megatron – Bánh 700C', category: 'Xe đạp đường phố', cost: 3990000, profit: 30, price: 5700000, code: 'VINBIKE' },
+
+    { id: 5, name: 'Xe Đạp Đường Phố Touring JAVA Wahoo City - Phanh Đĩa, Bánh 700C', category: 'Xe đạp đường phố', cost: 5990000, profit: 32, price: 8808823, code: 'WAHOO' }
+
+];
+
+    // --- HÀM HỖ TRỢ ---
+    function formatCurrency(amount) {
+        return parseFloat(amount).toLocaleString('vi-VN') + '₫';
+    }
+    function calculateSellingPrice(cost, rate) {
+        if (rate >= 100) return NaN;
+        return cost / (1 - (rate / 100));
+    }
+    function showSaveToast(message) {
+        toastMessageEl.textContent = message;
+        saveAlertToast.show();
+    }
+
+
+    // --- RENDER BẢNG 1: DANH MỤC ---
+    function renderCategoryTable(list = categoryProfitData) { 
+        categoryTableBody.innerHTML = '';
+        list.forEach((item, index) => {
+            categoryTableBody.insertAdjacentHTML('beforeend', `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${item.name}</td>
+                    <td class="text-end">
+                        <div class="d-flex justify-content-end align-items-center">
+                            <input type="number" class="profit-input me-0" value="${item.profitRate}" data-id="${item.id}" min="0" max="100">
+                            <span class="input-group-percent">%</span>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-save save-btn-category" data-id="${item.id}" data-name="${item.name}"><i class="fas fa-save me-1"></i> Lưu</button>
+                    </td>
+                </tr>
+            `);
+        });
+        attachCategorySaveEvents(); // Gắn sự kiện sau khi render
+    }
+    
+    function attachCategorySaveEvents() {
+        document.querySelectorAll('.save-btn-category').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = parseInt(this.dataset.id);
+                const name = this.dataset.name;
+                const input = document.querySelector(`#categoryProfit .profit-input[data-id="${id}"]`);
+                const newRate = parseInt(input.value);
+
+                if (isNaN(newRate) || newRate < 0 || newRate > 100) {
+                    showSaveToast("Lỗi: Tỷ lệ lợi nhuận phải là số từ 0 đến 100.");
+                    return;
+                }
+                
+                const item = categoryProfitData.find(d => d.id === id);
+                if (item) {
+                    item.profitRate = newRate;
+                    showSaveToast(`Đã cập nhật Tỷ lệ lợi nhuận cho Danh mục [${name}] thành ${newRate}%`);
+                }
+            });
+        });
+    }
+    searchCategoryButton.addEventListener('click', function() { renderCategoryTable(categoryProfitData.filter(item => item.name.toLowerCase().includes(categorySearchInput.value.toLowerCase()))); });
+    resetCategoryButton.addEventListener('click', function() { categorySearchInput.value = ''; profitRangeFilter.value = ''; renderCategoryTable(); });
+
+
+    // --- RENDER BẢNG 2: SẢN PHẨM ---
+    function renderProductTable(list = productProfitData) {
+        productTableBody.innerHTML = '';
+        list.forEach((item) => {
+            productTableBody.insertAdjacentHTML('beforeend', `
+                <tr>
+                    <td>${item.id}</td>
+                    <td>${item.name} <br><small class="text-muted">${item.category}</small></td>
+                    <td>${item.category}</td>
+                    <td class="text-end">
+                        <div class="d-flex justify-content-end align-items-center">
+                            <input type="number" class="profit-input me-0" value="${item.profitRate}" data-id="${item.id}" min="0" max="100">
+                            <span class="input-group-percent">%</span>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-save save-btn-product" data-id="${item.id}" data-name="${item.name}"><i class="fas fa-save me-1"></i> Lưu</button>
+                    </td>
+                </tr>
+            `);
+        });
+        attachProductSaveEvents();
+    }
+    
+    function attachProductSaveEvents() {
+        document.querySelectorAll('.save-btn-product').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = this.dataset.id;
+                const name = this.dataset.name;
+                const input = document.querySelector(`#productProfit .profit-input[data-id="${id}"]`);
+                const newRate = parseInt(input.value);
+
+                if (isNaN(newRate) || newRate < 0 || newRate > 100) {
+                    showSaveToast("Lỗi: Tỷ lệ lợi nhuận phải là số từ 0 đến 100.");
+                    return;
+                }
+                
+                const item = productProfitData.find(d => d.id === id);
+                if (item) {
+                    item.profitRate = newRate;
+                    showSaveToast(`Đã cập nhật Tỷ lệ lợi nhuận cho Sản phẩm [${name}] thành ${newRate}%`);
+                }
+            });
+        });
+    }
+    searchProductButton.addEventListener('click', function() { renderProductTable(productProfitData.filter(item => item.name.toLowerCase().includes(productSearchInput.value.toLowerCase()))); });
+    resetProductButton.addEventListener('click', function() { productSearchInput.value = ''; productProfitFilter.value = ''; renderProductTable(); });
+
+
+    // --- RENDER BẢNG 3: TRA CỨU GIÁ BÁN (BẢNG ĐẦY ĐỦ THÔNG TIN) ---
+    function renderPriceQueryTable(list = priceQueryTableData) {
+        priceQueryTableBody.innerHTML = '';
+        list.forEach((item, index) => {
+            const calculatedPrice = calculateSellingPrice(item.cost, item.profit);
+            
+            priceQueryTableBody.insertAdjacentHTML('beforeend', `
+                <tr data-id="${item.id}">
+                    <td>${index + 1}</td>
+                    <td>${item.name}</td>
+                    <td>${item.category}</td>
+                    <td data-cost="${item.cost}">${formatCurrency(item.cost)}</td>
+                    <td class="text-end" data-profit="${item.profit}">${item.profit}</td>
+                    <td class="text-end fw-bold text-danger">${formatCurrency(calculatedPrice)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-success edit-price-btn" data-id="${item.id}"><i class="fas fa-edit me-1"></i> Sửa</button>
+                    </td>
+                </tr>
+            `);
+        });
+        attachTableEditEvents(); // Gắn sự kiện sửa
+    }
+    
+    function attachTableEditEvents() {
+        document.querySelectorAll('.edit-price-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = parseInt(this.dataset.id);
+                const row = this.closest('tr');
+                const itemName = row.querySelector('td:nth-child(2)').textContent;
+                
+                // MÔ PHỎNG CHỨC NĂNG SỬA:
+                // Trong ứng dụng thực tế, bạn sẽ mở Modal hoặc bật chế độ chỉnh sửa inline tại đây.
+                showSaveToast(`Đang mở giao diện SỬA cho sản phẩm [${itemName}].`);
+                
+                // --- Logic thực tế (ví dụ: chuyển sang Tab Tỷ lệ lợi nhuận để sửa) ---
+                // const item = priceQueryTableData.find(d => d.id === id);
+                // console.log("Mở giao diện sửa cho:", item); 
+            });
+        });
+    }
+
+    // Logic lọc và đặt lại cho bảng tra cứu (giữ nguyên)
+    searchQueryTableButton.addEventListener('click', function() {
+        const keyword = tableSearchInput.value.toLowerCase();
+        const category = tableCategoryFilter.value;
+        const priceRange = tablePriceRangeFilter.value;
+
+        const filteredList = priceQueryTableData.filter(item => {
+            const matchesKeyword = item.name.toLowerCase().includes(keyword);
+            const matchesCategory = !category || item.category === category;
+            
+            let matchesPrice = true;
+            if (priceRange) {
+                const price = item.price;
+                if (priceRange === '<5000000') matchesPrice = (price < 5000000);
+                else if (priceRange === '5000000-15000000') matchesPrice = (price >= 5000000 && price <= 15000000);
+                else if (priceRange === '>15000000') matchesPrice = (price > 15000000);
+            }
+
+            return matchesKeyword && matchesCategory && matchesPrice;
+        });
+
+        renderPriceQueryTable(filteredList);
+    });
+
+    resetQueryTableButton.addEventListener('click', function() {
+        tableSearchInput.value = '';
+        tableCategoryFilter.value = '';
+        tablePriceRangeFilter.value = '';
+        renderPriceQueryTable();
+    });
+
+
+    // --- KHỞI TẠO BẢNG KHI MỞ TRANG ---
+    renderCategoryTable();
+    renderProductTable();
+    renderPriceQueryTable(); 
+});
+</script>
+</body>
+</html>
