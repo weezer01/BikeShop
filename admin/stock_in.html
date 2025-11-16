@@ -155,7 +155,52 @@
                         </tr>
                     </thead>
                     <tbody id="recentStockHistoryBody">
-                        </tbody>
+    <tr data-id="PNK001">
+        <td>PNK001</td>
+        <td>14/11/2025</td>
+        <td>Xưởng SX A</td>
+        <td>25</td>
+        <td>215,000,000₫</td>
+        <td>
+            <button class="btn btn-sm btn-info view-detail-btn" 
+                data-bs-toggle="modal" 
+                data-bs-target="#detailModal" 
+                data-entry-id="PNK003">
+                <i class="fas fa-eye"></i>
+            </button>
+        </td>
+    </tr>
+    <tr data-id="PNK003">
+        <td>PNK003</td>
+        <td>10/11/2025</td>
+        <td>Công ty Phụ Kiện B</td>
+        <td>15</td>
+        <td>1,800,000₫</td>
+        <td>
+            <button class="btn btn-sm btn-info view-detail-btn" 
+                data-bs-toggle="modal" 
+                data-bs-target="#detailModal" 
+                data-entry-id="PNK002">
+                <i class="fas fa-eye"></i>
+            </button>
+        </td>
+    </tr>
+    <tr data-id="PNK003">
+        <td>PNK003</td>
+        <td>05/11/2025</td>
+        <td>Nhà phân phối C</td>
+        <td>10</td>
+        <td>25,500,000₫</td>
+        <td>
+            <button class="btn btn-sm btn-info view-detail-btn" 
+                data-bs-toggle="modal" 
+                data-bs-target="#detailModal" 
+                data-entry-id="PNK001">
+                <i class="fas fa-eye"></i>
+            </button>
+        </td>
+    </tr>
+</tbody>
                 </table>
             </div>
         </div>
@@ -207,12 +252,11 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Khai báo biến DOM (đã chuẩn hóa)
+        // Khai báo biến DOM
         const inputProductId = document.getElementById('inputProductId');
         const inputProductName = document.getElementById('inputProductName');
         const inputProductCategory = document.getElementById('inputProductCategory');
         const stockInForm = document.getElementById('stockInForm');
-        // const selectProduct = document.getElementById('selectProduct'); // Không dùng vì đã chuyển sang input
         const inputQuantity = document.getElementById('inputQuantity');
         const inputImportPrice = document.getElementById('inputImportPrice');
         const addItemBtn = document.getElementById('addItemBtn');
@@ -220,33 +264,36 @@
         const totalAmount = document.getElementById('totalAmount');
         const finalizeStockInBtn = document.getElementById('finalizeStockInBtn');
         const stockInIdInput = document.getElementById('stockInId');
-        const detailModal = document.getElementById('detailModal'); // Biến cho Modal Chi tiết
+        const detailModal = document.getElementById('detailModal');
 
         let entryItems = []; // Danh sách các sản phẩm chờ nhập
         
-        // --- HÀM QUẢN LÝ DỮ LIỆU CƠ BẢN ---
-        function loadStockInHistory() {
-            const history = localStorage.getItem('stockInHistory');
-            return history ? JSON.parse(history) : [];
-        }
-
-        function saveStockInHistory(historyArray) {
-            localStorage.setItem('stockInHistory', JSON.stringify(historyArray));
-        }
+        // --- DỮ LIỆU MẪU TĨNH CHO MODAL CHI TIẾT ---
+        const staticHistoryData = {
+            'PNK001': {
+                id: 'PNK001', date: '05/11/2025', supplier: 'Nhà phân phối C', totalAmount: 25500000,
+                items: [
+                    { id: 'TRINX', name: 'Xe Đạp Đường Phố Touring TRINX Free 2.2 – Phanh Đĩa, Bánh 700C', category: 'Xe Đạp Địa Hình', quantity: 5, price: 7000000, subtotal: 21000000 },
+                    { id: 'MTB2', name: 'Khóa chống trộm', category: 'Phụ kiện', quantity: 5, price: 900000, subtotal: 4500000 }
+                ]
+            },
+            'PNK002': {
+                id: 'PNK002', date: '10/11/2025', supplier: 'Công ty Phụ Kiện B', totalAmount: 1800000,
+                items: [
+                    { id: 'ACC1', name: 'Dây khóa xe', category: 'Phụ kiện', quantity: 15, price: 120000, subtotal: 1800000 }
+                ]
+            },
+            'PNK003': {
+                id: 'PNK003', date: '14/11/2025', supplier: 'Xưởng SX A', totalAmount: 215000000,
+                items: [
+                    { id: 'LIV', name: 'Xe Đạp Đường Phố Touring LIV Alight 4 Disc - 2025', category: 'Xe Đạp Đua', quantity: 10, price: 8000000, subtotal: 80000000 },
+                    { id: 'JAVA', name: 'Xe Đạp Đường Phố Touring JAVA Wahoo City - Phanh Đĩa, Bánh 700C', category: 'Xe Đạp Đường Phố', quantity: 15, price: 9000000, subtotal: 135000000 }
+                ]
+            }
+        };
         
-        function generateNextStockInId(historyArray) {
-            if (historyArray.length === 0) return 'PNK001';
-            
-            let maxNum = 0;
-            historyArray.forEach(entry => {
-                const numPart = parseInt(entry.id.replace('PNK', '')) || 0;
-                if (numPart > maxNum) {
-                    maxNum = numPart;
-                }
-            });
-            return 'PNK' + String(maxNum + 1).padStart(3, '0');
-        }
-
+        // --- HÀM QUẢN LÝ DỮ LIỆU CƠ BẢN ---
+        
         function formatCurrency(amount) {
             const num = parseFloat(amount);
             return isNaN(num) ? '0₫' : num.toLocaleString('vi-VN') + '₫';
@@ -254,8 +301,8 @@
         
         // --- HÀM XỬ LÝ GIAO DIỆN ---
 
-        // Kiểm tra để bật/tắt nút Thêm Sản phẩm
         function checkAddItemButton() {
+            // (Logic kiểm tra input giữ nguyên)
             const id = inputProductId.value.trim();
             const name = inputProductName.value.trim();
             const category = inputProductCategory.value;
@@ -273,7 +320,6 @@
             }
         }
 
-        // Cập nhật tổng tiền và trạng thái nút Hoàn tất
         function updateSummary() {
             const total = entryItems.reduce((sum, item) => sum + item.subtotal, 0);
             totalAmount.textContent = formatCurrency(total);
@@ -285,14 +331,12 @@
             }
         }
         
-        // Xóa sản phẩm khỏi danh sách nhập
         function removeItem() {
             const indexToRemove = parseInt(this.getAttribute('data-index')); 
             entryItems.splice(indexToRemove, 1); 
             renderDetailTable(); 
         }
 
-        // Vẽ lại danh sách sản phẩm nhập
         function renderDetailTable() {
             stockInDetailBody.innerHTML = '';
             entryItems.forEach((item, index) => {
@@ -316,52 +360,16 @@
             });
         }
         
-        // Hàm Render bảng lịch sử gần đây
-        function renderRecentHistory() {
-            const historyArray = loadStockInHistory();
-            const recentStockHistoryBody = document.getElementById('recentStockHistoryBody');
-
-            recentStockHistoryBody.innerHTML = '';
-            
-            // Chỉ hiển thị 5 phiếu nhập gần nhất
-            const recentEntries = historyArray.slice(0, 5); 
-            
-            recentEntries.forEach(entry => {
-                const totalItems = entry.items.reduce((sum, item) => sum + item.quantity, 0);
-                
-                const row = `
-                    <tr data-id="${entry.id}">
-                        <td>${entry.id}</td>
-                        <td>${entry.date}</td>
-                        <td>${entry.supplier}</td>
-                        <td>${totalItems}</td>
-                        <td>${formatCurrency(entry.totalAmount)}</td>
-                        <td>
-                            <button class="btn btn-sm btn-info view-detail-btn" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#detailModal" 
-                                data-entry-id="${entry.id}">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-                recentStockHistoryBody.insertAdjacentHTML('beforeend', row);
-            });
-        }
-        
         // Khởi tạo form khi load trang
         function initializeForm() {
-            const history = loadStockInHistory();
-            
-            // 1. Tự động điền Mã phiếu nhập mới
-            stockInIdInput.value = generateNextStockInId(history);
+            // Tự động điền Mã phiếu nhập mới (PNK004 vì dữ liệu tĩnh là PNK001-003)
+            stockInIdInput.value = 'PNK004'; 
 
-            // 2. Tự động điền Ngày nhập (Hôm nay)
+            // Tự động điền Ngày nhập (Hôm nay)
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('stockInDate').value = today;
 
-            // 3. Gắn listener cho các trường nhập liệu
+            // Gắn listener cho các trường nhập liệu
             inputProductId.addEventListener('input', checkAddItemButton);
             inputProductName.addEventListener('input', checkAddItemButton);
             inputProductCategory.addEventListener('change', checkAddItemButton);
@@ -369,19 +377,19 @@
             inputImportPrice.addEventListener('input', checkAddItemButton);
             inputImportPrice.addEventListener('change', checkAddItemButton);
             
-            // 4. Reset các danh sách và tổng tiền
+            // Reset các danh sách và tổng tiền
             entryItems = []; 
             stockInDetailBody.innerHTML = '';
             updateSummary();
             
-            // 5. Load lịch sử gần đây
-            renderRecentHistory(); 
+            // Note: Lịch sử gần đây đã là HTML tĩnh, không cần renderHistory()
         }
 
         // --- XỬ LÝ SỰ KIỆN CHÍNH ---
 
         // Thêm sản phẩm vào danh sách nhập
         addItemBtn.addEventListener('click', function() {
+            // (Logic thêm sản phẩm giữ nguyên)
             checkAddItemButton(); 
             if (addItemBtn.hasAttribute('disabled')) {
                 return;
@@ -423,7 +431,7 @@
             renderDetailTable();
         });
 
-        // Hoàn tất và lưu phiếu nhập
+        // Hoàn tất và lưu phiếu nhập (CHỨC NĂNG LƯU VÀO LOCALSTORAGE BỊ VÔ HIỆU HÓA)
         stockInForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -432,40 +440,27 @@
                 return;
             }
 
-            // 1. Tạo bản ghi lịch sử nhập và lưu
-            const history = loadStockInHistory();
+            // --- MÔ PHỎNG LƯU DỮ LIỆU ---
             const newEntryId = stockInIdInput.value;
             const total = entryItems.reduce((sum, item) => sum + item.subtotal, 0);
 
-            const newStockInEntry = {
-                id: newEntryId,
-                date: document.getElementById('stockInDate').value,
-                supplier: document.getElementById('stockInSupplier').value,
-                totalAmount: total,
-                items: entryItems,
-                timestamp: new Date().toISOString()
-            };
-
-            history.unshift(newStockInEntry);
-            saveStockInHistory(history);
-
-            // 2. Thông báo và Reset form
-            alert(`Hoàn tất nhập kho! Mã phiếu: ${newEntryId}. Tổng tiền: ${formatCurrency(total)}`);
+            alert(`Hoàn tất nhập kho (Mô phỏng)! Mã phiếu: ${newEntryId}. Tổng tiền: ${formatCurrency(total)}`);
             
             // Reset form chính
             stockInForm.reset();
             
-            // Cài đặt lại các giá trị ban đầu và cập nhật lịch sử
-            initializeForm(); 
+            // Cài đặt lại các giá trị ban đầu (Mã phiếu mới: PNK005)
+            entryItems = [];
+            initializeForm();
+            stockInIdInput.value = 'PNK005'; 
         });
         
-        // Bắt sự kiện Modal hiển thị (đổ dữ liệu chi tiết lịch sử)
+        // Bắt sự kiện Modal hiển thị (đổ dữ liệu chi tiết lịch sử từ dữ liệu tĩnh)
         if (detailModal) {
             detailModal.addEventListener('show.bs.modal', function (event) {
                 const button = event.relatedTarget; 
                 const entryId = button.getAttribute('data-entry-id');
-                const history = loadStockInHistory();
-                const entry = history.find(e => e.id === entryId);
+                const entry = staticHistoryData[entryId]; // Lấy từ dữ liệu tĩnh
 
                 if (!entry) return;
 
