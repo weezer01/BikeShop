@@ -184,6 +184,7 @@
                             <option value="Xe đạp đua">Xe đạp đua</option>
                             <option value="Xe đạp gấp">Xe đạp gấp</option>
                             <option value="Xe đạp địa hình">Xe đạp địa hình</option>
+                            <option value="Xe đạp đường phố">Xe đạp đường phố</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -231,14 +232,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ===================== Dữ liệu mẫu (chỉ dùng khi localStorage trống) =====================
     const initialBikes = [
-        { id: "001", name: "Xe Đạp Đường Phố Touring TRINX Free 2.2 – Phanh Đĩa, Bánh 700C", price: 6490000, originalPrice: 7490000, status: 'Đang bán', stock: 15, image: "../assets/img/product/13.jpg", badge: "-13%", category: "Bộ sưu tập xe xịn", description: "Xe Đạp Đường Phố Touring TRINX Free 2.2 là sự kết hợp hoàn hảo giữa thiết kế đẹp mắt, chất lượng vượt trội và hiệu suất vận hành ấn tượng. Với khung nhôm TRINX cực kỳ nhẹ nhàng và bền bỉ, chiếc xe này mang lại sự ổn định và linh hoạt trên mọi loại địa hình." },
-        { id: "002", name: "Xe Đạp Đường Trường Road JAVA Auriga R5 - Phanh Đĩa, Bánh 700C", price: 7890000, originalPrice: 12890000, status: 'Đang bán', stock: 15, image: "../assets/img/product/37.jpg", badge: "-35%", category: "Bộ sưu tập xe xịn", description: "Chinh phục mọi cung đường với JAVA Auriga R5..." },
-        { id: "003", name: "Xe Đạp Đường Phố Touring LIV Alight 4 Disc - 2025", price: 7000000, originalPrice: 9000000, status: 'Đang bán', stock: 12, image: "../assets/img/product/6.jpg", badge: "-35%", category: "Bộ sưu tập xe xịn", description: "LIV Alight 4 Disc 2025 không chỉ là một chiếc xe đạp..." },
-        { id: "004", name: "Xe Đạp Đường Phố Fixed Gear VINBIKE Megatron – Bánh 700C", price: 3990000, originalPrice: null, status: 'Đang bán', stock: 15, image: "../assets/img/product/21.jpg", badge: "Hàng hiếm", category: "Bộ sưu tập xe xịn", description: "Xe Đạp Đường Phố Touring VINBIKE Megatron..." },
-        { id: "005", name: "Xe Đạp Đường Phố Touring JAVA Wahoo City - Phanh Đĩa, Bánh 700C", price: 5990000, originalPrice: 6990000, status: 'Đang bán', stock: 15, image: "../assets/img/product/22.jpg", badge: null, category: "Mua nhiều nhất", description: "JAVA Wahoo City là mẫu xe đạp đường phố..." },
-        { id: "006", name: "Xe Đạp Đường Phố Touring LIV Alight 2 Disc - 2023", price: 7000000, originalPrice: 9000000, status: 'Đang bán', stock: 15, image: "../assets/img/product/36.jpg", badge: "-35%", category: "Những mẫu thiết kế đẹp", description: "LIV Alight 2 – Bánh 700C – 2023 là mẫu xe đạp touring..." },
-        { id: "007", name: "Xe Đạp Đường Trường Road JAVA Siluro6-TOP-RX", price: 15990000, originalPrice: null, status: 'Đang bán', stock: 15, image: "../assets/img/product/24.jpg", badge: "Hot Trend", category: "Những mẫu thiết kế đẹp", description: "JAVA Siluro6-TOP-RX là dòng xe đạp đường trường cao cấp..." },
-        { id: "008", name: "Xe Đạp Đường Phố Touring GIANT Escape 2 Disc - 2025", price: 5000000, originalPrice: 12000000, status: 'Đang bán', stock: 15, image: "../assets/img/product/35.jpg", badge: "-60%", category: "Bán chạy", description: "Dòng xe đạp đường phố GIANT Escape 2 Disc - 2025..." }
+        { id: "001", name: "Xe Đạp Đường Phố Touring TRINX Free 2.2 – Phanh Đĩa, Bánh 700C", price: 6490000, originalPrice: 7490000, status: 'Đang bán', stock: 15, image: "../assets/img/product/13.jpg", badge: "-13%", category: "Xe đạp đường phố", description: "Xe Đạp Đường Phố Touring TRINX Free 2.2 là sự kết hợp hoàn hảo giữa thiết kế đẹp mắt, chất lượng vượt trội và hiệu suất vận hành ấn tượng. Với khung nhôm TRINX cực kỳ nhẹ nhàng và bền bỉ, chiếc xe này mang lại sự ổn định và linh hoạt trên mọi loại địa hình." },
+        { id: "002", name: "Xe Đạp Đường Trường Road JAVA Auriga R5 - Phanh Đĩa, Bánh 700C", price: 7890000, originalPrice: 12890000, status: 'Đang bán', stock: 15, image: "../assets/img/product/37.jpg", badge: "-35%", category: "Xe đạp đua", description: "Chinh phục mọi cung đường với JAVA Auriga R5..." },
+        { id: "003", name: "Xe Đạp Đường Phố Touring LIV Alight 4 Disc - 2025", price: 7000000, originalPrice: 9000000, status: 'Đang bán', stock: 12, image: "../assets/img/product/6.jpg", badge: "-35%", category: "Xe đạp đường phố", description: "LIV Alight 4 Disc 2025 không chỉ là một chiếc xe đạp..." },
+        { id: "004", name: "Xe Đạp Đường Phố Fixed Gear VINBIKE Megatron – Bánh 700C", price: 3990000, originalPrice: null, status: 'Đang bán', stock: 15, image: "../assets/img/product/21.jpg", badge: "Hàng hiếm", category: "Xe đạp đường phố", description: "Xe Đạp Đường Phố Touring VINBIKE Megatron..." },
+        { id: "005", name: "Xe Đạp Đường Phố Touring JAVA Wahoo City - Phanh Đĩa, Bánh 700C", price: 5990000, originalPrice: 6990000, status: 'Đang bán', stock: 15, image: "../assets/img/product/22.jpg", badge: null, category: "Xe đạp đường phố", description: "JAVA Wahoo City là mẫu xe đạp đường phố..." },
+        { id: "006", name: "Xe Đạp Đường Phố Touring LIV Alight 2 Disc - 2023", price: 7000000, originalPrice: 9000000, status: 'Đang bán', stock: 15, image: "../assets/img/product/36.jpg", badge: "-35%", category: "Xe đạp đường phố", description: "LIV Alight 2 – Bánh 700C – 2023 là mẫu xe đạp touring..." },
+        { id: "007", name: "Xe Đạp Đường Trường Road JAVA Siluro6-TOP-RX", price: 15990000, originalPrice: null, status: 'Đang bán', stock: 15, image: "../assets/img/product/24.jpg", badge: "Hot Trend", category: "Xe đạp đua", description: "JAVA Siluro6-TOP-RX là dòng xe đạp đường trường cao cấp..." },
+        { id: "008", name: "Xe Đạp Đường Phố Touring GIANT Escape 2 Disc - 2025", price: 5000000, originalPrice: 12000000, status: 'Đang bán', stock: 15, image: "../assets/img/product/35.jpg", badge: "-60%", category: "Xe đạp địa hình", description: "Dòng xe đạp đường phố GIANT Escape 2 Disc - 2025..." }
     ];
 
     let bikes = [];
@@ -420,6 +421,11 @@ document.addEventListener('DOMContentLoaded', function() {
             bikeIdInput.removeAttribute('disabled');
             bikeIdInput.removeAttribute('readonly');
 
+            // Set default category to first option if not editing
+            const bikeCategorySelect = document.getElementById('bikeCategory');
+            if (bikeCategorySelect) bikeCategorySelect.value = bikeCategorySelect.options[0].value;
+
+
             if (action === 'add') {
                 modalTitle.textContent = 'Thêm Xe Đạp Mới';
                 const newId = generateNextId(bikes);
@@ -446,7 +452,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 bikeIdInput.setAttribute('readonly', 'readonly');
                 document.getElementById('bikeName').value = bikeData.name || '';
                 document.getElementById('bikeDescription').value = bikeData.description || '';
-                document.getElementById('bikeCategory').value = bikeData.category || '';
+                document.getElementById('bikeCategory').value = bikeData.category || ''; // ĐÃ XÁC NHẬN LOAD CATEGORY
                 document.getElementById('bikePrice').value = bikeData.price || '';
                 document.getElementById('bikeStock').value = bikeData.stock || '';
                 document.getElementById('bikeStatus').value = bikeData.status || '';
@@ -546,7 +552,5 @@ document.addEventListener('DOMContentLoaded', function() {
     filterAndRenderBikes();
 });
 </script>
-
-
 </body>
 </html>

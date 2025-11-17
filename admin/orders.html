@@ -23,11 +23,11 @@
             vertical-align: middle; /* Căn giữa nội dung bảng */
         }
         
-        /* Đảm bảo badge màu vàng có chữ đen */
+        /* Style cho badge */
         .badge.bg-warning { background-color: #ffc100 !important; color: #343a40 !important; font-weight: bold; }
-        .badge.bg-danger { font-weight: bold; } /* Style cho Đã hủy */
-        .badge.bg-info { background-color: #0dcaf0 !important; color: #343a40 !important; font-weight: bold; } /* Style cho Đang giao */
-        .badge.bg-primary { font-weight: bold; } /* Style cho Đã hoàn thành */
+        .badge.bg-danger { font-weight: bold; }
+        .badge.bg-info { background-color: #0dcaf0 !important; color: #343a40 !important; font-weight: bold; } 
+        .badge.bg-primary { font-weight: bold; } 
 
         /* Style cho badge trong Modal */
         .status-badge-modal {
@@ -40,7 +40,6 @@
         .status-badge-modal.bg-danger,
         .status-badge-modal.bg-info,
         .status-badge-modal.bg-primary { color: #fff !important; }
-
     </style>
 </head>
 <body>
@@ -58,7 +57,7 @@
             <li><a href="stock_in.html"><i class="fas fa-truck-loading fa-icon"></i> Nhập Hàng Mới</a></li>
             <li><a href="price_management.html"><i class="fas fa-tags fa-icon"></i> Quản lý Giá bán</a></li>
           <li class="mt-4"><a href="admin-login.html"><i class="fas fa-sign-out-alt fa-icon"></i> Đăng xuất</a></li>
-          <li><a href="/BikeShop-main/index.html"><i class="fas fa-home fa-icon"></i> Về trang chủ</a></li>
+          <li><a href="../index.html"><i class="fas fa-home fa-icon"></i> Về trang chủ</a></li>
         </ul>
     </div>
     <div id="content" class="w-100">
@@ -67,6 +66,37 @@
                 <span class="navbar-brand h1 mb-0 text-primary">Quản Lý Đơn Hàng</span>
             </div>
         </nav>
+        
+        <div class="card shadow-sm border-0 mb-4 p-4">
+            <h5 class="fw-bold mb-3">Tìm kiếm & Lọc Đơn hàng</h5>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="searchKeyword" placeholder="Mã đơn / Tên KH...">
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="filterStatus">
+                        <option value="">-- Trạng thái --</option>
+                        <option value="Chờ xác nhận">Chờ xác nhận</option>
+                        <option value="Đang giao">Đang giao</option>
+                        <option value="Đã giao">Đã giao</option>
+                        <option value="Đã hoàn thành">Đã hoàn thành</option>
+                        <option value="Đã hủy">Đã hủy</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="date" class="form-control" id="filterDateFrom">
+                    <small class="text-muted">Từ ngày</small>
+                </div>
+                <div class="col-md-2">
+                    <input type="date" class="form-control" id="filterDateTo">
+                    <small class="text-muted">Đến ngày</small>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-primary w-50 me-2" id="searchButton"><i class="fas fa-search"></i></button>
+                    <button class="btn btn-secondary w-50" id="resetButton"><i class="fas fa-redo"></i></button>
+                </div>
+            </div>
+        </div>
 
         <div class="card shadow-sm border-0">
             <div class="card-header bg-white">
@@ -84,69 +114,14 @@
                             <th class="text-center">Hành động</th>
                         </tr>
                     </thead>
-<tbody>
-    <tr>
-        <td>#DH0012</td>
-        <td>Nguyễn Văn Đạt</td>
-        <td>11/11/2025</td>
-        <td class="text-end fw-bold">9,990,000₫</td> <td class="text-center"><span class="badge bg-warning text-dark">Chờ xác nhận</span></td>
-        <td class="text-center">
-            <button class="btn btn-sm btn-info detail-btn" data-bs-toggle="modal" data-bs-target="#orderDetailModal" data-id="#DH0012">
-                <i class="fas fa-eye"></i> Chi tiết
-            </button>
-        </td>
-    </tr>
-    <tr>
-        <td>#DH0011</td>
-        <td>Trần Thị Đẹp</td>
-        <td>10/11/2025</td>
-        <td class="text-end fw-bold">7,700,000₫</td> <td class="text-center"><span class="badge bg-success">Đã giao</span></td>
-        <td class="text-center">
-            <button class="btn btn-sm btn-info detail-btn" data-bs-toggle="modal" data-bs-target="#orderDetailModal" data-id="#DH0011">
-                <i class="fas fa-eye"></i> Chi tiết
-            </button>
-        </td>
-    </tr>
-    <tr>
-        <td>#DH0010</td>
-        <td>Phạm Thị Nhung</td>
-        <td>09/11/2025</td>
-        <td class="text-end fw-bold">5,990,000₫</td> <td class="text-center"><span class="badge bg-danger">Đã hủy</span></td>
-        <td class="text-center">
-            <button class="btn btn-sm btn-info detail-btn" data-bs-toggle="modal" data-bs-target="#orderDetailModal" data-id="#DH0010">
-                <i class="fas fa-eye"></i> Chi tiết
-            </button>
-        </td>
-    </tr>
-    <tr>
-        <td>#DH0009</td>
-        <td>Lê Văn Tèo Em</td>
-        <td>08/11/2025</td>
-        <td class="text-end fw-bold">10,750,000₫</td> <td class="text-center"><span class="badge bg-info">Đang giao</span></td>
-        <td class="text-center">
-            <button class="btn btn-sm btn-info detail-btn" data-bs-toggle="modal" data-bs-target="#orderDetailModal" data-id="#DH0009">
-                <i class="fas fa-eye"></i> Chi tiết
-            </button>
-        </td>
-    </tr>
-    <tr>
-        <td>#DH0008</td>
-        <td>Nguyễn Hoàng Đức</td>
-        <td>07/11/2025</td>
-        <td class="text-end fw-bold">2,100,000₫</td> <td class="text-center"><span class="badge bg-primary">Đã hoàn thành</span></td>
-        <td class="text-center">
-            <button class="btn btn-sm btn-info detail-btn" data-bs-toggle="modal" data-bs-target="#orderDetailModal" data-id="#DH0008">
-                <i class="fas fa-eye"></i> Chi tiết
-            </button>
-        </td>
-    </tr>
-</tbody>
+                    <tbody id="orderTableBody">
+                    </tbody>
                 </table>
             </div>
         </div>
 
     </div>
-    </div>
+</div>
 
 <div class="modal fade" id="orderDetailModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
@@ -158,176 +133,224 @@
             </div>
 
           <div class="modal-body">
-    <div id="orderDetailContent">
-        
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <p class="mb-1 text-muted">Khách hàng:</p>
-                <p class="fw-bold fs-5" id="customerName">...</p>
-            </div>
-            <div class="col-md-6">
-                <p class="mb-1 text-muted">Ngày đặt:</p>
-                <p class="fw-bold fs-5" id="orderDate">...</p>
-            </div>
-        </div>
-        
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <p class="mb-1 text-muted">Email:</p>
-                <p class="fw-bold" id="customerEmail">...</p>
-            </div>
-            <div class="col-md-6">
-                <p class="mb-1 text-muted">Số điện thoại:</p>
-                <p class="fw-bold" id="customerPhone">...</p>
-            </div>
-        </div>
+                <div id="orderDetailContent">
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p class="mb-1 text-muted">Khách hàng:</p>
+                            <p class="fw-bold fs-5" id="customerName">...</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1 text-muted">Ngày đặt:</p>
+                            <p class="fw-bold fs-5" id="orderDate">...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p class="mb-1 text-muted">Email:</p>
+                            <p class="fw-bold" id="customerEmail">...</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1 text-muted">Số điện thoại:</p>
+                            <p class="fw-bold" id="customerPhone">...</p>
+                        </div>
+                    </div>
 
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <p class="mb-1 text-muted">Địa chỉ giao hàng:</p>
-                <p class="fw-bold" id="shippingAddress">...</p>
-            </div>
-        </div>
-        
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <p class="mb-1 text-muted">Trạng thái:</p>
-                <span class="status-badge-modal bg-secondary fs-6 text-white" id="orderStatus">...</span>
-            </div>
-            <div class="col-md-6">
-                <p class="mb-1 text-muted">Tổng tiền:</p>
-                <p class="fw-bold text-danger fs-4" id="orderTotal">...</p>
-            </div>
-        </div>
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <p class="mb-1 text-muted">Địa chỉ giao hàng:</p>
+                            <p class="fw-bold" id="shippingAddress">...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4 align-items-center">
+                        <div class="col-md-6">
+                            <p class="mb-1 text-muted">Trạng thái:</p>
+                            <select class="form-select status-select" id="statusChangeDropdown">
+                                <option value="Chờ xác nhận">Chờ xác nhận</option>
+                                <option value="Đang giao">Đang giao</option>
+                                <option value="Đã giao">Đã giao</option>
+                                <option value="Đã hoàn thành">Đã hoàn thành</option>
+                                <option value="Đã hủy">Đã hủy</option>
+                            </select>
+                            <span class="status-badge-modal mt-2 d-inline-block" id="currentStatusDisplay"></span>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <p class="mb-1 text-muted">Tổng tiền:</p>
+                            <p class="fw-bold text-danger fs-4" id="orderTotal">...</p>
+                        </div>
+                    </div>
 
-        <h6 class="fw-bold border-bottom pb-2 mb-3">Danh sách sản phẩm</h6>
-        <table class="table table-bordered table-striped mb-4">
-            <thead>
-                <tr class="table-primary">
-                    <th>Sản phẩm</th>
-                    <th class="text-center">SL</th>
-                    <th class="text-end">Đơn giá</th>
-                    <th class="text-end">Thành tiền</th>
-                </tr>
-            </thead>
-            <tbody id="productDetailTableBody">
-                </tbody>
-        </table>
+                    <h6 class="fw-bold border-bottom pb-2 mb-3">Danh sách sản phẩm</h6>
+                    <table class="table table-bordered table-striped mb-4">
+                        <thead>
+                            <tr class="table-primary">
+                                <th>Sản phẩm</th>
+                                <th class="text-center">SL</th>
+                                <th class="text-end">Đơn giá</th>
+                                <th class="text-end">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productDetailTableBody">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="saveStatusButton">Lưu Trạng Thái</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+
+        </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Dữ liệu đơn hàng mẫu (thay thế bằng API thực tế)
-// Dữ liệu đơn hàng mẫu (ĐÃ THÊM EMAIL VÀ PHONE)
-const ordersData = {
-    '#DH0012': {
-        customer: 'Nguyễn Văn Đạt',
-        email: 'nguyenvandat@example.com', // THÊM MỚI
-        phone: '0901 123 456',           // THÊM MỚI
-        date: '11/11/2025',
-        status: 'Chờ xác nhận',
-        total: '9,990,000₫',
-        address: '456/78, Đường Trần Phú, Quận 1, TP.HCM',
-        statusClass: 'bg-warning',
-        products: [
-            { name: 'Xe Đạp Đường Phố Touring TRINX Free 2.2 – Phanh Đĩa, Bánh 700C', quantity: 1, price: '6,490,000₫', total: '6,490,000₫' },
-            { name: 'Phụ kiện đèn xe', quantity: 1, price: '3,500,000₫', total: '3,500,000₫' }
-        ]
-    },
-    '#DH0011': {
-        customer: 'Trần Thị Đẹp',
-        email: 'tranthidep@example.com', // THÊM MỚI
-        phone: '0988 999 000',           // THÊM MỚI
-        date: '10/11/2025',
-        status: 'Đã giao',
-        total: '7,700,000₫',
-        address: '123/45, Đường Lê Lợi, Quận 5, Hà Nội',
-        statusClass: 'bg-success',
-        products: [
-            { name: 'Xe Đạp Đường Phố Touring LIV Alight 4 Disc - 2025', quantity: 1, price: '7,000,000₫', total: '7,000,000₫' },
-            { name: 'Khóa chống trộm', quantity: 1, price: '700,000₫', total: '700,000₫' }
-        ]
-    },
-    // ĐƠN HÀNG MỚI 1
-    '#DH0010': {
-        customer: 'Phạm Thị Nhung',
-        email: 'phamthinhung@example.com', // THÊM MỚI
-        phone: '0905 555 111',           // THÊM MỚI
-        date: '09/11/2025',
-        status: 'Đã hủy',
-        total: '5,990,000₫',
-        address: '321/11, Đường Nguyễn Huệ, Quận 1, TP.HCM',
-        statusClass: 'bg-danger',
-        products: [
-            { name: 'Xe Đạp Đường Phố Touring JAVA Wahoo City - Phanh Đĩa, Bánh 700C', quantity: 1, price: '5,990,000₫', total: '5,990,000₫' }
-        ]
-    },
-    // ĐƠN HÀNG MỚI 2
-    '#DH0009': {
-        customer: 'Lê Văn Tèo Em',
-        email: 'levanteoem@example.com',  // THÊM MỚI
-        phone: '0919 777 888',           // THÊM MỚI
-        date: '08/11/2025',
-        status: 'Đang giao',
-        total: '10,750,000₫',
-        address: '77, Đường Hùng Vương, Quận Hải Châu, Đà Nẵng',
-        statusClass: 'bg-info',
-        products: [
-            { name: 'Xe Đạp Đường Phố Touring LIV Alight 2 Disc - 2023', quantity: 1, price: '7,000,000₫', total: '7,000,000₫' },
-            { name: 'Bộ đèn xe cao cấp', quantity: 1, price: '3,750,000₫', total: '3,750,000₫' }
-        ]
-    },
-    // ĐƠN HÀNG MỚI 3
-    '#DH0008': {
-        customer: 'Nguyễn Hoàng Đức',
-        email: 'nguyenhoangduc@example.com', // THÊM MỚI
-        phone: '0903 000 999',             // THÊM MỚI
-        date: '07/11/2025',
-        status: 'Đã hoàn thành',
-        total: '2,100,000₫',
-        address: '88/1, Đường Phạm Văn Đồng, Quận Thủ Đức, TP.HCM',
-        statusClass: 'bg-primary',
-        products: [
-            { name: 'Phụ kiện bơm xe', quantity: 3, price: '700,000₫', total: '2,100,000₫' }
-        ]
-    }
-};
-
+    // DOM Elements
+    const orderTableBody = document.getElementById('orderTableBody');
     const orderDetailModal = document.getElementById('orderDetailModal');
+    const searchButton = document.getElementById('searchButton');
+    const resetButton = document.getElementById('resetButton');
+    const saveStatusButton = document.getElementById('saveStatusButton');
+    const statusChangeDropdown = document.getElementById('statusChangeDropdown');
+    const currentStatusDisplay = document.getElementById('currentStatusDisplay');
 
-    // Hàm hiển thị chi tiết đơn hàng
-    function showOrderDetail(orderId) {
-    const data = ordersData[orderId];
-    if (!data) return;
+    // MAPPING CLASSES
+    const statusMap = {
+        'Chờ xác nhận': 'bg-warning text-dark',
+        'Đang giao': 'bg-info',
+        'Đã giao': 'bg-success',
+        'Đã hoàn thành': 'bg-primary',
+        'Đã hủy': 'bg-danger'
+    };
 
-    // Cập nhật thông tin chung
-    document.getElementById('orderIdDisplay').textContent = orderId;
-    document.getElementById('customerName').textContent = data.customer;
-    document.getElementById('orderDate').textContent = data.date;
+    // Dữ liệu đơn hàng mẫu (Đã cập nhật để khớp với HTML)
+    let ordersData = {
+        '#DH0012': {
+            customer: 'Nguyễn Văn Đạt', email: 'nguyenvandat@example.com', phone: '0901 123 456',
+            date: '2025-11-11', status: 'Chờ xác nhận', total: '9,990,000₫', statusClass: 'bg-warning',
+            products: [
+                { name: 'Xe Đạp Đường Phố Touring TRINX Free 2.2', quantity: 1, price: '6,490,000₫', total: '6,490,000₫' },
+                { name: 'Phụ kiện đèn xe', quantity: 1, price: '3,500,000₫', total: '3,500,000₫' }
+            ]
+        },
+        '#DH0011': {
+            customer: 'Trần Thị Đẹp', email: 'tranthidep@example.com', phone: '0988 999 000',
+            date: '2025-10-10', status: 'Đã giao', total: '7,700,000₫', statusClass: 'bg-success',
+            products: [
+                { name: 'Xe Đạp Đường Phố Touring LIV Alight 4 Disc', quantity: 1, price: '7,000,000₫', total: '7,000,000₫' },
+                { name: 'Khóa chống trộm', quantity: 1, price: '700,000₫', total: '700,000₫' }
+            ]
+        },
+        '#DH0010': {
+            customer: 'Phạm Thị Nhung', email: 'phamthinhung@example.com', phone: '0905 555 111',
+            date: '2025-11-09', status: 'Đã hủy', total: '5,990,000₫', statusClass: 'bg-danger',
+            products: [{ name: 'Xe Đạp Đường Phố Touring JAVA Wahoo City', quantity: 1, price: '5,990,000₫', total: '5,990,000₫' }]
+        },
+        '#DH0009': {
+            customer: 'Lê Văn Tèo Em', email: 'levanteoem@example.com', phone: '0919 777 888',
+            date: '2025-11-08', status: 'Đang giao', total: '10,750,000₫', statusClass: 'bg-info',
+            products: [
+                { name: 'Xe Đạp Đường Phố Touring LIV Alight 2 Disc', quantity: 1, price: '7,000,000₫', total: '7,000,000₫' },
+                { name: 'Bộ đèn xe cao cấp', quantity: 1, price: '3,750,000₫', total: '3,750,000₫' }
+            ]
+        },
+        '#DH0008': {
+            customer: 'Nguyễn Hoàng Đức', email: 'nguyenhoangduc@example.com', phone: '0903 000 999',
+            date: '2025-11-07', status: 'Đã hoàn thành', total: '2,100,000₫', statusClass: 'bg-primary',
+            products: [{ name: 'Phụ kiện bơm xe', quantity: 3, price: '700,000₫', total: '2,100,000₫' }]
+        }
+    };
+
+    // Utils
+    function formatDateDisplay(dateStr) {
+        if (!dateStr || dateStr.length < 10) return '';
+        const [year, month, day] = dateStr.split('-');
+        return `${day}/${month}/${year}`;
+    }
+
+    // --- RENDER BẢNG ĐƠN HÀNG ---
+    function renderOrders(filterList = Object.values(ordersData)) {
+        orderTableBody.innerHTML = '';
+        const sortableList = filterList.slice().sort((a, b) => b.date.localeCompare(a.date)); // Sắp xếp theo ngày mới nhất
+
+        sortableList.forEach(data => {
+            const statusClass = statusMap[data.status] || 'bg-secondary';
+            const row = `
+                <tr>
+                    <td>${Object.keys(ordersData).find(key => ordersData[key] === data)}</td>
+                    <td>${data.customer}</td>
+                    <td>${formatDateDisplay(data.date)}</td>
+                    <td class="text-end fw-bold">${data.total}</td> 
+                    <td class="text-center"><span class="badge ${statusClass}">${data.status}</span></td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-info detail-btn" data-bs-toggle="modal" data-bs-target="#orderDetailModal" data-id="${Object.keys(ordersData).find(key => ordersData[key] === data)}">
+                            <i class="fas fa-eye"></i> Chi tiết
+                        </button>
+                    </td>
+                </tr>
+            `;
+            orderTableBody.insertAdjacentHTML('beforeend', row);
+        });
+    }
+
+    // --- LOGIC LỌC ---
+    searchButton.addEventListener('click', function() {
+        const keyword = document.getElementById('searchKeyword').value.toLowerCase().trim();
+        const status = document.getElementById('filterStatus').value;
+        const dateFrom = document.getElementById('filterDateFrom').value;
+        const dateTo = document.getElementById('filterDateTo').value;
+
+        const filtered = Object.values(ordersData).filter(order => {
+            const matchesKeyword = !keyword || order.customer.toLowerCase().includes(keyword) || order.email.toLowerCase().includes(keyword) || order.phone.includes(keyword) || Object.keys(ordersData).find(key => ordersData[key] === order).toLowerCase().includes(keyword);
+            const matchesStatus = !status || order.status === status;
+            const matchesDateFrom = !dateFrom || order.date >= dateFrom;
+            const matchesDateTo = !dateTo || order.date <= dateTo;
+            
+            return matchesKeyword && matchesStatus && matchesDateFrom && matchesDateTo;
+        });
+
+        renderOrders(filtered);
+    });
+
+    resetButton.addEventListener('click', function() {
+        document.getElementById('searchKeyword').value = '';
+        document.getElementById('filterStatus').value = '';
+        document.getElementById('filterDateFrom').value = '';
+        document.getElementById('filterDateTo').value = '';
+        renderOrders();
+    });
     
-    // THÊM MỚI: Đổ dữ liệu Email và SĐT
-    document.getElementById('customerEmail').textContent = data.email;
-    document.getElementById('customerPhone').textContent = data.phone;
-    
-    document.getElementById('orderTotal').textContent = data.total;
-    document.getElementById('shippingAddress').textContent = data.address;
+    // --- HIỂN THỊ CHI TIẾT VÀ THAY ĐỔI TRẠNG THÁI ---
+    let currentEditingOrderId = null;
+
+    orderDetailModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget; 
+        const orderId = button.getAttribute('data-id'); 
+        const data = ordersData[orderId];
+        currentEditingOrderId = orderId;
+
+        // Populate detail fields
+        document.getElementById('orderIdDisplay').textContent = orderId;
+        document.getElementById('customerName').textContent = data.customer;
+        document.getElementById('orderDate').textContent = formatDateDisplay(data.date);
+        document.getElementById('customerEmail').textContent = data.email;
+        document.getElementById('customerPhone').textContent = data.phone;
+        document.getElementById('orderTotal').textContent = data.total;
+        document.getElementById('shippingAddress').textContent = data.address;
         
-        // Cập nhật trạng thái và màu sắc
-        const statusEl = document.getElementById('orderStatus');
-        statusEl.textContent = data.status;
+        // Setup Status Dropdown
+        statusChangeDropdown.value = data.status;
+        updateStatusDisplay(data.status);
         
-        // Xóa class cũ và thêm class mới
-        statusEl.className = `status-badge-modal fs-6 text-white ${data.statusClass}`; 
-        
-        // Cập nhật chi tiết sản phẩm
+        // Render Products
         const productDetailTableBody = document.getElementById('productDetailTableBody');
         productDetailTableBody.innerHTML = '';
         data.products.forEach(p => {
-            // Tạm thời fix màu chữ cho bg-warning trong modal
-            const textColor = data.statusClass === 'bg-warning' ? 'text-dark' : 'text-white';
-            
             productDetailTableBody.insertAdjacentHTML('beforeend', `
                 <tr>
                     <td>${p.name}</td>
@@ -337,17 +360,43 @@ const ordersData = {
                 </tr>
             `);
         });
+    });
+
+    // Cập nhật trạng thái hiển thị khi dropdown thay đổi
+    statusChangeDropdown.addEventListener('change', function() {
+        updateStatusDisplay(this.value);
+    });
+    
+    function updateStatusDisplay(status) {
+        const statusClass = statusMap[status] || 'bg-secondary';
+        currentStatusDisplay.className = `status-badge-modal mt-2 d-inline-block text-white ${statusClass}`;
+        currentStatusDisplay.textContent = status;
     }
 
-    // Gắn sự kiện để load data trước khi modal hiện ra
-    orderDetailModal.addEventListener('show.bs.modal', function (event) {
-        // Nút đã kích hoạt modal
-        const button = event.relatedTarget; 
-        // Lấy thông tin ID từ data-id
-        const orderId = button.getAttribute('data-id'); 
-        
-        showOrderDetail(orderId);
+    // Xử lý nút LƯU TRẠNG THÁI
+    saveStatusButton.addEventListener('click', function() {
+        if (!currentEditingOrderId) return;
+        const newStatus = statusChangeDropdown.value;
+        const currentData = ordersData[currentEditingOrderId];
+
+        if (currentData.status !== newStatus) {
+            // Cập nhật dữ liệu mẫu
+            currentData.status = newStatus;
+            currentData.statusClass = statusMap[newStatus].split(' ')[0]; // Lấy class chính
+
+            // Thực tế: Gửi API yêu cầu cập nhật trạng thái
+            alert(`Đã cập nhật trạng thái đơn hàng ${currentEditingOrderId} thành "${newStatus}" thành công!`);
+
+            // Đóng Modal và Render lại bảng chính
+            bootstrap.Modal.getInstance(orderDetailModal).hide();
+            renderOrders(); 
+        } else {
+            alert('Trạng thái không thay đổi.');
+        }
     });
+
+    // --- KHỞI TẠO ---
+    renderOrders();
 });
 </script>
 </body>

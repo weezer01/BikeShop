@@ -26,10 +26,10 @@
     /* CARD LOẠI XE */
     .bike-type-card { 
         border-radius: 12px; 
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06); /* nhẹ giống code 2 */
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06); 
         border: none; 
         transition: transform 0.25s ease, box-shadow 0.25s ease;
-        font-size: 14px; /* đồng bộ chữ nhỏ */
+        font-size: 14px;
     }
 
     .bike-type-card:hover { 
@@ -38,7 +38,7 @@
     }
 
     .bike-type-card .card-body { 
-        padding: 18px !important; /* giảm padding */
+        padding: 18px !important;
     }
 
     /* Icon của card */
@@ -95,7 +95,6 @@
 <body>
 <div class="d-flex">
 
-    <!-- SIDEBAR -->
     <div id="sidebar">
         <div class="sidebar-header text-center mb-4">
             <h3><i class="fas fa-bicycle"></i> Bike Admin</h3>
@@ -106,23 +105,20 @@
             <li><a href="categories.html" class="active"><i class="fas fa-sitemap fa-icon"></i> Loại Xe</a></li>
             <li><a href="orders.html"><i class="fas fa-receipt fa-icon"></i> Đơn hàng</a></li>
             <li><a href="customers.html"><i class="fas fa-users fa-icon"></i> Khách hàng</a></li>
-                                    <li><a href="stock.html"><i class="fas fa-warehouse fa-icon"></i> Tồn kho</a></li>
+            <li><a href="stock.html"><i class="fas fa-warehouse fa-icon"></i> Tồn kho</a></li>
             <li><a href="stock_in.html"><i class="fas fa-truck-loading fa-icon"></i> Nhập Hàng Mới</a></li>
-<li><a href="price_management.html"><i class="fas fa-tags fa-icon"></i> Quản lý Giá bán</a></li>
+            <li><a href="price_management.html"><i class="fas fa-tags fa-icon"></i> Quản lý Giá bán</a></li>
             <li class="mt-4"><a href="admin-login.html"><i class="fas fa-sign-out-alt fa-icon"></i> Đăng xuất</a></li>
             <li><a href="/BikeShop-main/index.html"><i class="fas fa-home fa-icon"></i> Về trang chủ</a></li>
         </ul>
     </div>
 
-    <!-- CONTENT -->
     <div id="content" class="w-100 p-4">
 
-        <!-- TITLE -->
         <div class="card bg-white shadow-sm border-0 mb-4 p-4" style="border-radius:12px;">
             <h2 class="fw-bold mb-0" style="font-size:1.8rem;color:#343a40;">Quản lý Loại Xe</h2>
         </div>
 
-        <!-- SEARCH + ADD -->
         <div class="d-flex align-items-center mb-4 p-3 bg-white shadow-sm" style="border-radius:12px;">
             <div class="d-flex flex-grow-1 align-items-center me-4">
                 <input type="text" class="form-control form-control-lg me-3 flex-fill" 
@@ -139,12 +135,10 @@
             </button>
         </div>
 
-        <!-- CARD CONTAINER -->
         <div class="row g-4" id="categoryCardsContainer"></div>
     </div>
 </div>
 
-<!-- MODAL THÊM / SỬA LOẠI XE -->
 <div class="modal fade" id="categoryModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -156,6 +150,8 @@
 
             <div class="modal-body">
                 <form id="categoryForm">
+                    <input type="hidden" id="categoryIdHidden">
+                    
                     <div class="mb-3">
                         <label class="form-label">Tên loại xe</label>
                         <input type="text" id="categoryName" class="form-control">
@@ -165,9 +161,17 @@
                         <textarea id="categoryDesc" class="form-control" rows="3"></textarea>
                     </div>
                     <div class="mb-3">
-    <label class="form-label">Số lượng</label>
-    <input type="number" id="categoryCount" class="form-control" min="0">
-</div>
+                        <label class="form-label">Số lượng xe đang tồn kho</label>
+                        <input type="number" id="categoryCount" class="form-control" min="0"> 
+                    </div>
+                    <div class="mb-3" id="colorPickerContainer">
+                        <label class="form-label">Màu hiển thị (Card Color)</label>
+                        <select id="categoryColor" class="form-select">
+                            <option value="blue">Xanh Dương (Mặc định)</option>
+                            <option value="green">Xanh Lá</option>
+                            <option value="orange">Vàng Cam</option>
+                        </select>
+                    </div>
 
                 </form>
             </div>
@@ -181,6 +185,32 @@
     </div>
 </div>
 
+<div class="modal fade" id="viewCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Chi Tiết Loại Xe: <span id="viewCategoryName" class="fw-bold"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Mã loại:</strong> <span id="viewCategoryId"></span></li>
+                    <li class="list-group-item"><strong>Mô tả:</strong> <span id="viewCategoryDesc"></span></li>
+                    <li class="list-group-item"><strong>Số lượng tồn kho:</strong> <span id="viewCategoryCount" class="fw-bold text-primary fs-5"></span></li>
+                    <li class="list-group-item"><strong>Màu sắc (Card):</strong> <span id="viewCategoryColor"></span></li>
+                </ul>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -192,6 +222,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchButton = document.getElementById('searchButton');
     const resetButton = document.getElementById('resetButton');
     const addButton = document.getElementById('addButton');
+    
+    // Inputs trong Modal
+    const categoryIdHidden = document.getElementById('categoryIdHidden');
+    const categoryNameInput = document.getElementById('categoryName');
+    const categoryDescInput = document.getElementById('categoryDesc');
+    const categoryCountInput = document.getElementById('categoryCount');
+    const categoryColorInput = document.getElementById('categoryColor');
 
     let editingCategoryId = null;
 
@@ -244,7 +281,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <h4 class="mb-0 fw-bold text-dark">${cat.count}</h4>
                                 </div>
                                 <div class="col-5 text-end">
-                                    <button class="btn btn-sm btn-outline-info edit-btn" data-id="${cat.id}">
+                                    <button class="btn btn-sm btn-outline-info view-btn me-1" data-id="${cat.id}" data-bs-toggle="modal" data-bs-target="#viewCategoryModal">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-info edit-btn me-1" data-id="${cat.id}" data-bs-toggle="modal" data-bs-target="#categoryModal">
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
                                     <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${cat.id}">
@@ -261,82 +301,124 @@ document.addEventListener('DOMContentLoaded', function() {
         attachCardEvents();
     }
 
-    // ===== ATTACH EVENTS TO EDIT & DELETE =====
+    // ===== ATTACH EVENTS TO EDIT & DELETE & VIEW =====
     function attachCardEvents() {
+        
+        // Listener cho Modal Sửa (Edit)
         document.querySelectorAll(".edit-btn").forEach(btn => {
             btn.onclick = () => {
                 const id = btn.dataset.id;
                 const cate = categories.find(c => c.id === id);
-                editingCategoryId = id;
+                editingCategoryId = id; // Đặt ID đang sửa
 
                 // Gán dữ liệu lên modal
                 modalTitle.textContent = "Sửa Loại Xe";
-                document.getElementById('categoryName').value = cate.name;
-                document.getElementById('categoryDesc').value = cate.desc;
-                document.getElementById('categoryCount').value = cate.count;
-
-                new bootstrap.Modal(categoryModal).show();
+                categoryIdHidden.value = cate.id;
+                categoryNameInput.value = cate.name;
+                categoryDescInput.value = cate.desc;
+                categoryCountInput.value = cate.count;
+                categoryColorInput.value = cate.color; 
+                
+                categoryCountInput.removeAttribute('readonly'); // Cho phép sửa Số lượng
+                
+                // Mở modal được xử lý bằng data-bs-target
             };
         });
 
+        // Listener cho Modal Xem Chi Tiết
+        document.querySelectorAll(".view-btn").forEach(btn => {
+            btn.onclick = () => {
+                const id = btn.dataset.id;
+                const cate = categories.find(c => c.id === id);
+                
+                // Đổ dữ liệu vào Modal Xem Chi Tiết
+                document.getElementById('viewCategoryName').textContent = cate.name;
+                document.getElementById('viewCategoryId').textContent = cate.id;
+                document.getElementById('viewCategoryDesc').textContent = cate.desc;
+                document.getElementById('viewCategoryCount').textContent = cate.count + ' xe';
+                document.getElementById('viewCategoryColor').textContent = cate.color.toUpperCase();
+                
+                // Mở modal được xử lý bằng data-bs-target
+            };
+        });
+
+        // Delete button
         document.querySelectorAll(".delete-btn").forEach(btn => {
             btn.onclick = () => {
                 const id = btn.dataset.id;
-                if (confirm("Bạn có chắc muốn xóa loại xe này?")) {
+                const name = categories.find(c => c.id === id).name;
+                if (confirm(`Bạn có chắc muốn xóa loại xe "${name}" này không?`)) {
                     categories = categories.filter(c => c.id !== id);
                     saveCategories();
-                    renderCategories();
-                    alert("Đã xóa thành công!");
+                    // KHÔNG DÙNG renderCategories() mà reload lại trang
+                    window.location.reload(); 
                 }
             };
         });
     }
-
-    // ===== ADD NEW =====
-    addButton.addEventListener('click', () => {
-        editingCategoryId = null;
-        modalTitle.textContent = "Thêm Loại Xe Mới";
-        categoryForm.reset();
-        document.getElementById('categoryCount').value = 0;
-        new bootstrap.Modal(categoryModal).show();
+    
+    // Xử lý khi modal mở (dành cho Thêm mới)
+    categoryModal.addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget; 
+        const isEdit = button && button.classList.contains('edit-btn');
+        
+        if (!isEdit) {
+            // Trường hợp Thêm mới (Reset)
+            categoryForm.reset();
+            modalTitle.textContent = "Thêm Loại Xe Mới";
+            categoryCountInput.value = 0;
+            categoryCountInput.setAttribute('readonly', 'readonly'); 
+            categoryIdHidden.value = '';
+            editingCategoryId = null; // Đảm bảo reset ID sửa
+        }
     });
 
-    // ===== SAVE BUTTON =====
+
+    // ===== SAVE BUTTON (Thêm/Sửa) =====
     document.getElementById('saveCategoryButton').addEventListener('click', () => {
-        const name = document.getElementById('categoryName').value.trim();
-        const desc = document.getElementById('categoryDesc').value.trim();
-        const count = parseInt(document.getElementById('categoryCount').value) || 0;
+        const id = categoryIdHidden.value.trim();
+        const name = categoryNameInput.value.trim();
+        const desc = categoryDescInput.value.trim();
+        const count = parseInt(categoryCountInput.value) || 0;
+        const color = categoryColorInput.value;
 
         if (!name || !desc) {
-            alert("Vui lòng nhập đầy đủ thông tin!");
+            alert("Vui lòng nhập đầy đủ Tên và Mô tả!");
             return;
         }
 
-        if (editingCategoryId) {
-            const cate = categories.find(c => c.id === editingCategoryId);
-            cate.name = name;
-            cate.desc = desc;
-            cate.count = count;
+        if (id) {
+            // Sửa
+            const cate = categories.find(c => c.id === id);
+            if (cate) {
+                cate.name = name;
+                cate.desc = desc;
+                cate.count = count; // Cho phép sửa số lượng
+                cate.color = color;
+            }
         } else {
+            // Thêm mới
             categories.push({
                 id: generateNextCategoryId(),
                 name,
                 desc,
-                count,
-                color: 'blue',
+                count: 0, 
+                color: color,
                 icon: 'fas fa-bicycle'
             });
         }
 
         saveCategories();
-        renderCategories();
-        bootstrap.Modal.getInstance(categoryModal).hide();
+        
+        // --- CẬP NHẬT GIAO DIỆN BẰNG CÁCH TẢI LẠI TRANG ---
+        window.location.reload();
+        // Lưu ý: Dòng lệnh này sẽ ngăn Modal đóng mềm mại, nhưng đảm bảo giao diện được refresh.
     });
 
-    // ===== SEARCH =====
+    // ===== SEARCH & RESET (Giữ nguyên logic) =====
     searchButton.addEventListener('click', () => {
         const query = searchDescInput.value.toLowerCase();
-        renderCategories(categories.filter(c => c.desc.toLowerCase().includes(query)));
+        renderCategories(categories.filter(c => c.desc.toLowerCase().includes(query) || c.name.toLowerCase().includes(query)));
     });
 
     resetButton.addEventListener('click', () => {
@@ -346,7 +428,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     renderCategories();
 });
-
 </script>
 </body>
 </html>

@@ -46,7 +46,7 @@
             <li><a href="stock_in.html" class = "active"><i class="fas fa-truck-loading fa-icon"></i> Nhập Hàng Mới</a></li>
             <li><a href="price_management.html"><i class="fas fa-tags fa-icon"></i> Quản lý Giá bán</a></li>
                        <li class="mt-4"><a href="admin-login.html"><i class="fas fa-sign-out-alt fa-icon"></i> Đăng xuất</a></li>
-                       <li><a href="/BikeShop-main/index.html"><i class="fas fa-home fa-icon"></i> Về trang chủ</a></li>
+                       <li><a href="../index.html"><i class="fas fa-home fa-icon"></i> Về trang chủ</a></li>
         </ul>
     </div>
     <div id="content" class="w-100">
@@ -78,7 +78,8 @@
                     </div>
 
                     <h5 class="mt-4 mb-3 text-primary">Chi Tiết Sản Phẩm Nhập</h5>
-                    <div class="row g-3 align-items-end"> <div class="col-md-2">
+                    <div class="row g-3 align-items-end"> 
+                        <div class="col-md-2">
                             <label for="inputProductId" class="form-label">Mã ID</label>
                             <input type="text" class="form-control" id="inputProductId" required placeholder="Ví dụ: #001">
                         </div>
@@ -301,8 +302,19 @@
         
         // --- HÀM XỬ LÝ GIAO DIỆN ---
 
+        // Hàm đọc URL để tự động điền ID
+        function autoFillProductId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('product_id'); // Lấy giá trị của 'product_id'
+            if (productId) {
+                // Điền vào trường Mã ID
+                inputProductId.value = productId.replace('#', ''); 
+                // Mã ID sẽ được điền tự động khi chuyển từ trang Tồn kho/Cảnh báo
+            }
+        }
+
         function checkAddItemButton() {
-            // (Logic kiểm tra input giữ nguyên)
+            // Logic kiểm tra input giữ nguyên
             const id = inputProductId.value.trim();
             const name = inputProductName.value.trim();
             const category = inputProductCategory.value;
@@ -382,7 +394,8 @@
             stockInDetailBody.innerHTML = '';
             updateSummary();
             
-            // Note: Lịch sử gần đây đã là HTML tĩnh, không cần renderHistory()
+            // TỰ ĐỘNG ĐIỀN ID TỪ URL
+            autoFillProductId();
         }
 
         // --- XỬ LÝ SỰ KIỆN CHÍNH ---
@@ -491,6 +504,5 @@
         initializeForm();
     });
 </script>
-
 </body>
 </html>
